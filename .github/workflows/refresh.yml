@@ -29,6 +29,7 @@ jobs:
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TEST_MODE: ${{ vars.TEST_MODE }}
         run: python scraper.py
 
       - name: Commit updated data
@@ -38,5 +39,7 @@ jobs:
           git add events.json
           git diff --staged --quiet && echo "no changes — nothing to commit" && exit 0
           git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
+          # events.json is written ONLY by this bot, so its copy is always authoritative.
+          # Plain "git push" uses the token actions/checkout already configured.
           git pull --rebase -X ours origin main || true
           git push
