@@ -38,4 +38,5 @@ jobs:
           git add events.json
           git diff --staged --quiet && echo "no changes — nothing to commit" && exit 0
           git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push --force-with-lease || (git fetch origin main && git push --force-with-lease)
+          git fetch origin main
+          git push origin HEAD:main --force
