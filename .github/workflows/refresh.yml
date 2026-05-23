@@ -38,5 +38,5 @@ jobs:
           git add events.json
           git diff --staged --quiet && echo "no changes — nothing to commit" && exit 0
           git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git fetch origin main
-          git push origin HEAD:main --force
+          git pull --rebase -X ours origin main || true
+          git push
