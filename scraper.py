@@ -1,4 +1,4 @@
-     #!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Sannyas Gatherings — hourly scraper pipeline
 =============================================
@@ -14,6 +14,7 @@ Output: events.json  (same shape the HTML app expects)
 """
 
 import os, json, time, hashlib, datetime as dt
+import re as _re
 import requests
 
 # ----------------------------------------------------------------------
@@ -95,6 +96,18 @@ FLYERS_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/h
 # Each entry: (base_site_url, default_country). The scraper hits {site}/wp-json/tribe/events/v1/events
 WP_EVENT_SITES = [
     ("https://tapoban.com", "Nepal"),   # Osho Tapoban, Kathmandu — major Nepal centre
+]
+
+# iCAL FEEDS — the universal way to read centre calendars (no Apify, no AI cost).
+# Many Osho centres expose a .ics feed. Each entry: (ics_url, default_country, organizer_name).
+# To find a centre's feed: look for "Add to Calendar" / "Save iCal" / "Subscribe" on their events page.
+# Common patterns: {site}/events/?ical=1  or  {site}/?post_type=tribe_events&ical=1
+ICAL_FEEDS = [
+    ("https://tapoban.com/events/?ical=1", "Nepal", "Osho Tapoban"),
+    ("https://oshoworld.com/events/?ical=1", "India", "Osho World"),
+    ("https://www.oshonisarga.com/upcoming-programs/calendar/?ical=1", "India", "Osho Nisarga"),
+    ("https://www.oshosandiego.com/?post_type=tribe_events&ical=1", "USA", "Osho San Diego"),
+    # Add more centres' .ics feeds here as you find them.
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -444,6 +457,65 @@ def extract_event_from_file(path):
             print(f"  ! flyer vision failed: {e}")
     return {"is_event": False}
 
+def _ical_unescape(s):
+    return (s or "").replace("\\,", ",").replace("\\;", ";").replace("\\n", " ").replace("\\N", " ").strip()
+
+def _ical_date(val):
+    """Parse an iCal DTSTART/DTEND value → 'YYYY-MM-DD'. Handles 20260620 and 20260620T090000Z."""
+    val = (val or "").strip()
+    digits = _re.sub(r"[^0-9]", "", val)
+    if len(digits) >= 8:
+        return f"{digits[0:4]}-{digits[4:6]}-{digits[6:8]}"
+    return ""
+
+def read_ical_feeds():
+    """Read events from standard iCal (.ics) feeds — works for any centre that publishes one.
+    FREE: no Apify, no AI. Returns list of event dicts."""
+    out = []
+    if not ICAL_FEEDS:
+        return out
+    for url, country, organizer in ICAL_FEEDS:
+        try:
+            r = requests.get(url, timeout=45, headers={"User-Agent": "Mozilla/5.0 (events-bot)"})
+            if r.status_code != 200 or "BEGIN:VCALENDAR" not in r.text:
+                print(f"  ! {organizer}: no iCal feed (HTTP {r.status_code})")
+                continue
+            text = r.text.replace("\r\n ", "").replace("\r\n\t", "")  # unfold long lines
+        except Exception as e:
+            print(f"  ! {organizer}: iCal fetch failed ({type(e).__name__})")
+            continue
+        got = 0
+        for block in text.split("BEGIN:VEVENT")[1:]:
+            block = block.split("END:VEVENT")[0]
+            fields = {}
+            for line in block.splitlines():
+                if ":" in line:
+                    key = line.split(":", 1)[0].split(";")[0].strip().upper()
+                    valpart = line.split(":", 1)[1]
+                    fields.setdefault(key, valpart)
+            title = _ical_unescape(fields.get("SUMMARY", ""))
+            start = _ical_date(fields.get("DTSTART", ""))
+            end = _ical_date(fields.get("DTEND", "")) or start
+            if not title or not start:
+                continue
+            loc = _ical_unescape(fields.get("LOCATION", ""))
+            desc = _ical_unescape(fields.get("DESCRIPTION", ""))[:200]
+            city = loc.split(",")[0].strip() if loc else ""
+            out.append({
+                "is_event": True,
+                "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
+                "title": title, "start_date": start, "end_date": end,
+                "venue": loc or organizer, "city": city or "", "state": None,
+                "country": country, "phone": None, "organizer": organizer,
+                "description": desc,
+                "source_url": _ical_unescape(fields.get("URL", "")) or url.split("/?")[0].split("/events")[0],
+                "source_platform": f"{organizer} (website)",
+                "flyer_url": "", "region": REGION_MAP.get(country, "Asia"),
+            })
+            got += 1
+        print(f"  → {got} events from {organizer} (iCal)")
+    return out
+
 def read_wp_event_sites():
     """Read events from WordPress 'The Events Calendar' JSON APIs (e.g. Tapoban).
     These give clean structured data — no Apify, no AI cost. Returns list of event dicts."""
@@ -614,10 +686,10 @@ def build():
         seen.add(ev["id"])
         events.append(ev)
 
-    # --- WORDPRESS EVENT SITES (e.g. Tapoban) — clean JSON feeds, free, no AI ---
+    # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
     print("\nReading website event feeds…")
-    for ev in read_wp_event_sites():
+    for ev in (read_ical_feeds() + read_wp_event_sites()):
         try:
             if not keep_upcoming(ev):
                 continue
@@ -712,7 +784,7 @@ def build():
     print(f"  extraction failures .. {_extract_fail_count[0]}  (if this ≈ posts scraped, your ANTHROPIC_API_KEY is the problem)")
     print(f"  judged real events ... {n_is_event}")
     print(f"  still upcoming ....... {n_upcoming}")
-    print(f"  website feeds ........ {n_wp}  (Tapoban etc.)")
+    print(f"  website feeds ........ {n_wp}  (intl centres: Nisarga, Osho World, San Diego…)")
     print(f"  flyer uploads ........ {n_flyer}  (from your '{FLYERS_DIR}/' folder)")
     print(f"  new this run ......... {len(events)}")
     print(f"  TOTAL in directory ... {len(merged)}  (new + carried forward)")
@@ -722,4 +794,3 @@ def build():
 
 if __name__ == "__main__":
     build()
-       
