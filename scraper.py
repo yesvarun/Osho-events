@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+     #!/usr/bin/env python3
 """
 Sannyas Gatherings — hourly scraper pipeline
 =============================================
@@ -75,8 +75,8 @@ SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation worksho
 # Cookies → copy the value of the "sessionid" cookie. Format: "sessionid=XXXX…"
 IG_SESSION_COOKIE = os.environ.get("IG_SESSION_COOKIE", "")
 
-POSTS_PER_QUERY = 40          # higher = more camps found per run (cost rises modestly)
-MAX_POST_AGE_DAYS = 30        # posts from the last 30 days (camps are often announced weeks ahead)
+POSTS_PER_QUERY = 40          # more posts per run = more camps found (and higher cost per run)
+MAX_POST_AGE_DAYS = 30        # keep modest to control cost; raise only if you choose to
 
 # VISION: when a post has little/no caption text, read its flyer IMAGE with Claude vision.
 # Costs more per image, so it only fires for caption-less posts (cost-aware). Set False to disable.
@@ -528,6 +528,7 @@ def read_local_flyers():
                 ev["flyer_url"] = FLYERS_BASE_URL + fname
                 ev["country"] = ev.get("country") or "India"
                 ev["region"] = REGION_MAP.get(ev["country"], "Asia")
+                ev["_flyer_path"] = path        # remember the file so past ones can be cleaned up
                 events.append(ev)
                 print(f"  ✓ {os.path.basename(path)} → {ev.get('title','(event)')}")
             else:
@@ -538,41 +539,13 @@ def read_local_flyers():
     return events
 
 
-import re as _re
-
-# Words that don't help tell two camps apart — stripped before comparing.
-_DEDUP_STOPWORDS = {
-    "osho", "meditation", "camp", "retreat", "workshop", "gathering", "festival",
-    "yoga", "the", "of", "and", "a", "an", "at", "in", "on", "with", "for",
-    "day", "days", "night", "morning", "level", "1st", "first", "annual",
-    "international", "centre", "center", "ashram", "sannyas", "dhyan", "shivir",
-}
-
-def _norm_text(s):
-    """Lowercase, drop punctuation/emoji → compact signature. Keeps ALL meaningful words."""
-    s = (s or "").lower()
-    s = _re.sub(r"[^a-z0-9\s]", " ", s)            # keep letters/numbers only
-    words = [w for w in s.split() if w]
-    return "".join(sorted(set(words)))
-
-def _norm_core(s):
-    """Like _norm_text but drops filler words — used only as a SECONDARY signal."""
-    s = (s or "").lower()
-    s = _re.sub(r"[^a-z0-9\s]", " ", s)
-    words = [w for w in s.split() if w and w not in _DEDUP_STOPWORDS]
-    return "".join(sorted(set(words)))
-
 def make_id(ev):
-    """Dedup key: full title signature + EXACT start date + city.
-    Two events are 'the same' only if their full normalized title, exact start date,
-    and city all match — so genuinely different camps are never merged. Uses the full
-    title (not just core words) so generic names like 'Osho Meditation Camp' that share
-    a city/date are NOT wrongly collapsed unless they're truly identical."""
-    title_sig = _norm_text(ev.get("title", ""))           # FULL title, not stripped to core
-    city_sig = _norm_text(ev.get("city", "")) or _norm_text(ev.get("venue", ""))
-    sd = (ev.get("start_date") or "")                     # EXACT date, not month
-    key = f"{title_sig}|{sd}|{city_sig}"
-    return hashlib.md5(key.encode()).hexdigest()[:12]
+    """Simple, safe dedup key: exact title + exact start date + exact city.
+    Only merges events that are truly identical. Never over-merges different camps."""
+    title = (ev.get("title") or "").strip().lower()
+    city = (ev.get("city") or ev.get("venue") or "").strip().lower()
+    sd = (ev.get("start_date") or "").strip()
+    return hashlib.md5(f"{title}|{sd}|{city}".encode()).hexdigest()[:12]
 
 def keep_upcoming(ev):
     end = ev.get("end_date") or ev.get("start_date")
@@ -659,11 +632,20 @@ def build():
 
     # --- LOCAL FLYERS: your uploaded WhatsApp flyer images, read by Claude vision ---
     n_flyer = 0
+    flyers_to_delete = []        # files for camps that are confirmed PAST (clean up after)
     for ev in read_local_flyers():
         try:
             if not keep_upcoming(ev):
                 print(f"  – flyer event '{ev.get('title','')}' skipped as past "
                       f"(start={ev.get('start_date')}, end={ev.get('end_date')})")
+                # Only mark for deletion if we have a REAL, parseable past date (not missing/unclear).
+                end = ev.get("end_date") or ev.get("start_date")
+                if end and ev.get("_flyer_path"):
+                    try:
+                        if dt.date.fromisoformat(end) < dt.date.today():
+                            flyers_to_delete.append(ev["_flyer_path"])
+                    except ValueError:
+                        pass   # unclear date → keep the file, never delete
                 continue
             ev["id"] = make_id(ev)
             if ev["id"] in seen:
@@ -674,6 +656,16 @@ def build():
         except Exception as e:
             print(f"  ! flyer event skipped ({type(e).__name__})")
             continue
+
+    # Delete flyer files for confirmed-past camps so they don't cost vision credit next run.
+    if flyers_to_delete:
+        deleted = 0
+        for fp in set(flyers_to_delete):
+            try:
+                os.remove(fp); deleted += 1
+            except Exception:
+                pass
+        print(f"  🗑  removed {deleted} past flyer image(s) from '{FLYERS_DIR}/'")
 
     events.sort(key=lambda e: e.get("start_date") or "9999")
 
@@ -702,6 +694,13 @@ def build():
             seen_ids.add(eid); merged.append(ev); carried += 1
 
     merged.sort(key=lambda e: e.get("start_date") or "9999")
+
+    # SAFETY: warn loudly if this run drastically shrinks the directory — a sign something
+    # went wrong (bad scrape, over-merge). The data is still written, but you'll see the alert.
+    if len(existing) >= 10 and len(merged) < len(existing) * 0.5:
+        print(f"  ⚠️  WARNING: directory dropped from {len(existing)} to {len(merged)} events. "
+              f"If unexpected, check the funnel above — a source may have returned little this run.")
+
     out = {"generated_at": dt.datetime.utcnow().isoformat() + "Z", "events": merged}
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
@@ -723,3 +722,4 @@ def build():
 
 if __name__ == "__main__":
     build()
+       
