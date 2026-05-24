@@ -110,6 +110,13 @@ ICAL_FEEDS = [
     # Add more centres' .ics feeds here as you find them.
 ]
 
+# HTML EVENT PAGES — for centres WITHOUT an iCal/JSON feed (e.g. custom-built sites).
+# The scraper fetches the page and Claude reads the listed camps from it. Free of Apify
+# (uses Claude, which you already pay for). Each entry: (events_page_url, default_country, organizer).
+HTML_EVENT_PAGES = [
+    ("https://oshoworld.com/events", "India", "Osho Dham / Osho World"),
+]
+
 # Country -> region grouping (must match the app's REGION_MAP)
 REGION_MAP = {
     "India":"India",
@@ -468,6 +475,70 @@ def _ical_date(val):
         return f"{digits[0:4]}-{digits[4:6]}-{digits[6:8]}"
     return ""
 
+def read_html_event_pages():
+    """Fetch each centre's events page and have Claude extract ALL upcoming camps from it.
+    Works for ANY site (incl. custom-built ones with no feed). One Claude call per page."""
+    out = []
+    if not HTML_EVENT_PAGES:
+        return out
+    for url, country, organizer in HTML_EVENT_PAGES:
+        try:
+            r = requests.get(url, timeout=45, headers={"User-Agent": "Mozilla/5.0 (events-bot)"})
+            if r.status_code != 200:
+                print(f"  ! {organizer}: events page HTTP {r.status_code}")
+                continue
+            # strip tags → text, collapse whitespace; cap length to control token cost
+            text = _re.sub(r"<script[\s\S]*?</script>", " ", r.text)
+            text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
+            text = _re.sub(r"<[^>]+>", " ", text)
+            text = _re.sub(r"\s+", " ", text)[:12000]
+        except Exception as e:
+            print(f"  ! {organizer}: fetch failed ({type(e).__name__})")
+            continue
+        prompt = (
+            f"Today is {TODAY}. Below is the text of an Osho centre's events page. "
+            "Extract EVERY upcoming meditation camp/retreat/workshop/celebration with a clear date. "
+            "Reply with ONLY a JSON array, each item: "
+            "{title, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description}. "
+            "Infer the year from context (events are 2026 unless stated). No prose, just the JSON array.\n\n"
+            + text
+        )
+        try:
+            resp = requests.post("https://api.anthropic.com/v1/messages",
+                headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
+                         "content-type": "application/json"},
+                json={"model": EXTRACT_MODEL, "max_tokens": 4000,
+                      "messages": [{"role": "user", "content": prompt}]}, timeout=120)
+            if resp.status_code != 200:
+                print(f"  ! {organizer}: Claude HTTP {resp.status_code}")
+                continue
+            raw = "".join(b.get("text", "") for b in resp.json().get("content", []))
+            raw = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            items = json.loads(raw)
+        except Exception as e:
+            print(f"  ! {organizer}: extraction failed ({type(e).__name__})")
+            continue
+        got = 0
+        for it in (items if isinstance(items, list) else []):
+            title = (it.get("title") or "").strip()
+            start = (it.get("start_date") or "").strip()
+            if not title or not start:
+                continue
+            out.append({
+                "is_event": True,
+                "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
+                "title": title, "start_date": start,
+                "end_date": (it.get("end_date") or start).strip(),
+                "venue": organizer, "city": "New Delhi" if "Dham" in organizer else "",
+                "state": None, "country": country, "phone": None, "organizer": organizer,
+                "description": (it.get("description") or "")[:200],
+                "source_url": url, "source_platform": f"{organizer} (website)",
+                "flyer_url": "", "region": REGION_MAP.get(country, "Asia"),
+            })
+            got += 1
+        print(f"  → {got} events from {organizer} (web page)")
+    return out
+
 def read_ical_feeds():
     """Read events from standard iCal (.ics) feeds — works for any centre that publishes one.
     FREE: no Apify, no AI. Returns list of event dicts."""
@@ -689,7 +760,7 @@ def build():
     # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
     print("\nReading website event feeds…")
-    for ev in (read_ical_feeds() + read_wp_event_sites()):
+    for ev in (read_ical_feeds() + read_wp_event_sites() + read_html_event_pages()):
         try:
             if not keep_upcoming(ev):
                 continue
