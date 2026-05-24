@@ -312,26 +312,31 @@ def extract_event(caption):
         "system": EXTRACT_SYSTEM,
         "messages": [{"role": "user", "content": caption[:4000]}],
     }
-    try:
-        r = requests.post(
-            "https://api.anthropic.com/v1/messages",
-            headers={"x-api-key": ANTHROPIC_KEY,
-                     "anthropic-version": "2023-06-01",
-                     "content-type": "application/json"},
-            json=body, timeout=60)
-        if r.status_code != 200:
-            _extract_fail_count[0] += 1
-            if _extract_fail_count[0] <= 3:   # don't spam — show first few
-                print(f"  ! extraction HTTP {r.status_code}: {r.text[:200]}")
-            return {"is_event": False}
-        text = "".join(b.get("text", "") for b in r.json().get("content", []))
-        text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-        return json.loads(text)
-    except Exception as e:
-        _extract_fail_count[0] += 1
-        if _extract_fail_count[0] <= 3:
-            print(f"  ! extraction failed: {type(e).__name__}: {e}")
-        return {"is_event": False}
+    last_err = None
+    for attempt in range(2):   # try once, retry once on transient failure
+        try:
+            r = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={"x-api-key": ANTHROPIC_KEY,
+                         "anthropic-version": "2023-06-01",
+                         "content-type": "application/json"},
+                json=body, timeout=90)
+            if r.status_code != 200:
+                last_err = f"HTTP {r.status_code}: {r.text[:150]}"
+                if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
+                    time.sleep(2); continue       # transient — retry once
+                break
+            text = "".join(b.get("text", "") for b in r.json().get("content", []))
+            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            return json.loads(text)
+        except Exception as e:
+            last_err = f"{type(e).__name__}: {e}"
+            if attempt == 0:
+                time.sleep(2); continue            # timeout/network — retry once
+    _extract_fail_count[0] += 1
+    if _extract_fail_count[0] <= 3:
+        print(f"  ! extraction failed after retry: {last_err}")
+    return {"is_event": False}
 
 
 # ----------------------------------------------------------------------
