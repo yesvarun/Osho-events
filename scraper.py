@@ -443,17 +443,21 @@ def read_local_flyers():
     print(f"Reading {len(files)} local flyer image(s) with Claude vision…")
     events = []
     for path in files:
-        ev = extract_event_from_file(path)
-        if ev.get("is_event"):
-            ev["source_platform"] = "Flyer upload"
-            ev["source_url"] = ""
-            ev["flyer_url"] = ""        # local file; the card shows the placeholder
-            ev["country"] = ev.get("country") or "India"
-            ev["region"] = REGION_MAP.get(ev["country"], "Asia")
-            events.append(ev)
-            print(f"  ✓ {os.path.basename(path)} → {ev.get('title','(event)')}")
-        else:
-            print(f"  – {os.path.basename(path)} → not a datable event")
+        try:
+            ev = extract_event_from_file(path)
+            if ev.get("is_event"):
+                ev["source_platform"] = "Flyer upload"
+                ev["source_url"] = ""
+                ev["flyer_url"] = ""        # local file; the card shows the placeholder
+                ev["country"] = ev.get("country") or "India"
+                ev["region"] = REGION_MAP.get(ev["country"], "Asia")
+                events.append(ev)
+                print(f"  ✓ {os.path.basename(path)} → {ev.get('title','(event)')}")
+            else:
+                print(f"  – {os.path.basename(path)} → not a datable event")
+        except Exception as e:
+            print(f"  ! {os.path.basename(path)} → skipped ({type(e).__name__})")
+            continue
     return events
 
 
@@ -531,15 +535,19 @@ def build():
     # --- LOCAL FLYERS: your uploaded WhatsApp flyer images, read by Claude vision ---
     n_flyer = 0
     for ev in read_local_flyers():
-        if not keep_upcoming(ev):
-            print(f"  – flyer event '{ev.get('title','')}' is past — skipped")
+        try:
+            if not keep_upcoming(ev):
+                print(f"  – flyer event '{ev.get('title','')}' is past — skipped")
+                continue
+            ev["id"] = make_id(ev)
+            if ev["id"] in seen:
+                continue
+            seen.add(ev["id"])
+            events.append(ev)
+            n_flyer += 1
+        except Exception as e:
+            print(f"  ! flyer event skipped ({type(e).__name__})")
             continue
-        ev["id"] = make_id(ev)
-        if ev["id"] in seen:
-            continue
-        seen.add(ev["id"])
-        events.append(ev)
-        n_flyer += 1
 
     events.sort(key=lambda e: e.get("start_date") or "9999")
 
