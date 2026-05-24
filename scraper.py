@@ -77,7 +77,7 @@ SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation worksho
 IG_SESSION_COOKIE = os.environ.get("IG_SESSION_COOKIE", "")
 
 POSTS_PER_QUERY = 40          # more posts per run = more camps found (and higher cost per run)
-MAX_POST_AGE_DAYS = 30        # keep modest to control cost; raise only if you choose to
+MAX_POST_AGE_DAYS = 90        # ONE-TIME recovery run: reach back 90 days to re-catch older camp posts
 
 # VISION: when a post has little/no caption text, read its flyer IMAGE with Claude vision.
 # Costs more per image, so it only fires for caption-less posts (cost-aware). Set False to disable.
