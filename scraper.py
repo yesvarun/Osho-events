@@ -549,21 +549,29 @@ _DEDUP_STOPWORDS = {
 }
 
 def _norm_text(s):
-    """Lowercase, drop punctuation/emoji, remove filler words → a compact signature."""
+    """Lowercase, drop punctuation/emoji → compact signature. Keeps ALL meaningful words."""
     s = (s or "").lower()
     s = _re.sub(r"[^a-z0-9\s]", " ", s)            # keep letters/numbers only
+    words = [w for w in s.split() if w]
+    return "".join(sorted(set(words)))
+
+def _norm_core(s):
+    """Like _norm_text but drops filler words — used only as a SECONDARY signal."""
+    s = (s or "").lower()
+    s = _re.sub(r"[^a-z0-9\s]", " ", s)
     words = [w for w in s.split() if w and w not in _DEDUP_STOPWORDS]
-    return "".join(sorted(set(words)))             # order-independent core words
+    return "".join(sorted(set(words)))
 
 def make_id(ev):
-    """Aggressive dedup key: normalized title-core + month + normalized city.
-    Collapses 'Chimangaon Yoga Retreat' and 'Chimangaon Yoga & Meditation Retreat (Day 1)'
-    on the same dates/place into ONE event."""
-    title_core = _norm_text(ev.get("title", ""))
-    city_core = _norm_text(ev.get("city", "")) or _norm_text(ev.get("venue", ""))
-    # match on month (YYYY-MM) so a 1-day date difference doesn't create a twin
-    sd = (ev.get("start_date") or "")[:7]
-    key = f"{title_core}|{sd}|{city_core}"
+    """Dedup key: full title signature + EXACT start date + city.
+    Two events are 'the same' only if their full normalized title, exact start date,
+    and city all match — so genuinely different camps are never merged. Uses the full
+    title (not just core words) so generic names like 'Osho Meditation Camp' that share
+    a city/date are NOT wrongly collapsed unless they're truly identical."""
+    title_sig = _norm_text(ev.get("title", ""))           # FULL title, not stripped to core
+    city_sig = _norm_text(ev.get("city", "")) or _norm_text(ev.get("venue", ""))
+    sd = (ev.get("start_date") or "")                     # EXACT date, not month
+    key = f"{title_sig}|{sd}|{city_sig}"
     return hashlib.md5(key.encode()).hexdigest()[:12]
 
 def keep_upcoming(ev):
@@ -654,7 +662,8 @@ def build():
     for ev in read_local_flyers():
         try:
             if not keep_upcoming(ev):
-                print(f"  – flyer event '{ev.get('title','')}' is past — skipped")
+                print(f"  – flyer event '{ev.get('title','')}' skipped as past "
+                      f"(start={ev.get('start_date')}, end={ev.get('end_date')})")
                 continue
             ev["id"] = make_id(ev)
             if ev["id"] in seen:
