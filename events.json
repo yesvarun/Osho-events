@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24T16:22:21.346771Z",
+  "generated_at": "2026-05-24T16:34:06.318926Z",
   "events": [
     {
       "is_event": true,
@@ -7,18 +7,56 @@
       "title": "Osho Summer Festival Meditation Camp at Solan",
       "start_date": "2026-05-21",
       "end_date": "2026-05-24",
-      "venue": "Centa Rosa Resort, Majhgaon Village",
+      "venue": "Centa Rosa Resort, Majhgaon Village, P.O. Shamti, Rajgarh Road",
       "city": "Solan",
       "state": "Himachal Pradesh",
       "country": "India",
       "phone": "9810672814",
-      "organizer": "Ma Prem Anjali Celebrate Life Retreat",
+      "organizer": "Ma Prem Anjali - Celebrate Life Retreat",
       "description": "Osho meditation summer festival camp with facilitator Ma Prem Ajasta. Pre-booking mandatory online registration.",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260309-WA0007.jpg",
       "region": "India",
-      "id": "98b409d46785"
+      "id": "71accbe0cba0"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Tantra Meditation Silvassa, Gujarat",
+      "start_date": "2026-05-21",
+      "end_date": "2026-05-24",
+      "venue": "Rajneesh Tantra Temple",
+      "city": "Silvassa",
+      "state": "Dadra and Nagar Haveli",
+      "country": "India",
+      "phone": "+91 62398 61554",
+      "organizer": "Bhagwan Shree Rajneesh Foundation",
+      "description": "Guided tantra meditation, satsang, kirtan, ecstatic dance, and tantra massage introduction. Inspired by Bhagwan Shree Rajneesh.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0027.jpg",
+      "region": "India",
+      "id": "a8f30f3fd3d8"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Art of Living & Dying - 3 Days Osho Meditation Camp",
+      "start_date": "2026-05-21",
+      "end_date": "2026-05-24",
+      "venue": "Osho Sadhanapath Meditation Resort",
+      "city": "Nargol",
+      "state": "Gujarat",
+      "country": "India",
+      "phone": "7509076090",
+      "organizer": "Osho Sadhanapath",
+      "description": "3-day meditation camp on art of living and dying with Swami Shashikant Sadaiv. Arrival 21 May 4 PM.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260511-WA0000.jpg",
+      "region": "India",
+      "id": "64a8e69d2e59"
     },
     {
       "is_event": true,
@@ -37,26 +75,7 @@
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0027.jpg",
       "region": "India",
-      "id": "33a35e23f16b"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Art of Living & Dying - 3 Days Osho Meditation Camp",
-      "start_date": "2026-05-21",
-      "end_date": "2026-05-24",
-      "venue": "Osho Sadhanapath Meditation Resort",
-      "city": "Nargol",
-      "state": "Gujarat",
-      "country": "India",
-      "phone": "7509076090",
-      "organizer": "Osho Sadhanapath",
-      "description": "3-day Osho meditation camp on the art of living and dying with Swami Shashikant Sadaiv at Nargol Beach.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260511-WA0000.jpg",
-      "region": "India",
-      "id": "104f0fc3dee3"
+      "id": "8897e7a1c5cd"
     },
     {
       "is_event": true,
@@ -70,12 +89,31 @@
       "country": "India",
       "phone": null,
       "organizer": null,
-      "description": "Guided self-hypnosis and relaxation techniques to support meditation naturally. Facilitator training also available.",
+      "description": "Guided self-hypnosis and relaxation for meditation. Work gently with unconscious mind. Optional facilitator training available.",
       "source_url": "https://www.instagram.com/p/DYU4WYamIxM/",
       "source_platform": "Instagram",
-      "flyer_url": "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/690126595_18597313801049390_3592490707730856509_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gH7CE7J23WIQXDvHTcAzuGNck4xwfHKkHDBd-h1EHFiltgMzWdIeTWXc33D6eVMCVA&_nc_ohc=7gqGn-EBygsQ7kNvwEfDUB7&_nc_gid=43Pjh2h3nhaYYVZdsJ_rxw&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af74x6JbyPkQvrsxY7NMD0JOmklka8lgJHI8tEWM4pg-Zg&oe=6A18FB34&_nc_sid=10d13b",
+      "flyer_url": "https://scontent-atl3-2.cdninstagram.com/v/t51.82787-15/690126595_18597313801049390_3592490707730856509_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-atl3-2.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gHWbGjEGob9gkCDwMbqjRw5U0Lf3a81yiDuEzmlQzA44sL9NO-lproH9aGBzWvfZg4&_nc_ohc=7gqGn-EBygsQ7kNvwHC4uYz&_nc_gid=W7qnfdkkevYX5K9-zZ72nA&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af7bHuKhhjEtGdU_xUSoZVbs4ei_Asx1jY0GtJL_2aSt8g&oe=6A18FB34&_nc_sid=10d13b",
       "region": "India",
-      "id": "74c63ab6f162"
+      "id": "069d78d7767e"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Meditation: Gateway to Ultimate Health",
+      "start_date": "2026-05-27",
+      "end_date": "2026-05-31",
+      "venue": "Osho Gangadham Ashram",
+      "city": "Rishikesh",
+      "state": "Uttarakhand",
+      "country": "India",
+      "phone": "9149323698, 9258160729",
+      "organizer": "Dr. Isha Singla (Punjab)",
+      "description": "4-day Osho meditation retreat focused on ultimate health and wellness.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260421-WA0006.jpg",
+      "region": "India",
+      "id": "98c83f8eeba5"
     },
     {
       "is_event": true,
@@ -94,12 +132,12 @@
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260421-WA0006.jpg",
       "region": "India",
-      "id": "db1a6ca58cd2"
+      "id": "c5a79454b11a"
     },
     {
       "is_event": true,
       "type": "Gathering",
-      "title": "Global Osho Meditation Day",
+      "title": "Global OSHO Meditation Day",
       "start_date": "2026-05-30",
       "end_date": "2026-05-31",
       "venue": "Online",
@@ -108,12 +146,12 @@
       "country": "India",
       "phone": null,
       "organizer": null,
-      "description": "20-hour global online event with live meditations across time zones featuring guidance, connection, and celebration of transformation.",
+      "description": "20-hour global online meditation event with live guided meditations across time zones. Join anytime for connection and transformation.",
       "source_url": "https://www.instagram.com/p/DYoMaHWG9te/",
       "source_platform": "Instagram",
-      "flyer_url": "https://scontent-sjc6-1.cdninstagram.com/v/t51.82787-15/697077159_18599461699049390_4097130579957611238_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-sjc6-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gEqZdU-llJtcEYvxUY1rfhvyu6kSRauSwASOV2whNF0tcMzVHys57caYljqJPD8V8U&_nc_ohc=FXDM1fzrZtYQ7kNvwECg1Nz&_nc_gid=LHsrJWbKGGMj03RI1_iJqg&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af7z9zp9pLg6-JL5v-LNodZC9HgirXi6RDDq7DF4pfKu-Q&oe=6A190F2B&_nc_sid=10d13b",
+      "flyer_url": "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/697077159_18599461699049390_4097130579957611238_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gEjrTck1rUZ4oeuAVWVx8Q4sGPnxjoAnodBbj-eO4QR8wId6XIxq0ahegvpSBH43Fk&_nc_ohc=FXDM1fzrZtYQ7kNvwHBj7Pe&_nc_gid=Ypet7cMRtLiPY8L6-tQ1LA&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af75Dro2g5zEQ79nvWK6X-UN_Kf1-oQSQqrJgeJPnd2j1g&oe=6A190F2B&_nc_sid=10d13b",
       "region": "India",
-      "id": "d59160e1b9dc"
+      "id": "5b3dfe214f15"
     },
     {
       "is_event": true,
@@ -127,12 +165,12 @@
       "country": "India",
       "phone": "+91 94180 37370",
       "organizer": "Swami Naman",
-      "description": "Love is the first step towards God. A meditation and spiritual camp led by Swami Naman.",
+      "description": "Love is the first step towards God. A meditation and spiritual gathering exploring love and spirituality.",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260402-WA0011.jpg",
       "region": "India",
-      "id": "5d942a950309"
+      "id": "629f6f34e28a"
     },
     {
       "is_event": true,
@@ -144,14 +182,14 @@
       "city": "Kullu",
       "state": "Himachal Pradesh",
       "country": "India",
-      "phone": "7018081235, 7888583061",
+      "phone": "70180 81235, 78885 83061",
       "organizer": "Satyam Prem",
-      "description": "Osho meditation camp in nature near Kasol, Parvati Valley. Facilitated by Satyam Prem (Osho manan, Mehsana).",
+      "description": "Osho meditation camp in nature. Facilitator: Satyam Prem (Osho manan, Mehsana). Near Kasol Parvati Valley Mankaran.",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0024.jpg",
       "region": "India",
-      "id": "d37ec3ca03e6"
+      "id": "a6aa8b7b733f"
     },
     {
       "is_event": true,
@@ -168,9 +206,9 @@
       "description": "Live online course exploring body connection through feeling, awareness, relaxation, movement, and presence for women seeking conscious self-relationship beyond judgment.",
       "source_url": "https://www.instagram.com/p/DYh2Q9EkQS1/",
       "source_platform": "Instagram",
-      "flyer_url": "https://scontent-lax3-1.cdninstagram.com/v/t51.82787-15/702028300_18598755124049390_3699281125567733217_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-lax3-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gFYEAaK_FrSAJRaN7smOarSP0UXGMk2iTZoor0QaCw02T97DxYyfpikVxETQDwE6LA&_nc_ohc=9vhmV6E-9OUQ7kNvwGyvAr8&_nc_gid=YoXI2Lzs1Ty1N-N-tKlvpg&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af6OerLkUvEKnDHOu741wQOKzjxX6dxoxV19H_iLjpJJaw&oe=6A19004A&_nc_sid=10d13b",
+      "flyer_url": "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/702028300_18598755124049390_3699281125567733217_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gGS4Ko-1jXcgMVauPG83JNb7czLe7hEkFNCWeFUPV8Zn8s3ZqB7lOBj6JTYYtUdQYg&_nc_ohc=9vhmV6E-9OUQ7kNvwFxJTL1&_nc_gid=vRcgUQnRW-3Uu_yVwviAfg&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af4rBe32JQ_PzBjj73kQ-I-ZYIefSfcm34ftA-J6jCTliw&oe=6A19004A&_nc_sid=10d13b",
       "region": "India",
-      "id": "555310c8b6fe"
+      "id": "7937944c906e"
     },
     {
       "is_event": true,
@@ -184,12 +222,12 @@
       "country": "India",
       "phone": "+91 70180 81235, +91 78885 83061",
       "organizer": "Dhyan Pratibha",
-      "description": "Osho meditation retreat on silence and awareness with facilitator Dhyan Pratibha.",
+      "description": "Osho meditation retreat on silence, sky and awareness. Facilitated by Dhyan Pratibha.",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0020.jpg",
       "region": "India",
-      "id": "ae27f9f885ae"
+      "id": "182ac7a3821c"
     },
     {
       "is_event": true,
@@ -208,7 +246,7 @@
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0021.jpg",
       "region": "India",
-      "id": "03fbd351e07f"
+      "id": "0786fd9f3cf5"
     },
     {
       "is_event": true,
@@ -222,12 +260,31 @@
       "country": "India",
       "phone": null,
       "organizer": "OSHO Multiversity",
-      "description": "Monthly 1-day workshop on flexibility and responding to change without preconceived ideas, held on the 21st of each month.",
+      "description": "Monthly one-day course on flexibility and responding to change without preconceived ideas. Held on the 21st of each month.",
       "source_url": "https://www.facebook.com/reel/1193227839518049/",
       "source_platform": "Facebook",
-      "flyer_url": "https://scontent-dfw6-1.xx.fbcdn.net/v/t15.5256-10/701598416_1417875673691914_5915241417558899451_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=d2b52d&_nc_ohc=efky6asqp4MQ7kNvwGXDxsq&_nc_oc=AdpYpm7ng-Z8xcekWaD2oGTjeBRZ_oJWkwivF9KFjMGKHBDLLFRtuZMeCTNADBtQj-c&_nc_zt=23&_nc_ht=scontent-dfw6-1.xx&_nc_gid=-E7jVIamGOTV5mV8we9Xaw&_nc_ss=72289&oh=00_Af4To8hbWTOlxsyQjP5pm8BECEKImlzB10JM0LDoC66jhg&oe=6A18F826",
+      "flyer_url": "https://scontent-lga3-2.xx.fbcdn.net/v/t15.5256-10/701598416_1417875673691914_5915241417558899451_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=101&ccb=1-7&_nc_sid=d2b52d&_nc_ohc=efky6asqp4MQ7kNvwG0I-_a&_nc_oc=AdrqjW4XjeVFvoCWQQptxhCBEkG9WnHIG5jtghyYcSGmnhTalCiQyFdqG9N_NuFsCYA&_nc_zt=23&_nc_ht=scontent-lga3-2.xx&_nc_gid=E6tirKiIGQJ32lJClfq2fw&_nc_ss=7c289&oh=00_Af7Jj8fTN8iJDThuS8Ma-hqtaIl9CIFNCbuAm4AHq8HScA&oe=6A18F826",
       "region": "India",
-      "id": "9090fff6516f"
+      "id": "8fc4fd1986b1"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Osho Meditation Shivir",
+      "start_date": "2026-06-25",
+      "end_date": "2026-06-28",
+      "venue": "Osho Friends Home",
+      "city": "Manali",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "99278-81134",
+      "organizer": "Amrit Varsha",
+      "description": "Silent meditation retreat in nature. 3-day camp with food, accommodation, and meditation guidance.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0019.jpg",
+      "region": "India",
+      "id": "f41c0dd903d2"
     },
     {
       "is_event": true,
@@ -246,7 +303,7 @@
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0019.jpg",
       "region": "India",
-      "id": "885c0cfb6098"
+      "id": "b70d2483660c"
     },
     {
       "is_event": true,
@@ -260,12 +317,12 @@
       "country": "India",
       "phone": "9810672814",
       "organizer": "Celebrate Life Retreat",
-      "description": "Osho meditation camp with loving presence of Ma Prem Anjali and Ma Prasannata. Advance booking mandatory.",
+      "description": "Osho meditation camp with loving presence of Ma Prem Anjali and Ma Prasannata. Advance booking mandatory online.",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260312-WA0036.jpg",
       "region": "India",
-      "id": "508368fdd399"
+      "id": "6ece6c17d6d3"
     },
     {
       "is_event": true,
@@ -279,12 +336,12 @@
       "country": "India",
       "phone": "9828843839, 8302371182",
       "organizer": "Ma Prem Isha (Dr. Isha Singla Punjab)",
-      "description": "3-day Osho meditation camp focusing on stress management and inner peace through meditation techniques.",
+      "description": "3-day Osho meditation camp focusing on stress management through meditation techniques and mindfulness.",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260402-WA0008.jpg",
       "region": "India",
-      "id": "6c89b67d553b"
+      "id": "1e46d435c749"
     }
   ]
 }
