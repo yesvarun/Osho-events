@@ -78,6 +78,10 @@ MAX_POST_AGE_DAYS = 30        # posts from the last 30 days (camps are often ann
 VISION_FOR_IMAGE_POSTS = True
 VISION_MIN_CAPTION_LEN = 40   # if caption is shorter than this, try reading the image instead
 
+# LOCAL FLYERS: drop WhatsApp camp flyer images into this folder in your repo, and the
+# scraper reads them with Claude vision into events (no Apify cost — they're your own files).
+FLYERS_DIR = "flyers"
+
 # Country -> region grouping (must match the app's REGION_MAP)
 REGION_MAP = {
     "India":"India",
@@ -384,9 +388,75 @@ def extract_event(caption, image_url=None):
     return {"is_event": False}
 
 
-# ----------------------------------------------------------------------
-# 3. CLEAN / FILTER / WRITE
-# ----------------------------------------------------------------------
+def extract_event_from_file(path):
+    """Read a local flyer image file with Claude vision → event dict."""
+    import base64, mimetypes
+    try:
+        with open(path, "rb") as f:
+            raw = f.read()
+        mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
+        if mtype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
+            mtype = "image/jpeg"
+        b64 = base64.standard_b64encode(raw).decode()
+    except Exception as e:
+        print(f"  ! couldn't read flyer {path}: {e}")
+        return {"is_event": False}
+
+    body = {
+        "model": EXTRACT_MODEL, "max_tokens": 600, "system": EXTRACT_SYSTEM,
+        "messages": [{"role": "user", "content": [
+            {"type": "image", "source": {"type": "base64", "media_type": mtype, "data": b64}},
+            {"type": "text", "text": "This is a camp/event FLYER image. Read it and extract the event details."},
+        ]}],
+    }
+    for attempt in range(2):
+        try:
+            r = requests.post("https://api.anthropic.com/v1/messages",
+                headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
+                         "content-type": "application/json"}, json=body, timeout=90)
+            if r.status_code != 200:
+                if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
+                    time.sleep(2); continue
+                print(f"  ! flyer vision HTTP {r.status_code}: {r.text[:150]}")
+                break
+            text = "".join(b.get("text", "") for b in r.json().get("content", []))
+            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            return json.loads(text)
+        except Exception as e:
+            if attempt == 0:
+                time.sleep(2); continue
+            print(f"  ! flyer vision failed: {e}")
+    return {"is_event": False}
+
+def read_local_flyers():
+    """Read every image in FLYERS_DIR with Claude vision. Returns list of event dicts."""
+    import glob
+    if not os.path.isdir(FLYERS_DIR):
+        print(f"  (no '{FLYERS_DIR}/' folder — add flyer images there to include them)")
+        return []
+    files = []
+    for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.JPG", "*.JPEG", "*.PNG"):
+        files += glob.glob(os.path.join(FLYERS_DIR, ext))
+    if not files:
+        print(f"  (no flyer images in '{FLYERS_DIR}/')")
+        return []
+    print(f"Reading {len(files)} local flyer image(s) with Claude vision…")
+    events = []
+    for path in files:
+        ev = extract_event_from_file(path)
+        if ev.get("is_event"):
+            ev["source_platform"] = "Flyer upload"
+            ev["source_url"] = ""
+            ev["flyer_url"] = ""        # local file; the card shows the placeholder
+            ev["country"] = ev.get("country") or "India"
+            ev["region"] = REGION_MAP.get(ev["country"], "Asia")
+            events.append(ev)
+            print(f"  ✓ {os.path.basename(path)} → {ev.get('title','(event)')}")
+        else:
+            print(f"  – {os.path.basename(path)} → not a datable event")
+    return events
+
+
 def make_id(ev):
     key = f"{ev.get('title','')}|{ev.get('start_date','')}|{ev.get('city','')}"
     return hashlib.md5(key.lower().encode()).hexdigest()[:12]
@@ -458,6 +528,19 @@ def build():
         seen.add(ev["id"])
         events.append(ev)
 
+    # --- LOCAL FLYERS: your uploaded WhatsApp flyer images, read by Claude vision ---
+    n_flyer = 0
+    for ev in read_local_flyers():
+        if not keep_upcoming(ev):
+            print(f"  – flyer event '{ev.get('title','')}' is past — skipped")
+            continue
+        ev["id"] = make_id(ev)
+        if ev["id"] in seen:
+            continue
+        seen.add(ev["id"])
+        events.append(ev)
+        n_flyer += 1
+
     events.sort(key=lambda e: e.get("start_date") or "9999")
 
     # --- ACCUMULATE: merge with what was found in previous runs ---
@@ -495,6 +578,7 @@ def build():
     print(f"  extraction failures .. {_extract_fail_count[0]}  (if this ≈ posts scraped, your ANTHROPIC_API_KEY is the problem)")
     print(f"  judged real events ... {n_is_event}")
     print(f"  still upcoming ....... {n_upcoming}")
+    print(f"  flyer uploads ........ {n_flyer}  (from your '{FLYERS_DIR}/' folder)")
     print(f"  new this run ......... {len(events)}")
     print(f"  TOTAL in directory ... {len(merged)}  (new + carried forward)")
     print("="*60)
