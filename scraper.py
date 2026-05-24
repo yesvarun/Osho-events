@@ -33,13 +33,12 @@ FB_GROUPS_ACTOR = "apify~facebook-groups-scraper"           # scrapes public gro
 FB_SEARCH_ACTOR = "danek~facebook-search-ppr"
 FB_SEARCH_ENABLED = True          # set False to skip the search actor
 
-# Known, active Osho Facebook PAGES. Temporarily EMPTY to save Apify credit
-# (Facebook is the pricier source). Re-add these URLs when you have paid credit:
-#   "https://www.facebook.com/osho.international.meditation.resort/",
-#   "https://www.facebook.com/OSHOInternational/",
-#   "https://www.facebook.com/oshoworld/",
-#   "https://www.facebook.com/oshonisarga/",
-FB_PAGES = []
+# Known, active Osho Facebook PAGES — adds a reliable source beyond search.
+FB_PAGES = [
+    "https://www.facebook.com/osho.international.meditation.resort/",
+    "https://www.facebook.com/OSHOInternational/",
+    "https://www.facebook.com/oshoworld/",
+]
 
 # Public Osho Facebook GROUPS to scrape. Groups are where many regional camps get
 # announced. Paste public group URLs here, e.g. "https://www.facebook.com/groups/123456/".
@@ -54,6 +53,12 @@ IG_HASHTAGS = ["oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
                # Hindi / Punjabi / regional tags to catch regional-language posts:
                "ओशो", "ओशोध्यान", "ध्यानशिविर", "ओशोशिविर", "साधनाशिविर",
                "ਓਸ਼ੋ", "ਧਿਆਨ"]
+# Specific Instagram PROFILES to scrape (more reliable than hashtags).
+# Paste profile URLs, e.g. "https://www.instagram.com/oshointernational/".
+IG_PROFILES = [
+    "https://www.instagram.com/oshointernational/",
+    # add more Osho centre / organiser accounts here
+]
 SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation workshop",
                 "osho gathering", "dynamic meditation camp", "mystic rose meditation",
                 "ओशो ध्यान शिविर", "ध्यान शिविर", "ओशो साधना शिविर"]
@@ -65,8 +70,13 @@ SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation worksho
 # Cookies → copy the value of the "sessionid" cookie. Format: "sessionid=XXXX…"
 IG_SESSION_COOKIE = os.environ.get("IG_SESSION_COOKIE", "")
 
-POSTS_PER_QUERY = 10          # LOW to stay cheap on the free tier (raise later if you add credit)
+POSTS_PER_QUERY = 40          # higher = more camps found per run (cost rises modestly)
 MAX_POST_AGE_DAYS = 30        # posts from the last 30 days (camps are often announced weeks ahead)
+
+# VISION: when a post has little/no caption text, read its flyer IMAGE with Claude vision.
+# Costs more per image, so it only fires for caption-less posts (cost-aware). Set False to disable.
+VISION_FOR_IMAGE_POSTS = True
+VISION_MIN_CAPTION_LEN = 40   # if caption is shorter than this, try reading the image instead
 
 # Country -> region grouping (must match the app's REGION_MAP)
 REGION_MAP = {
@@ -126,7 +136,8 @@ def scrape_instagram():
     print("Scraping Instagram…")
     payload = {
         # The official actor scrapes posts from hashtag PAGE urls in one run:
-        "directUrls": [f"https://www.instagram.com/explore/tags/{h}/" for h in IG_HASHTAGS],
+        "directUrls": ([f"https://www.instagram.com/explore/tags/{h}/" for h in IG_HASHTAGS]
+                       + list(IG_PROFILES)),
         "resultsType": "posts",
         "resultsLimit": POSTS_PER_QUERY,
         "onlyPostsNewerThan": f"{MAX_POST_AGE_DAYS} days",
@@ -148,9 +159,6 @@ def scrape_instagram():
                or it.get("description") or it.get("edge_media_to_caption") or "")
         if isinstance(cap, dict):   # some actors nest caption in an object
             cap = cap.get("text") or cap.get("caption") or ""
-        if not cap:
-            skipped_no_caption += 1
-            continue
         # real post permalink — IG actor returns shortCode; build a clean /p/ link as fallback
         link = it.get("url") or it.get("postUrl") or it.get("inputUrl") or ""
         if not link and it.get("shortCode"):
@@ -158,6 +166,10 @@ def scrape_instagram():
         img = it.get("displayUrl") or it.get("imageUrl")
         if not img and isinstance(it.get("images"), list) and it["images"]:
             img = it["images"][0]
+        # Keep the post if it has a caption OR an image (image-only flyers → vision reads them)
+        if not cap and not img:
+            skipped_no_caption += 1
+            continue
         posts.append({
             "caption": cap,
             "url": link,
@@ -165,8 +177,8 @@ def scrape_instagram():
             "platform": "Instagram",
             "timestamp": it.get("timestamp") or it.get("takenAt"),
         })
-    print(f"  → {len(posts)} Instagram posts with captions"
-          + (f"  ({skipped_no_caption} skipped — no caption field found)" if skipped_no_caption else ""))
+    print(f"  → {len(posts)} Instagram posts"
+          + (f"  ({skipped_no_caption} skipped — no caption or image)" if skipped_no_caption else ""))
     if skipped_no_caption and not posts:
         print("    !! All items skipped for missing caption. The actor uses a DIFFERENT field name.")
         print("       Look at the 'sample keys' line above to see the real field names.")
@@ -176,8 +188,6 @@ def _fb_post(it):
     """Normalise one Facebook dataset item into our shape. Handles multiple actor formats."""
     cap = (it.get("text") or it.get("message") or it.get("message_text")
            or it.get("postText") or it.get("content") or "")
-    if not cap:
-        return None
     # canonical post permalink across the common actors
     link = (it.get("url") or it.get("topLevelUrl") or it.get("postUrl")
             or it.get("facebookUrl") or it.get("link") or "")
@@ -189,6 +199,9 @@ def _fb_post(it):
                or (m0.get("photo_image") or {}).get("uri") or "")
     if not img and isinstance(it.get("images"), list) and it["images"]:
         img = it["images"][0] if isinstance(it["images"][0], str) else ""
+    # Keep if there's text OR an image (image-only flyers → vision reads them)
+    if not cap and not img:
+        return None
     return {
         "caption": cap,
         "url": link,
@@ -305,12 +318,44 @@ def check_anthropic_key():
         print(f"  !! Anthropic check error: {e}")
         return False
 
-def extract_event(caption):
+def _download_image_b64(url):
+    """Fetch an image URL and return (base64, media_type) or (None, None)."""
+    try:
+        r = requests.get(url, timeout=30)
+        if r.status_code != 200 or not r.content:
+            return None, None
+        ctype = r.headers.get("content-type", "").split(";")[0].strip()
+        if ctype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
+            ctype = "image/jpeg"   # most IG/FB flyers are jpeg
+        import base64
+        return base64.standard_b64encode(r.content).decode(), ctype
+    except Exception:
+        return None, None
+
+def extract_event(caption, image_url=None):
+    # Decide whether to use vision: only when caption is thin AND we have an image.
+    use_image = bool(VISION_FOR_IMAGE_POSTS and image_url
+                     and len((caption or "").strip()) < VISION_MIN_CAPTION_LEN)
+    content = []
+    if use_image:
+        b64, mtype = _download_image_b64(image_url)
+        if b64:
+            content.append({"type": "image",
+                            "source": {"type": "base64", "media_type": mtype, "data": b64}})
+            content.append({"type": "text",
+                            "text": "This post has little caption text. Read the FLYER IMAGE above "
+                                    "and extract the event details. Caption (may be empty): "
+                                    + (caption or "")[:1000]})
+        else:
+            content = (caption or "")[:4000]   # image fetch failed → fall back to text
+    else:
+        content = (caption or "")[:4000]
+
     body = {
         "model": EXTRACT_MODEL,
         "max_tokens": 600,
         "system": EXTRACT_SYSTEM,
-        "messages": [{"role": "user", "content": caption[:4000]}],
+        "messages": [{"role": "user", "content": content}],
     }
     last_err = None
     for attempt in range(2):   # try once, retry once on transient failure
@@ -395,7 +440,7 @@ def build():
     events, seen = [], set()
     n_is_event = n_upcoming = 0
     for i, p in enumerate(posts, 1):
-        ev = extract_event(p["caption"])
+        ev = extract_event(p["caption"], p.get("image"))
         if not ev.get("is_event"):
             continue
         n_is_event += 1
