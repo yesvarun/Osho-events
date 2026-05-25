@@ -136,6 +136,12 @@ HTML_EVENT_PAGES = [
     ("https://oshoworld.com/events", "India", "Osho Dham / Osho World",
      "011-25319026",
      "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043"),
+    ("https://wellness.oshohimalayas.com/all_upcoming_meditation_courses", "India", "Osho Himalayas",
+     "",
+     "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)"),
+    ("https://www.oshonisarga.com/upcoming-programs/calendar", "India", "Osho Nisarga",
+     "+91-9418037370",
+     "Osho Nisarga, Dharamshala, Himachal Pradesh"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -508,9 +514,16 @@ def read_html_event_pages():
         contact_phone = entry[3] if len(entry) > 3 else None
         venue_addr = entry[4] if len(entry) > 4 else ""
         try:
-            r = requests.get(url, timeout=45, headers=BROWSER_HEADERS)
+            # Polite fetch: a referer + small delay + one retry reduces 403 bot-blocking.
+            hdrs = dict(BROWSER_HEADERS)
+            hdrs["Referer"] = url.rsplit("/", 1)[0] + "/"
+            r = requests.get(url, timeout=45, headers=hdrs)
+            if r.status_code == 403:
+                time.sleep(5)                       # brief cool-off, then one retry
+                r = requests.get(url, timeout=45, headers=hdrs)
             if r.status_code != 200:
-                print(f"  ! {organizer}: events page HTTP {r.status_code}")
+                print(f"  ! {organizer}: events page HTTP {r.status_code} "
+                      f"(site is blocking automated requests — try again later)")
                 continue
             raw_html = r.text
             # Pull real image URLs (e.g. https://oshoworld.com/uploads/xxx.jpg) in page order.
@@ -566,13 +579,22 @@ def read_html_event_pages():
             # Match this camp to its image by position on the page, then re-host it.
             img_src = imgs[idx] if idx < len(imgs) else ""
             flyer = rehost_image(img_src, img_src) if img_src else ""
+            # City/state per centre (helps the India "by State" filter group it correctly).
+            if "Dham" in organizer:
+                city, state = "New Delhi", "Delhi"
+            elif "Himalayas" in organizer:
+                city, state = "Dharamshala", "Himachal Pradesh"
+            elif "Nisarga" in organizer:
+                city, state = "Dharamshala", "Himachal Pradesh"
+            else:
+                city, state = "", None
             out.append({
                 "is_event": True,
                 "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
                 "title": title, "start_date": start,
                 "end_date": (it.get("end_date") or start).strip(),
-                "venue": venue_addr or organizer, "city": "New Delhi" if "Dham" in organizer else "",
-                "state": None, "country": country, "phone": contact_phone, "organizer": organizer,
+                "venue": venue_addr or organizer, "city": city,
+                "state": state, "country": country, "phone": contact_phone, "organizer": organizer,
                 "description": (it.get("description") or "")[:200],
                 "source_url": url, "source_platform": f"{organizer} (website)",
                 "flyer_url": flyer, "region": REGION_MAP.get(country, "Asia"),
