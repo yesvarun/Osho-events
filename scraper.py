@@ -91,6 +91,11 @@ FLYERS_DIR = "flyers"
 # This is your repo's raw URL (same host that serves events.json).
 FLYERS_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/"
 
+# Re-hosted card images: IG/FB image URLs get blocked when embedded on another site, so we
+# DOWNLOAD them into this repo folder and serve from our own URL (never blocked, never expires).
+CARD_IMG_DIR = "card_images"
+CARD_IMG_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/"
+
 # WORDPRESS "The Events Calendar" sites — these expose a clean JSON API of their events.
 # FREE to read (no Apify, no AI). Add any Osho centre that runs this plugin.
 # Each entry: (base_site_url, default_country). The scraper hits {site}/wp-json/tribe/events/v1/events
@@ -672,6 +677,9 @@ def read_local_flyers():
                 ev["country"] = ev.get("country") or "India"
                 ev["region"] = REGION_MAP.get(ev["country"], "Asia")
                 ev["_flyer_path"] = path        # remember the file so past ones can be cleaned up
+                # STABLE id from the filename — same flyer = same id every run, so no repeats
+                # even if Claude reads the title slightly differently next time.
+                ev["_fixed_id"] = "fly" + hashlib.md5(os.path.basename(path).encode()).hexdigest()[:9]
                 events.append(ev)
                 print(f"  ✓ {os.path.basename(path)} → {ev.get('title','(event)')}")
             else:
@@ -683,8 +691,17 @@ def read_local_flyers():
 
 
 def make_id(ev):
-    """Simple, safe dedup key: exact title + exact start date + exact city.
-    Only merges events that are truly identical. Never over-merges different camps."""
+    """Stable dedup id that survives across runs.
+    - Flyer uploads & re-hosted images: id from the IMAGE FILENAME (stored in flyer_url),
+      so a carried-forward copy and a freshly-read copy always get the SAME id → no repeats.
+    - Everything else: exact title + start date + city."""
+    fu = ev.get("flyer_url") or ""
+    # Our own repo images (flyers/ or card_images/) have stable filenames — key off them.
+    if "/flyers/" in fu or "/card_images/" in fu:
+        fname = fu.rstrip("/").split("/")[-1]
+        return "img" + hashlib.md5(fname.encode()).hexdigest()[:9]
+    if ev.get("_fixed_id"):
+        return ev["_fixed_id"]
     title = (ev.get("title") or "").strip().lower()
     city = (ev.get("city") or ev.get("venue") or "").strip().lower()
     sd = (ev.get("start_date") or "").strip()
@@ -698,6 +715,26 @@ def keep_upcoming(ev):
         return dt.date.fromisoformat(end) >= dt.date.today()
     except ValueError:
         return False
+
+def rehost_image(img_url, key):
+    """Download an external (IG/FB) image into CARD_IMG_DIR and return our own permanent URL.
+    'key' (e.g. the post URL) makes a stable filename so the same post reuses the same file.
+    Returns our repo URL on success, or '' on failure (card then shows placeholder)."""
+    if not img_url:
+        return ""
+    try:
+        os.makedirs(CARD_IMG_DIR, exist_ok=True)
+        name = "img" + hashlib.md5((key or img_url).encode()).hexdigest()[:12] + ".jpg"
+        path = os.path.join(CARD_IMG_DIR, name)
+        if not os.path.exists(path):                 # don't re-download if we already have it
+            r = requests.get(img_url, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
+            if r.status_code != 200 or not r.content or len(r.content) < 500:
+                return ""
+            with open(path, "wb") as f:
+                f.write(r.content)
+        return CARD_IMG_BASE_URL + name
+    except Exception:
+        return ""
 
 def build():
     print("="*60)
@@ -745,7 +782,8 @@ def build():
         n_is_event += 1
         ev["source_url"] = p["url"] if p.get("url") else ""
         ev["source_platform"] = p["platform"]
-        ev["flyer_url"] = p.get("image") or ""
+        # Re-host the post image on our repo so it actually shows on the card (IG/FB block embeds).
+        ev["flyer_url"] = rehost_image(p.get("image"), p.get("url") or p.get("image"))
         ev["country"] = ev.get("country") or "India"
         ev["region"] = REGION_MAP.get(ev["country"], "Asia")
         if not keep_upcoming(ev):
