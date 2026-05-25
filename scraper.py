@@ -129,9 +129,13 @@ ICAL_FEEDS = [
 
 # HTML EVENT PAGES — for centres WITHOUT an iCal/JSON feed (e.g. custom-built sites).
 # The scraper fetches the page and Claude reads the listed camps from it. Free of Apify
-# (uses Claude, which you already pay for). Each entry: (events_page_url, default_country, organizer).
+# (uses Claude, which you already pay for).
+# Each entry: (events_page_url, default_country, organizer, contact_phone, venue_address).
+# The phone/venue are applied to every camp from that page so cards have a way to enquire.
 HTML_EVENT_PAGES = [
-    ("https://oshoworld.com/events", "India", "Osho Dham / Osho World"),
+    ("https://oshoworld.com/events", "India", "Osho Dham / Osho World",
+     "011-25319026",
+     "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -499,7 +503,10 @@ def read_html_event_pages():
     out = []
     if not HTML_EVENT_PAGES:
         return out
-    for url, country, organizer in HTML_EVENT_PAGES:
+    for entry in HTML_EVENT_PAGES:
+        url, country, organizer = entry[0], entry[1], entry[2]
+        contact_phone = entry[3] if len(entry) > 3 else None
+        venue_addr = entry[4] if len(entry) > 4 else ""
         try:
             r = requests.get(url, timeout=45, headers=BROWSER_HEADERS)
             if r.status_code != 200:
@@ -564,8 +571,8 @@ def read_html_event_pages():
                 "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
                 "title": title, "start_date": start,
                 "end_date": (it.get("end_date") or start).strip(),
-                "venue": organizer, "city": "New Delhi" if "Dham" in organizer else "",
-                "state": None, "country": country, "phone": None, "organizer": organizer,
+                "venue": venue_addr or organizer, "city": "New Delhi" if "Dham" in organizer else "",
+                "state": None, "country": country, "phone": contact_phone, "organizer": organizer,
                 "description": (it.get("description") or "")[:200],
                 "source_url": url, "source_platform": f"{organizer} (website)",
                 "flyer_url": flyer, "region": REGION_MAP.get(country, "Asia"),
@@ -747,19 +754,33 @@ def keep_upcoming(ev):
         return False
 
 def rehost_image(img_url, key):
-    """Download an external (IG/FB) image into CARD_IMG_DIR and return our own permanent URL.
-    'key' (e.g. the post URL) makes a stable filename so the same post reuses the same file.
-    Returns our repo URL on success, or '' on failure (card then shows placeholder)."""
+    """Download an external image into CARD_IMG_DIR and return our own permanent URL.
+    'key' makes a stable filename so the same source reuses the same file.
+    Preserves the real file extension so browsers render it. Returns '' on failure."""
     if not img_url:
         return ""
     try:
         os.makedirs(CARD_IMG_DIR, exist_ok=True)
-        name = "img" + hashlib.md5((key or img_url).encode()).hexdigest()[:12] + ".jpg"
+        # Detect a sensible extension from the source URL (default jpg).
+        ext = "jpg"
+        m = _re.search(r"\.(jpe?g|png|webp)(?:[?#]|$)", img_url, _re.I)
+        if m:
+            ext = m.group(1).lower().replace("jpeg", "jpg")
+        name = "img" + hashlib.md5((key or img_url).encode()).hexdigest()[:12] + "." + ext
         path = os.path.join(CARD_IMG_DIR, name)
         if not os.path.exists(path):                 # don't re-download if we already have it
             r = requests.get(img_url, timeout=30, headers=BROWSER_HEADERS)
             if r.status_code != 200 or not r.content or len(r.content) < 500:
                 return ""
+            # If the server says it's an image type, trust that for the extension.
+            ctype = r.headers.get("Content-Type", "").lower()
+            if "webp" in ctype: real = "webp"
+            elif "png" in ctype: real = "png"
+            elif "jpeg" in ctype or "jpg" in ctype: real = "jpg"
+            else: real = ext
+            if real != ext:
+                name = "img" + hashlib.md5((key or img_url).encode()).hexdigest()[:12] + "." + real
+                path = os.path.join(CARD_IMG_DIR, name)
             with open(path, "wb") as f:
                 f.write(r.content)
         return CARD_IMG_BASE_URL + name
