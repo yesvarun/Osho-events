@@ -482,7 +482,8 @@ def _ical_date(val):
 
 def read_html_event_pages():
     """Fetch each centre's events page and have Claude extract ALL upcoming camps from it.
-    Works for ANY site (incl. custom-built ones with no feed). One Claude call per page."""
+    Works for ANY site (incl. custom-built ones with no feed). One Claude call per page.
+    Also captures each camp's OWN image and re-hosts it so it shows on the card."""
     out = []
     if not HTML_EVENT_PAGES:
         return out
@@ -492,8 +493,20 @@ def read_html_event_pages():
             if r.status_code != 200:
                 print(f"  ! {organizer}: events page HTTP {r.status_code}")
                 continue
-            # strip tags → text, collapse whitespace; cap length to control token cost
-            text = _re.sub(r"<script[\s\S]*?</script>", " ", r.text)
+            raw_html = r.text
+            # Pull real image URLs (e.g. https://oshoworld.com/uploads/xxx.jpg) in page order.
+            # Next.js wraps them as /_next/image?url=<ENCODED>&w=...  — decode those too.
+            import urllib.parse as _up
+            imgs = []
+            for m in _re.finditer(r'/_next/image\?url=([^&"]+)', raw_html):
+                dec = _up.unquote(m.group(1))
+                if "/uploads/" in dec:
+                    imgs.append(dec)
+            for m in _re.finditer(r'(https?://[^\s"\']+/uploads/[^\s"\'?]+\.(?:jpg|jpeg|png|webp|JPG|JPEG|PNG))', raw_html):
+                if m.group(1) not in imgs:
+                    imgs.append(m.group(1))
+            # text for Claude
+            text = _re.sub(r"<script[\s\S]*?</script>", " ", raw_html)
             text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
             text = _re.sub(r"<[^>]+>", " ", text)
             text = _re.sub(r"\s+", " ", text)[:12000]
@@ -502,7 +515,8 @@ def read_html_event_pages():
             continue
         prompt = (
             f"Today is {TODAY}. Below is the text of an Osho centre's events page. "
-            "Extract EVERY upcoming meditation camp/retreat/workshop/celebration with a clear date. "
+            "Extract EVERY upcoming meditation camp/retreat/workshop/celebration with a clear date, "
+            "IN THE ORDER they appear on the page. "
             "Reply with ONLY a JSON array, each item: "
             "{title, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description}. "
             "Infer the year from context (events are 2026 unless stated). No prose, just the JSON array.\n\n"
@@ -517,18 +531,22 @@ def read_html_event_pages():
             if resp.status_code != 200:
                 print(f"  ! {organizer}: Claude HTTP {resp.status_code}")
                 continue
-            raw = "".join(b.get("text", "") for b in resp.json().get("content", []))
-            raw = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            items = json.loads(raw)
+            rawtext = "".join(b.get("text", "") for b in resp.json().get("content", []))
+            rawtext = rawtext.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            items = json.loads(rawtext)
         except Exception as e:
             print(f"  ! {organizer}: extraction failed ({type(e).__name__})")
             continue
         got = 0
-        for it in (items if isinstance(items, list) else []):
+        items = items if isinstance(items, list) else []
+        for idx, it in enumerate(items):
             title = (it.get("title") or "").strip()
             start = (it.get("start_date") or "").strip()
             if not title or not start:
                 continue
+            # Match this camp to its image by position on the page, then re-host it.
+            img_src = imgs[idx] if idx < len(imgs) else ""
+            flyer = rehost_image(img_src, img_src) if img_src else ""
             out.append({
                 "is_event": True,
                 "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
@@ -538,7 +556,7 @@ def read_html_event_pages():
                 "state": None, "country": country, "phone": None, "organizer": organizer,
                 "description": (it.get("description") or "")[:200],
                 "source_url": url, "source_platform": f"{organizer} (website)",
-                "flyer_url": "", "region": REGION_MAP.get(country, "Asia"),
+                "flyer_url": flyer, "region": REGION_MAP.get(country, "Asia"),
             })
             got += 1
         print(f"  → {got} events from {organizer} (web page)")
