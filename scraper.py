@@ -17,6 +17,18 @@ import os, json, time, hashlib, datetime as dt
 import re as _re
 import requests
 
+# Realistic browser headers — some sites (e.g. Osho World) return 403 to obvious bots.
+# Looking like a normal Chrome browser avoids that blocking.
+BROWSER_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+}
+
 # ----------------------------------------------------------------------
 # CONFIG
 # ----------------------------------------------------------------------
@@ -489,7 +501,7 @@ def read_html_event_pages():
         return out
     for url, country, organizer in HTML_EVENT_PAGES:
         try:
-            r = requests.get(url, timeout=45, headers={"User-Agent": "Mozilla/5.0 (events-bot)"})
+            r = requests.get(url, timeout=45, headers=BROWSER_HEADERS)
             if r.status_code != 200:
                 print(f"  ! {organizer}: events page HTTP {r.status_code}")
                 continue
@@ -570,7 +582,7 @@ def read_ical_feeds():
         return out
     for url, country, organizer in ICAL_FEEDS:
         try:
-            r = requests.get(url, timeout=45, headers={"User-Agent": "Mozilla/5.0 (events-bot)"})
+            r = requests.get(url, timeout=45, headers=BROWSER_HEADERS)
             if r.status_code != 200 or "BEGIN:VCALENDAR" not in r.text:
                 print(f"  ! {organizer}: no iCal feed (HTTP {r.status_code})")
                 continue
@@ -621,7 +633,7 @@ def read_wp_event_sites():
     for site, default_country in WP_EVENT_SITES:
         url = f"{site}/wp-json/tribe/events/v1/events?per_page=50&start_date={today}&status=publish"
         try:
-            r = requests.get(url, timeout=45, headers={"User-Agent": "Mozilla/5.0 (events-bot)"})
+            r = requests.get(url, timeout=45, headers=BROWSER_HEADERS)
             if r.status_code != 200:
                 print(f"  ! {site} events API HTTP {r.status_code}")
                 continue
@@ -745,7 +757,7 @@ def rehost_image(img_url, key):
         name = "img" + hashlib.md5((key or img_url).encode()).hexdigest()[:12] + ".jpg"
         path = os.path.join(CARD_IMG_DIR, name)
         if not os.path.exists(path):                 # don't re-download if we already have it
-            r = requests.get(img_url, timeout=30, headers={"User-Agent": "Mozilla/5.0"})
+            r = requests.get(img_url, timeout=30, headers=BROWSER_HEADERS)
             if r.status_code != 200 or not r.content or len(r.content) < 500:
                 return ""
             with open(path, "wb") as f:
