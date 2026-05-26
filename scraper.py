@@ -154,6 +154,12 @@ HTML_EVENT_PAGES = [
     ("https://oshoramana.com/upcoming-events", "India", "Osho Ramana",
      "",
      "Osho Ramana, Tiruvannamalai, Tamil Nadu"),
+    ("https://oshogorakhpur.com/category/forthcoming/", "India", "Osho Prabhu Kripal Ashram (Gorakhpur)",
+     "+91-9839501228",
+     "Osho Prabhu Kripal Ashram, Algatpur via Ghaghsara Bazar, Gorakhpur, Uttar Pradesh 273209"),
+    ("https://oshomanan.com/", "India", "Osho Manan (Mehsana)",
+     "+91-9428959979",
+     "Osho Manan Neo-Sannyas Commune, Palavasana, Mehsana, Gujarat"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -636,7 +642,7 @@ def read_html_event_pages():
             text = _re.sub(r"<script[\s\S]*?</script>", " ", raw_html)
             text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
             text = _re.sub(r"<[^>]+>", " ", text)
-            text = _re.sub(r"\s+", " ", text)[:12000]
+            text = _re.sub(r"\s+", " ", text)[:45000]   # raised from 12000: big landing pages (e.g. Swipepages) push the event list far down
         except Exception as e:
             print(f"  ! {organizer}: fetch failed ({type(e).__name__})")
             continue
@@ -697,6 +703,10 @@ def read_html_event_pages():
                 city, state = "Nargol", "Gujarat"
             elif "Ramana" in organizer:
                 city, state = "Tiruvannamalai", "Tamil Nadu"
+            elif "Gorakhpur" in organizer:
+                city, state = "Gorakhpur", "Uttar Pradesh"
+            elif "Manan" in organizer:
+                city, state = "Mehsana", "Gujarat"
             else:
                 city, state = "", None
             ev_obj = {
@@ -713,6 +723,11 @@ def read_html_event_pages():
             out.append(ev_obj)
             page_events.append(ev_obj)
             got += 1
+        if got == 0:
+            snippet = text[:300].replace("\n", " ")
+            print(f"    (0 events — Claude was given {len(text)} chars of page text. "
+                  f"If that number is small, the page is JS-rendered or bot-blocked, so the "
+                  f"events never reached Claude. Start of text: {snippet!r})")
         print(f"  → {got} events from {organizer} (web page)")
         # Save today's results so later runs today reuse them (once-a-day fetch).
         if got > 0:
