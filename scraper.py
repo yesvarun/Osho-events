@@ -590,6 +590,7 @@ def read_html_event_pages():
             "IN THE ORDER they appear on the page. "
             "Reply with ONLY a JSON array, each item: "
             "{title, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description}. "
+            "Keep description under 12 words. "
             "Infer the year from context (events are 2026 unless stated). No prose, just the JSON array.\n\n"
             + text
         )
@@ -597,14 +598,25 @@ def read_html_event_pages():
             resp = requests.post("https://api.anthropic.com/v1/messages",
                 headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
                          "content-type": "application/json"},
-                json={"model": EXTRACT_MODEL, "max_tokens": 4000,
+                json={"model": EXTRACT_MODEL, "max_tokens": 8000,
                       "messages": [{"role": "user", "content": prompt}]}, timeout=120)
             if resp.status_code != 200:
                 print(f"  ! {organizer}: Claude HTTP {resp.status_code}")
                 continue
             rawtext = "".join(b.get("text", "") for b in resp.json().get("content", []))
             rawtext = rawtext.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            items = json.loads(rawtext)
+            try:
+                items = json.loads(rawtext)
+            except json.JSONDecodeError:
+                # Response was likely truncated mid-array — salvage each complete {...} object.
+                items = []
+                for m in _re.finditer(r"\{[^{}]*\}", rawtext):
+                    try:
+                        items.append(json.loads(m.group(0)))
+                    except Exception:
+                        pass
+                if items:
+                    print(f"  (recovered {len(items)} events from a long {organizer} page)")
         except Exception as e:
             print(f"  ! {organizer}: extraction failed ({type(e).__name__})")
             continue
