@@ -381,6 +381,51 @@ EXTRACT_SYSTEM = (
 
 _extract_fail_count = [0]   # mutable counter shared across calls
 
+
+# --- ROBUST PARSERS (added to fix JSONDecodeError "Extra data" + flyer AttributeError) ----
+def _parse_event_json(text):
+    """Turn Claude's reply into a SINGLE event dict, defensively.
+    Handles: code fences, trailing 'Extra data' after the JSON, a JSON ARRAY wrapper,
+    a bare `null`, or prose around the object. ALWAYS returns a dict so callers can
+    safely do ev.get(...) — never raises JSONDecodeError or AttributeError."""
+    if not text:
+        return {"is_event": False}
+    s = text.strip()
+    if s.startswith("```"):
+        s = s.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+    try:
+        # raw_decode parses the FIRST json value and ignores anything after it → fixes "Extra data"
+        obj, _end = json.JSONDecoder().raw_decode(s)
+    except json.JSONDecodeError:
+        # last resort: grab the first {...} block if the value didn't start at char 0
+        m = _re.search(r"\{[\s\S]*\}", s)
+        if not m:
+            return {"is_event": False}
+        try:
+            obj = json.loads(m.group(0))
+        except json.JSONDecodeError:
+            return {"is_event": False}
+    if isinstance(obj, list):                       # array wrapper → take the first event object
+        obj = next((x for x in obj if isinstance(x, dict)), None)
+    if not isinstance(obj, dict):                   # null / string / number → not an event
+        return {"is_event": False}
+    return obj
+
+def _image_media_type(raw):
+    """Identify a Claude-supported image type from its MAGIC BYTES (not the HTTP header,
+    which often lies). Returns the media_type or None if it isn't a real, supported image —
+    so we never send Claude something it will reject with HTTP 400 'Could not process image'."""
+    if not raw or len(raw) < 12:
+        return None
+    if raw[:3] == b"\xff\xd8\xff":                  return "image/jpeg"
+    if raw[:8] == b"\x89PNG\r\n\x1a\n":             return "image/png"
+    if raw[:6] in (b"GIF87a", b"GIF89a"):           return "image/gif"
+    if raw[:4] == b"RIFF" and raw[8:12] == b"WEBP": return "image/webp"
+    return None
+
+MAX_IMAGE_BYTES = 4_800_000   # Claude rejects very large images; stay safely under the limit
+
+
 def check_anthropic_key():
     """Verify the Anthropic key works BEFORE processing 130 posts. Fail loudly if not."""
     print("Checking Anthropic API key…")
@@ -402,16 +447,20 @@ def check_anthropic_key():
         return False
 
 def _download_image_b64(url):
-    """Fetch an image URL and return (base64, media_type) or (None, None)."""
+    """Fetch an image URL and return (base64, media_type) or (None, None).
+    Validates the bytes are a real, supported, not-too-large image so vision calls
+    never fail with HTTP 400 'Could not process image' (we fall back to caption text)."""
     try:
-        r = requests.get(url, timeout=30)
+        r = requests.get(url, timeout=30, headers=BROWSER_HEADERS)
         if r.status_code != 200 or not r.content:
             return None, None
-        ctype = r.headers.get("content-type", "").split(";")[0].strip()
-        if ctype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
-            ctype = "image/jpeg"   # most IG/FB flyers are jpeg
+        mtype = _image_media_type(r.content)        # trust the bytes, not the content-type header
+        if not mtype:                               # not a real/supported image → don't send it
+            return None, None
+        if len(r.content) > MAX_IMAGE_BYTES:        # too big for the API → skip vision
+            return None, None
         import base64
-        return base64.standard_b64encode(r.content).decode(), ctype
+        return base64.standard_b64encode(r.content).decode(), mtype
     except Exception:
         return None, None
 
@@ -453,10 +502,14 @@ def extract_event(caption, image_url=None):
                 last_err = f"HTTP {r.status_code}: {r.text[:150]}"
                 if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
                     time.sleep(2); continue       # transient — retry once
+                # If a bad image triggered a 400, retry once WITHOUT the image (caption only).
+                if r.status_code == 400 and use_image and attempt == 0:
+                    body["messages"] = [{"role": "user", "content": (caption or "")[:4000]}]
+                    use_image = False
+                    continue
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
-            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            return json.loads(text)
+            return _parse_event_json(text)         # robust: tolerates extra data / arrays / null
         except Exception as e:
             last_err = f"{type(e).__name__}: {e}"
             if attempt == 0:
@@ -469,13 +522,17 @@ def extract_event(caption, image_url=None):
 
 def extract_event_from_file(path):
     """Read a local flyer image file with Claude vision → event dict."""
-    import base64, mimetypes
+    import base64
     try:
         with open(path, "rb") as f:
             raw = f.read()
-        mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
-        if mtype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
-            mtype = "image/jpeg"
+        mtype = _image_media_type(raw)              # detect real format from bytes
+        if not mtype:                               # corrupt / unsupported (e.g. HEIC) → skip cleanly
+            print(f"  ! flyer {os.path.basename(path)} → unsupported or corrupt image, skipped")
+            return {"is_event": False}
+        if len(raw) > MAX_IMAGE_BYTES:              # too big for the API → skip cleanly
+            print(f"  ! flyer {os.path.basename(path)} → too large ({len(raw)//1024} KB), skipped")
+            return {"is_event": False}
         b64 = base64.standard_b64encode(raw).decode()
     except Exception as e:
         print(f"  ! couldn't read flyer {path}: {e}")
@@ -499,8 +556,7 @@ def extract_event_from_file(path):
                 print(f"  ! flyer vision HTTP {r.status_code}: {r.text[:150]}")
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
-            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            return json.loads(text)
+            return _parse_event_json(text)         # robust: never returns a list/None to the caller
         except Exception as e:
             if attempt == 0:
                 time.sleep(2); continue
@@ -789,6 +845,8 @@ def read_local_flyers():
     for path in files:
         try:
             ev = extract_event_from_file(path)
+            if not isinstance(ev, dict):            # belt-and-braces: never trust a non-dict here
+                ev = {"is_event": False}
             if ev.get("is_event"):
                 ev["source_platform"] = "Flyer upload"
                 ev["source_url"] = ""
