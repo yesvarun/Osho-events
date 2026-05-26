@@ -44,13 +44,18 @@ FB_GROUPS_ACTOR = "apify~facebook-groups-scraper"           # scrapes public gro
 # Facebook SEARCH actor — works cheaply (40 results ≈ $0.10). Set the exact actor ID here.
 # Find it on the actor's page header (looks like "creator~facebook-search-...").
 FB_SEARCH_ACTOR = "danek~facebook-search-ppr"
-FB_SEARCH_ENABLED = True          # set False to skip the search actor
+FB_SEARCH_ENABLED = True          # ON: searches Facebook by keyword (like IG hashtag search)
 
 # Known, active Osho Facebook PAGES — adds a reliable source beyond search.
 FB_PAGES = [
     "https://www.facebook.com/osho.international.meditation.resort/",
     "https://www.facebook.com/OSHOInternational/",
     "https://www.facebook.com/oshoworld/",
+    "https://www.facebook.com/oshohimalayas/",        # Osho Himalayas (144k+ followers, very active)
+    "https://www.facebook.com/osnisarga/",            # Osho Nisarga
+    "https://www.facebook.com/oshotapoban1/",         # Osho Tapoban, Nepal
+    "https://www.facebook.com/zorbathebuddhaindia/",  # Zorba the Buddha India
+    "https://www.facebook.com/oshosadhanapath/",      # Osho Sadhana Path, Nargol
 ]
 
 # Public Osho Facebook GROUPS to scrape. Groups are where many regional camps get
@@ -73,13 +78,14 @@ IG_HASHTAGS = ["oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
 IG_PROFILES = [
     "https://www.instagram.com/oshointernational/",
     "https://www.instagram.com/tapobaninternational/",   # Osho Tapoban, Nepal — correct handle
+    "https://www.instagram.com/oshobliss_experiences/",  # Osho Bliss, Rishikesh
+    "https://www.instagram.com/zorbathebuddhaindia/",    # Zorba the Buddha, India
     # add more Osho centre / organiser accounts here
 ]
-SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation workshop",
-                "osho gathering", "dynamic meditation camp", "mystic rose meditation",
-                "ओशो ध्यान शिविर", "ध्यान शिविर", "ओशो साधना शिविर",
-                # Nepal-focused (Nepali uses Devanagari too):
-                "osho nepal", "osho tapoban", "ध्यान शिविर नेपाल", "ओशो नेपाल"]
+# Facebook SEARCH terms — searched ONE AT A TIME, so each adds a small cost.
+# Covers common camp types. Trim if cost matters; add if you want wider reach.
+SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation shivir",
+                "mystic rose meditation", "osho festival", "ध्यान शिविर", "osho tapoban"]
 
 # IMPORTANT: Instagram now blocks most ANONYMOUS hashtag browsing, which is the #1 reason
 # a hashtag scrape returns 0 posts. If your Apify test confirms this, paste a logged-in
@@ -89,7 +95,7 @@ SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation worksho
 IG_SESSION_COOKIE = os.environ.get("IG_SESSION_COOKIE", "")
 
 POSTS_PER_QUERY = 40          # more posts per run = more camps found (and higher cost per run)
-MAX_POST_AGE_DAYS = 90        # ONE-TIME recovery run: reach back 90 days to re-catch older camp posts
+MAX_POST_AGE_DAYS = 45        # balanced window — wide enough to catch advance announcements, modest cost
 
 # VISION: when a post has little/no caption text, read its flyer IMAGE with Claude vision.
 # Costs more per image, so it only fires for caption-less posts (cost-aware). Set False to disable.
@@ -137,11 +143,17 @@ HTML_EVENT_PAGES = [
      "011-25319026",
      "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043"),
     ("https://wellness.oshohimalayas.com/all_upcoming_meditation_courses", "India", "Osho Himalayas",
-     "",
+     "+91-7071042042",
      "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)"),
     ("https://www.oshonisarga.com/upcoming-programs/calendar", "India", "Osho Nisarga",
      "+91-9418037370",
      "Osho Nisarga, Dharamshala, Himachal Pradesh"),
+    ("https://www.oshoresortnargol.com/", "India", "Osho Sadhana Path (Nargol)",
+     "+91-7509076090",
+     "Osho Sadhana Path International Meditation Resort, Nargol Beach, Gujarat"),
+    ("https://oshoramana.com/upcoming-events", "India", "Osho Ramana",
+     "",
+     "Osho Ramana, Tiruvannamalai, Tamil Nadu"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -280,23 +292,27 @@ def scrape_facebook():
     print("Scraping Facebook…")
     posts = []
 
-    # 0) SEARCH — keyword search across Facebook (cheap & working: ~40 results ≈ $0.10)
+    # 0) SEARCH — keyword search across Facebook (like IG hashtag search).
+    # Search ONE term at a time (one big comma-joined query tends to return 0 — FB reads it
+    # as a single literal phrase). Splitting the budget across terms gets real results.
     if FB_SEARCH_ENABLED and FB_SEARCH_ACTOR and FB_SEARCH_ACTOR != "REPLACE_WITH_ACTOR_ID":
         start = (dt.date.today() - dt.timedelta(days=MAX_POST_AGE_DAYS)).isoformat()
         end = dt.date.today().isoformat()
-        search_payload = {
-            "query": ", ".join(SEARCH_TERMS),     # comma-separated keywords, as your actor expects
-            "search_type": "posts",
-            "max_posts": POSTS_PER_QUERY,
-            "recent_posts": False,
-            "start_date": start,
-            "end_date": end,
-        }
-        skipped = 0; got = 0
-        for it in run_actor(FB_SEARCH_ACTOR, search_payload):
-            p = _fb_post(it)
-            if p: posts.append(p); got += 1
-            else: skipped += 1
+        per_term = max(10, POSTS_PER_QUERY // max(1, len(SEARCH_TERMS)))
+        got = 0; skipped = 0
+        for term in SEARCH_TERMS:
+            search_payload = {
+                "query": term,                     # ONE keyword phrase at a time
+                "search_type": "posts",
+                "max_posts": per_term,
+                "recent_posts": False,
+                "start_date": start,
+                "end_date": end,
+            }
+            for it in run_actor(FB_SEARCH_ACTOR, search_payload):
+                p = _fb_post(it)
+                if p: posts.append(p); got += 1
+                else: skipped += 1
         print(f"  → {got} Facebook SEARCH posts"
               + (f"  ({skipped} skipped — no text)" if skipped else ""))
     else:
@@ -505,14 +521,37 @@ def _ical_date(val):
 def read_html_event_pages():
     """Fetch each centre's events page and have Claude extract ALL upcoming camps from it.
     Works for ANY site (incl. custom-built ones with no feed). One Claude call per page.
-    Also captures each camp's OWN image and re-hosts it so it shows on the card."""
+    Also captures each camp's OWN image and re-hosts it so it shows on the card.
+
+    ONCE-A-DAY CACHE: each page is fetched at most once per calendar day. If you run the
+    workflow again the same day, the saved copy is reused (no re-fetch, no Claude cost, no
+    risk of the site blocking us). Fresh fetch happens automatically on the next day."""
     out = []
     if not HTML_EVENT_PAGES:
         return out
+    cache_dir = "feed_cache"
+    os.makedirs(cache_dir, exist_ok=True)
+    today = dt.date.today().isoformat()
     for entry in HTML_EVENT_PAGES:
         url, country, organizer = entry[0], entry[1], entry[2]
         contact_phone = entry[3] if len(entry) > 3 else None
         venue_addr = entry[4] if len(entry) > 4 else ""
+
+        # --- once-a-day cache check ---
+        cache_file = os.path.join(cache_dir, hashlib.md5(url.encode()).hexdigest()[:12] + ".json")
+        cached = None
+        if os.path.exists(cache_file):
+            try:
+                with open(cache_file) as f:
+                    cached = json.load(f)
+            except Exception:
+                cached = None
+        if cached and cached.get("date") == today:
+            evs = cached.get("events", [])
+            out.extend(evs)
+            print(f"  → {len(evs)} events from {organizer} (cached today, not re-fetched)")
+            continue
+        page_events = []  # collect this page's events to cache
         try:
             # Polite fetch: a referer + small delay + one retry reduces 403 bot-blocking.
             hdrs = dict(BROWSER_HEADERS)
@@ -586,9 +625,13 @@ def read_html_event_pages():
                 city, state = "Dharamshala", "Himachal Pradesh"
             elif "Nisarga" in organizer:
                 city, state = "Dharamshala", "Himachal Pradesh"
+            elif "Nargol" in organizer:
+                city, state = "Nargol", "Gujarat"
+            elif "Ramana" in organizer:
+                city, state = "Tiruvannamalai", "Tamil Nadu"
             else:
                 city, state = "", None
-            out.append({
+            ev_obj = {
                 "is_event": True,
                 "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
                 "title": title, "start_date": start,
@@ -598,9 +641,18 @@ def read_html_event_pages():
                 "description": (it.get("description") or "")[:200],
                 "source_url": url, "source_platform": f"{organizer} (website)",
                 "flyer_url": flyer, "region": REGION_MAP.get(country, "Asia"),
-            })
+            }
+            out.append(ev_obj)
+            page_events.append(ev_obj)
             got += 1
         print(f"  → {got} events from {organizer} (web page)")
+        # Save today's results so later runs today reuse them (once-a-day fetch).
+        if got > 0:
+            try:
+                with open(cache_file, "w") as f:
+                    json.dump({"date": today, "events": page_events}, f)
+            except Exception:
+                pass
     return out
 
 def read_ical_feeds():
@@ -834,7 +886,28 @@ def build():
         print(f"✓ TEST_MODE: re-saved {len(existing)} existing events (0 Apify cost).")
         return
 
-    posts = scrape_instagram() + scrape_facebook()
+    # ONCE-A-DAY APIFY CACHE: scrape Instagram/Facebook at most once per calendar day.
+    # Repeat runs the same day reuse the saved raw posts → no extra Apify charge.
+    os.makedirs("feed_cache", exist_ok=True)
+    posts_cache = os.path.join("feed_cache", "apify_posts.json")
+    today_str = dt.date.today().isoformat()
+    posts = None
+    if os.path.exists(posts_cache):
+        try:
+            c = json.load(open(posts_cache))
+            if c.get("date") == today_str:
+                posts = c.get("posts", [])
+                print(f"\n♻️  Reusing {len(posts)} Instagram/Facebook posts scraped earlier today "
+                      f"(no extra Apify cost). Fresh scrape happens tomorrow.")
+        except Exception:
+            posts = None
+    if posts is None:
+        posts = scrape_instagram() + scrape_facebook()
+        if posts:                                  # only cache a successful scrape
+            try:
+                json.dump({"date": today_str, "posts": posts}, open(posts_cache, "w"))
+            except Exception:
+                pass
     print(f"\nTOTAL posts scraped from all platforms: {len(posts)}")
     if not posts:
         print("⚠️  Zero posts scraped. The problem is APIFY (token, actor, or no posts for these tags),")
