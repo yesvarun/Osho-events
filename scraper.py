@@ -69,27 +69,64 @@ FB_GROUPS = [
 ]
 
 # What we look for. Trimmed to the most productive tags to save credit.
-IG_HASHTAGS = ["oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
-               # Hindi / Punjabi / Nepali / regional tags to catch regional-language posts:
-               "ओशो", "ओशोध्यान", "ध्यानशिविर", "ओशोशिविर", "साधनाशिविर",
-               "ਓਸ਼ੋ", "ਧਿਆਨ",
-               # Nepal-focused:
-               "oshotapoban", "oshonepal", "meditationnepal", "ओशोनेपाल", "ध्यानशिविरनेपाल"]
-# Specific Instagram PROFILES to scrape (more reliable than hashtags).
-# Paste profile URLs, e.g. "https://www.instagram.com/oshointernational/".
-IG_PROFILES = [
-    "https://www.instagram.com/oshointernational/",
-    "https://www.instagram.com/tapobaninternational/",   # Osho Tapoban, Nepal — correct handle
-    "https://www.instagram.com/oshobliss_experiences/",  # Osho Bliss, Rishikesh
-    "https://www.instagram.com/zorbathebuddhaindia/",    # Zorba the Buddha, India
-    "https://www.instagram.com/oshogangadham_ashram/",   # Osho Gangadham, Rishikesh (on the Ganga)
-    "https://www.instagram.com/oshogram.himachal/",       # Oshogram / Ensogram, Sundernagar HP
-    # add more Osho centre / organiser accounts here
+# These run through Apify; each one is one query. More tags = more reach but more cost.
+IG_HASHTAGS = [
+    # Core Osho meditation tags (English)
+    "oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
+    "oshoshivir", "oshofestival", "oshosadhana", "oshocelebration",
+    "dynamicmeditation", "kundalinimeditation", "mysticrose",
+    # Hindi script (covers most regional posts from north & central India)
+    "ओशो", "ओशोध्यान", "ध्यानशिविर", "ओशोशिविर", "साधनाशिविर", "ओशोकैंप",
+    # Punjabi script — Punjab/Haryana regional camps
+    "ਓਸ਼ੋ", "ਧਿਆਨ", "ਓਸ਼ੋਧਿਆਨ",
+    # Nepal
+    "oshotapoban", "oshonepal", "meditationnepal", "ओशोनेपाल", "ध्यानशिविरनेपाल",
+    # State-tagged English hashtags — these are how regional organisers tag their camps
+    "oshopunjab", "oshohimachal", "oshorajasthan", "oshogujarat",
+    "oshokerala", "oshokarnataka", "oshomaharashtra", "oshodelhi",
+    "oshouttarakhand", "oshouttarpradesh", "oshobihar", "oshomp",
+    "oshorishikesh", "oshodharamshala", "oshopune", "oshogoa",
 ]
-# Facebook SEARCH terms — searched ONE AT A TIME, so each adds a small cost.
-# Covers common camp types. Trim if cost matters; add if you want wider reach.
-SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation shivir",
-                "mystic rose meditation", "osho festival", "ध्यान शिविर", "osho tapoban"]
+# Specific Instagram PROFILES to scrape (more reliable than hashtags).
+# Profile scrapes work even WITHOUT the IG_SESSION_COOKIE (Apify can read public profiles
+# anonymously). So adding profiles is the safest way to widen reach without depending
+# on the cookie.
+#
+# Paste profile URLs, e.g. "https://www.instagram.com/oshointernational/".
+# To add a new centre: search Instagram for "osho <city>" or "osho <state>" and verify
+# they post camp flyers (not just photos). Remove any handle that returns nothing
+# after a few runs — dead profiles waste Apify credits.
+IG_PROFILES = [
+    # Major international + India hubs (verified active)
+    "https://www.instagram.com/oshointernational/",       # Osho International, Pune
+    "https://www.instagram.com/tapobaninternational/",    # Osho Tapoban, Nepal
+    "https://www.instagram.com/oshobliss_experiences/",   # Osho Bliss, Rishikesh
+    "https://www.instagram.com/zorbathebuddhaindia/",     # Zorba the Buddha, India
+    "https://www.instagram.com/oshogangadham_ashram/",    # Osho Gangadham, Rishikesh
+    "https://www.instagram.com/oshogram.himachal/",       # Oshogram/Ensogram, HP
+    # ----
+    # ADD MORE REGIONAL HANDLES HERE as you find them. Suggested research path on Instagram:
+    #   search "osho <state name>" — e.g. osho punjab, osho rajasthan, osho gujarat
+    #   search "osho <city>"       — e.g. osho chandigarh, osho jaipur, osho ahmedabad
+    #   look at "Suggested for you" when viewing oshointernational
+    #   check the followers of the existing profiles above
+    # Each new active handle is worth 5–30 events/month.
+]
+# Facebook SEARCH terms — searched ONE AT A TIME, so each adds a small Apify cost.
+# Each term is a separate Facebook keyword search. Covers Osho camps across India.
+# Trim if cost matters; add if you want wider reach.
+SEARCH_TERMS = [
+    # Core camp types
+    "osho meditation camp", "osho retreat", "osho meditation shivir",
+    "mystic rose meditation", "osho festival", "osho dynamic meditation",
+    "ध्यान शिविर", "साधना शिविर", "ओशो शिविर",
+    # Nepal
+    "osho tapoban",
+    # State-level searches — capture regional camps you'd otherwise miss
+    "osho punjab", "osho himachal", "osho rajasthan", "osho gujarat",
+    "osho kerala", "osho karnataka", "osho maharashtra", "osho delhi",
+    "osho uttarakhand", "osho uttar pradesh", "osho madhya pradesh",
+]
 
 # IMPORTANT: Instagram now blocks most ANONYMOUS hashtag browsing, which is the #1 reason
 # a hashtag scrape returns 0 posts. If your Apify test confirms this, paste a logged-in
@@ -204,7 +241,7 @@ HTML_EVENT_PAGES = [
 # Each URL is a region/country listing page; Claude extracts the retreats from each one.
 # Add or remove URLs to focus on regions that matter most.
 BOOKRETREATS_PAGES = [
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",       "Europe", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",       "Germany", "BookRetreats"),
     ("https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states","USA", "BookRetreats"),
     ("https://bookretreats.com/s/meditation-retreats/osho-retreats/india",        "India", "BookRetreats"),
     ("https://bookretreats.com/s/meditation-retreats/osho-retreats/bali",         "Indonesia", "BookRetreats"),
