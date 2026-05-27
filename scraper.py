@@ -942,16 +942,38 @@ def read_bookretreats():
             "PAGE TEXT:\n" + text
         )
         try:
-            data = _parse_event_json(_claude_call(prompt, max_tokens=4000))
-            if isinstance(data, list):
-                # Some prompts return [{...}, ...]; some return {events:[...]}; tolerate both
-                items = data
-            elif isinstance(data, dict) and isinstance(data.get("events"), list):
-                items = data["events"]
-            else:
+            resp = requests.post("https://api.anthropic.com/v1/messages",
+                headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
+                         "content-type": "application/json"},
+                json={"model": EXTRACT_MODEL, "max_tokens": 4000,
+                      "messages": [{"role": "user", "content": prompt}]}, timeout=120)
+            if resp.status_code != 200:
+                if _is_credit_error(resp.status_code, resp.text):
+                    _credit_exhausted[0] = True
+                    print(f"  ! BookRetreats / {default_country}: Anthropic credit exhausted — skipping remaining pages.")
+                    continue
+                print(f"  ! BookRetreats / {default_country}: Claude HTTP {resp.status_code}")
+                continue
+            rawtext = "".join(b.get("text", "") for b in resp.json().get("content", []))
+            rawtext = rawtext.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            try:
+                items = json.loads(rawtext)
+            except json.JSONDecodeError:
+                # Response may have been truncated mid-array — salvage each complete {...} object.
+                items = []
+                for m in _re.finditer(r"\{[^{}]*\}", rawtext):
+                    try:
+                        items.append(json.loads(m.group(0)))
+                    except Exception:
+                        pass
+                if items:
+                    print(f"  (recovered {len(items)} retreats from a long BookRetreats / {default_country} page)")
+            if isinstance(items, dict) and isinstance(items.get("events"), list):
+                items = items["events"]
+            if not isinstance(items, list):
                 items = []
         except Exception as e:
-            print(f"  ! BookRetreats / {default_country}: parse failed ({type(e).__name__})")
+            print(f"  ! BookRetreats / {default_country}: extraction failed ({type(e).__name__})")
             continue
 
         kept = 0
