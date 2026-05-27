@@ -198,6 +198,28 @@ HTML_EVENT_PAGES = [
      "Oshogram, Pandar, Sundernagar, Distt. Mandi, Himachal Pradesh 175038"),
 ]
 
+# BOOKRETREATS.COM — third-party Osho retreat directory with global coverage.
+# Listed retreats are commercial offerings (paid) but they're real, dated, and add
+# substantial INTERNATIONAL coverage (Europe, Americas, Pacific) that we otherwise miss.
+# Each URL is a region/country listing page; Claude extracts the retreats from each one.
+# Add or remove URLs to focus on regions that matter most.
+BOOKRETREATS_PAGES = [
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",       "Europe", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states","USA", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/india",        "India", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/bali",         "Indonesia", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/thailand",     "Thailand", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/costa-rica",   "Costa Rica", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",       "Mexico", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",        "Nepal", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",       "Canada", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",    "Australia", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",      "Morocco", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/sri-lanka",    "Sri Lanka", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/vietnam",      "Vietnam", "BookRetreats"),
+    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",     "Colombia", "BookRetreats"),
+]
+
 # Country -> region grouping (must match the app's REGION_MAP)
 REGION_MAP = {
     "India":"India",
@@ -815,6 +837,128 @@ def read_html_event_pages():
                 pass
     return out
 
+def read_bookretreats():
+    """Read Osho retreats from BookRetreats.com region pages.
+    BookRetreats lists commercial retreats globally; one page = one country/region with many retreats.
+    Fetch each page, strip to text, let Claude extract titles + locations + dates.
+    Uses the same once-a-day cache as the HTML event pages (no re-fetch in the same day)."""
+    out = []
+    if not BOOKRETREATS_PAGES:
+        return out
+    cache_dir = "feed_cache"
+    os.makedirs(cache_dir, exist_ok=True)
+    today = dt.date.today().isoformat()
+    for url, default_country, organizer in BOOKRETREATS_PAGES:
+        cache_file = os.path.join(cache_dir, "br_" + hashlib.md5(url.encode()).hexdigest()[:12] + ".json")
+        cached = None
+        if os.path.exists(cache_file):
+            try:
+                with open(cache_file) as f:
+                    cached = json.load(f)
+            except Exception:
+                cached = None
+        if cached and cached.get("date") == today:
+            evs = cached.get("events", [])
+            out.extend(evs)
+            print(f"  → {len(evs)} retreats from BookRetreats / {default_country} (cached today)")
+            continue
+        page_events = []
+        try:
+            hdrs = dict(BROWSER_HEADERS)
+            hdrs["Referer"] = "https://bookretreats.com/"
+            r = requests.get(url, timeout=45, headers=hdrs)
+            if r.status_code != 200:
+                print(f"  ! BookRetreats / {default_country}: HTTP {r.status_code} — skipping")
+                continue
+            raw_html = r.text
+            # Extract retreat-image URLs in page order (so we can match images to retreats by index).
+            imgs = []
+            for m in _re.finditer(r'(https?://bookretreats\.com/[^\s"\']+/p_\d+/[^\s"\'?]+\.(?:jpg|jpeg|png|webp))', raw_html):
+                if m.group(1) not in imgs:
+                    imgs.append(m.group(1))
+            # Strip HTML for Claude
+            text = _re.sub(r"<script[\s\S]*?</script>", " ", raw_html)
+            text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
+            text = _re.sub(r"<[^>]+>", " ", text)
+            text = _re.sub(r"\s+", " ", text)[:50000]
+        except Exception as e:
+            print(f"  ! BookRetreats / {default_country}: fetch failed ({type(e).__name__})")
+            continue
+
+        prompt = (
+            f"Today is {TODAY}. Below is the text content of a BookRetreats.com listing page for "
+            f"Osho retreats in {default_country}. Extract EVERY retreat that has a clear UPCOMING date "
+            "or date range, IN THE ORDER they appear on the page. "
+            "Reply with ONLY a JSON array; each item: "
+            "{title, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', city, country, description}. "
+            "Rules: "
+            "- title: the retreat name as listed (e.g. '7 Day Transformational Healing Retreat on Gozo Island, Malta'). "
+            "- start_date / end_date: parse formats like 'Jun 11 - 14, 2026' or 'Sep 5 - 9, 2026'. "
+            "  If only month(s) are listed like 'Jun | Jul | Aug, 2026', use the FIRST day of the EARLIEST listed month "
+            "  that is in the future (relative to today) as start_date, and the LAST day of that month as end_date. "
+            "  Skip the retreat entirely if you cannot determine any specific upcoming month/dates. "
+            "  Skip 'Available all year round' retreats — they aren't time-bound events. "
+            "- city: the city/town from the location line (e.g. 'Gozo' from 'Gozo, Malta'). If multiple parts, take the most specific. "
+            "- country: the country from the location line. Default to '" + default_country + "' if unclear. "
+            "- description: under 15 words, summarising what the retreat offers. "
+            "Output the JSON array only — no prose, no code fences.\n\n"
+            "PAGE TEXT:\n" + text
+        )
+        try:
+            data = _parse_event_json(_claude_call(prompt, max_tokens=4000))
+            if isinstance(data, list):
+                # Some prompts return [{...}, ...]; some return {events:[...]}; tolerate both
+                items = data
+            elif isinstance(data, dict) and isinstance(data.get("events"), list):
+                items = data["events"]
+            else:
+                items = []
+        except Exception as e:
+            print(f"  ! BookRetreats / {default_country}: parse failed ({type(e).__name__})")
+            continue
+
+        kept = 0
+        for i, it in enumerate(items):
+            if not isinstance(it, dict):
+                continue
+            title = (it.get("title") or "").strip()
+            sd = (it.get("start_date") or "").strip()
+            ed = (it.get("end_date") or sd).strip()
+            if not title or not sd:
+                continue
+            # validate dates parse
+            try:
+                dt.date.fromisoformat(sd)
+                dt.date.fromisoformat(ed)
+            except Exception:
+                continue
+            city = (it.get("city") or "").strip()
+            country = (it.get("country") or default_country).strip()
+            desc = (it.get("description") or "").strip()
+            # match an image by position (best effort; safe if it's missing)
+            img = imgs[i] if i < len(imgs) else ""
+            ev = {
+                "title": title,
+                "start_date": sd, "end_date": ed,
+                "city": city, "country": country,
+                "venue": "", "organizer": organizer,
+                "phone": "", "description": desc,
+                "type": "Retreat",
+                "source_url": url, "source_platform": "BookRetreats",
+                "flyer_url": img,
+            }
+            page_events.append(ev)
+            kept += 1
+        out.extend(page_events)
+        print(f"  → {kept} retreats from BookRetreats / {default_country} (web page)")
+        # cache
+        try:
+            with open(cache_file, "w") as f:
+                json.dump({"date": today, "events": page_events}, f)
+        except Exception:
+            pass
+    return out
+
 def read_ical_feeds():
     """Read events from standard iCal (.ics) feeds — works for any centre that publishes one.
     FREE: no Apify, no AI. Returns list of event dicts."""
@@ -963,26 +1107,55 @@ def read_local_flyers():
     return events
 
 
+_STOPWORDS = {
+    # generic filler that Claude adds/drops between runs, causing false "new" events
+    "osho", "meditation", "camp", "retreat", "workshop", "gathering", "shivir",
+    "the", "a", "an", "of", "and", "with", "for", "in", "at", "on", "by",
+    "days", "day", "3", "5", "7", "10", "21", "neo", "sannyas", "international",
+    "ध्यान", "शिविर", "ओशो", "साधना", "ਓਸ਼ੋ", "ਧਿਆਨ",
+}
+
+def _norm_title(title):
+    """Reduce a title to its distinctive core so the SAME camp matches across runs
+    even when Claude extracts a slightly different wording each time.
+    'Awakening Under The Trees', 'Awakening Under The Trees - Osho Meditation Camp',
+    and 'Awakening Under The Trees Osho Meditation Camp' all collapse to 'awakeningtrees...'."""
+    t = (title or "").lower()
+    # strip everything after a dash/pipe/colon (Claude often appends "- Osho Meditation Camp")
+    t = _re.split(r"[-|:–—]", t)[0]
+    # keep letters/numbers only, split to words
+    words = _re.findall(r"[a-z0-9\u0900-\u097f\u0a00-\u0a7f]+", t)
+    core = [w for w in words if w not in _STOPWORDS and len(w) > 1]
+    # if filtering removed everything (title WAS all filler), fall back to the raw words
+    if not core:
+        core = words
+    core.sort()                      # word order varies between extractions → sort for stability
+    return "".join(core)
+
 def make_id(ev):
-    """Stable dedup id that survives across runs.
-    - Flyer uploads & re-hosted images: id from the IMAGE FILENAME (stored in flyer_url),
-      so a carried-forward copy and a freshly-read copy always get the SAME id → no repeats.
-    - Everything else: exact title + start date + city."""
+    """Stable, content-FIRST dedup id that survives across runs and collapses near-duplicates.
+    Identity = normalized-core-title + start_date + city. The image is NOT part of identity
+    (an event keeps the same id before and after a fallback image is attached), which removes
+    the 'same camp twice' problem. Genuine flyer uploads with no title still key off the file."""
+    if ev.get("_fixed_id"):
+        return ev["_fixed_id"]
+    core = _norm_title(ev.get("title"))
+    city = (ev.get("city") or ev.get("venue") or "").strip().lower()
+    sd = (ev.get("start_date") or "").strip()
+    # If there is real content to key on, use it (this is the normal path).
+    if core or city or sd:
+        return hashlib.md5(f"{core}|{sd}|{city}".encode()).hexdigest()[:12]
+    # No usable content at all → fall back to the image filename so an untitled flyer
+    # at least dedupes against its own carried-forward copy.
     fu = ev.get("flyer_url") or ""
-    if isinstance(fu, dict):                       # old data sometimes stored an image object
+    if isinstance(fu, dict):
         fu = fu.get("url") or fu.get("src") or ""
     elif not isinstance(fu, str):
         fu = ""
-    # Our own repo images (flyers/ or card_images/) have stable filenames — key off them.
-    if "/flyers/" in fu or "/card_images/" in fu:
+    if fu:
         fname = fu.rstrip("/").split("/")[-1]
         return "img" + hashlib.md5(fname.encode()).hexdigest()[:9]
-    if ev.get("_fixed_id"):
-        return ev["_fixed_id"]
-    title = (ev.get("title") or "").strip().lower()
-    city = (ev.get("city") or ev.get("venue") or "").strip().lower()
-    sd = (ev.get("start_date") or "").strip()
-    return hashlib.md5(f"{title}|{sd}|{city}".encode()).hexdigest()[:12]
+    return hashlib.md5(repr(ev).encode()).hexdigest()[:12]
 
 def keep_upcoming(ev):
     end = ev.get("end_date") or ev.get("start_date")
@@ -1229,7 +1402,7 @@ def build():
     # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
     print("\nReading website event feeds…")
-    for ev in (read_ical_feeds() + read_wp_event_sites() + read_html_event_pages()):
+    for ev in (read_ical_feeds() + read_wp_event_sites() + read_html_event_pages() + read_bookretreats()):
         try:
             if not keep_upcoming(ev):
                 continue
@@ -1292,10 +1465,15 @@ def build():
         existing = []
 
     merged, seen_ids = [], set()
+    dropped_past = 0
     for ev in events:                       # new finds first (freshest data wins on dupes)
         ev["id"] = make_id(ev)              # recompute with aggressive dedup
-        if ev["id"] not in seen_ids:
-            seen_ids.add(ev["id"]); merged.append(ev)
+        if ev["id"] in seen_ids:
+            continue
+        if not keep_upcoming(ev):           # NEW: drop past/dateless finds before they bloat the file
+            dropped_past += 1
+            continue
+        seen_ids.add(ev["id"]); merged.append(ev)
     carried = 0
     for ev in existing:
         eid = make_id(ev)                    # recompute (ignore old weak IDs) so dupes collapse
@@ -1304,6 +1482,41 @@ def build():
         if keep_upcoming(ev):               # only carry forward events that haven't passed
             ev["id"] = eid
             seen_ids.add(eid); merged.append(ev); carried += 1
+    if dropped_past:
+        print(f"  🧹 dropped {dropped_past} past/dateless event(s) so the file matches the page")
+
+    # --- MANUAL BLOCK LIST: human override for cards that should NOT appear ---
+    # Read block_list.txt from the repo root. Each line is a SUBSTRING match against the
+    # event's id, title, city, or venue (case-insensitive). Lines starting with # are
+    # comments. Match anywhere in the field. This lets you kill a wrong card by adding,
+    # for example, "Mystery of Love|2026-06-01|Pune" or just "wrong title fragment".
+    blocked_terms = []
+    try:
+        if os.path.exists("block_list.txt"):
+            with open("block_list.txt", encoding="utf-8") as f:
+                for raw in f:
+                    line = raw.strip()
+                    if line and not line.startswith("#"):
+                        blocked_terms.append(line.lower())
+    except Exception as e:
+        print(f"  ! could not read block_list.txt: {e}")
+
+    if blocked_terms:
+        def _is_blocked(ev):
+            blob = " | ".join([
+                str(ev.get("id") or ""),
+                str(ev.get("title") or ""),
+                str(ev.get("city") or ""),
+                str(ev.get("venue") or ""),
+                str(ev.get("start_date") or ""),
+                str(ev.get("organizer") or ""),
+            ]).lower()
+            return any(t in blob for t in blocked_terms)
+        before = len(merged)
+        merged = [e for e in merged if not _is_blocked(e)]
+        blocked_count = before - len(merged)
+        if blocked_count:
+            print(f"  🚫 block_list.txt removed {blocked_count} card(s) you marked for removal")
 
     merged.sort(key=lambda e: e.get("start_date") or "9999")
 
@@ -1357,7 +1570,7 @@ def build():
     print(f"  extraction failures .. {_extract_fail_count[0]}  (if this ≈ posts scraped, your ANTHROPIC_API_KEY is the problem)")
     print(f"  judged real events ... {n_is_event}")
     print(f"  still upcoming ....... {n_upcoming}")
-    print(f"  website feeds ........ {n_wp}  (intl centres: Nisarga, Osho World, San Diego…)")
+    print(f"  website feeds ........ {n_wp}  (centres + BookRetreats global)")
     print(f"  flyer uploads ........ {n_flyer}  (from your '{FLYERS_DIR}/' folder)")
     print(f"  new this run ......... {len(events)}")
     print(f"  TOTAL in directory ... {len(merged)}  (new + carried forward)")
