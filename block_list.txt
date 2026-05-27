@@ -1,0 +1,29 @@
+# block_list.txt — your manual kill list for the Sannyas Gatherings directory.
+#
+# How it works:
+# Each line is a phrase. If that phrase appears anywhere in an event's
+# title, city, venue, organizer, or date, the event will be removed from
+# events.json on every run. Matching is case-insensitive.
+#
+# Lines starting with # are comments (ignored).
+# Empty lines are ignored.
+#
+# Examples — uncomment and edit to remove unwanted cards:
+#
+# Block a specific wrong card by its exact title fragment:
+#   Mystery of Love
+#
+# Block everything from a venue you don't want listed:
+#   wrong centre name
+#
+# Block a specific date that has a junk entry:
+#   2026-08-15
+#
+# Block a specific city if there's a bad mass-imported batch:
+#   somewhere
+#
+# Tip: be specific enough to NOT block real camps you want to keep.
+# Short generic words like "camp" or "osho" would remove almost everything.
+#
+# Add your block patterns below this line:
+
