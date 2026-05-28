@@ -157,6 +157,9 @@ HTML_EVENT_PAGES = [
     ("https://www.oshorisk.com/events/", "Denmark", "Osho Risk",
      "+45 75752500",
      "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark"),
+    ("https://www.oshouta.de/de/programm", "Germany", "Osho Uta",
+     "+49 221 9520320",
+     "Osho UTA Institut, Venloer Str. 5-7, 50672 Köln, Germany"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -592,8 +595,11 @@ def read_html_event_pages():
             "Extract EVERY upcoming meditation camp/retreat/workshop/celebration with a clear date, "
             "IN THE ORDER they appear on the page. "
             "Reply with ONLY a JSON array, each item: "
-            "{title, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description}. "
-            "Keep description under 12 words. "
+            "{title, title_original, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description}. "
+            "If the page is NOT in English, set title to a clear English translation and "
+            "title_original to the exact original-language title. If the page is already in English, "
+            "set title_original to an empty string. "
+            "Keep description under 12 words, in English. "
             "Infer the year from context (events are 2026 unless stated). No prose, just the JSON array.\n\n"
             + text
         )
@@ -627,6 +633,7 @@ def read_html_event_pages():
         items = items if isinstance(items, list) else []
         for idx, it in enumerate(items):
             title = (it.get("title") or "").strip()
+            title_original = (it.get("title_original") or "").strip()
             start = (it.get("start_date") or "").strip()
             if not title or not start:
                 continue
@@ -644,12 +651,18 @@ def read_html_event_pages():
                 city, state = "Nargol", "Gujarat"
             elif "Ramana" in organizer:
                 city, state = "Tiruvannamalai", "Tamil Nadu"
+            elif "Risk" in organizer:
+                city, state = "Braedstrup", None
+            elif "Uta" in organizer:
+                city, state = "Köln", None
             else:
                 city, state = "", None
             ev_obj = {
                 "is_event": True,
                 "type": "Camp" if "camp" in title.lower() else ("Retreat" if "retreat" in title.lower() else "Workshop"),
-                "title": title, "start_date": start,
+                "title": title,
+                "title_original": title_original,
+                "start_date": start,
                 "end_date": (it.get("end_date") or start).strip(),
                 "venue": venue_addr or organizer, "city": city,
                 "state": state, "country": country, "phone": contact_phone, "organizer": organizer,
