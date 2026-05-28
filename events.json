@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T23:36:05.146459Z",
+  "generated_at": "2026-05-28T07:47:02.848321Z",
   "events": [
     {
       "is_event": true,
@@ -18,7 +18,7 @@
       "source_platform": "Oshogram (Ensogram) (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img87515c35301b.jpg",
       "region": "India",
-      "id": "c160d306cfaf"
+      "id": "imgb22303554"
     },
     {
       "is_event": true,
@@ -37,7 +37,7 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img440e632962de.jpg",
       "region": "India",
-      "id": "0a2495d36854"
+      "id": "img6982b458c"
     },
     {
       "title": "4 Day Mindfulness Meditation & Yoga Retreat, Tayrona, Colombia",
@@ -53,26 +53,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/55k/55147/p_2053407/1000_1746997599.jpg",
-      "id": "a4643cd8f10a"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Rishikesh Meditation Camp - May 2026",
-      "start_date": "2026-05-01",
-      "end_date": "2026-05-31",
-      "venue": null,
-      "city": "Rishikesh",
-      "state": "Uttarakhand",
-      "country": "India",
-      "phone": null,
-      "organizer": null,
-      "description": "Osho meditation camp in Rishikesh facilitated by Christine and Sarju. Breathing techniques, emotional release, consciousness exploration.",
-      "source_url": "https://www.instagram.com/p/DYSYm9YgTvW/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img440e632962de.jpg",
-      "region": "India",
-      "id": "3822f7efc59e"
+      "id": "1b82c42895f7"
     },
     {
       "is_event": true,
@@ -85,13 +66,32 @@
       "state": null,
       "country": "India",
       "phone": null,
-      "organizer": null,
-      "description": "6-week course on conscious eating and body awareness. Learn to relate to food naturally and meditatively, finding balance and nourishment.",
+      "organizer": "Anand",
+      "description": "6-week course on conscious eating and body awareness. Learn to relate to food naturally and meditatively, balancing extremes of eating habits.",
       "source_url": "https://www.instagram.com/p/DXdT86fjBzC/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2d0ad5b4a822.jpg",
       "region": "India",
-      "id": "beee69bebd5c"
+      "id": "imgd26d005a3"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Osho Mystic Rose",
+      "start_date": "2026-05-11",
+      "end_date": "2026-05-31",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Essential fundamental meditation invention by Osho",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga99183110edb.jpg",
+      "region": "Europe",
+      "id": "imgb766f392c"
     },
     {
       "is_event": true,
@@ -110,7 +110,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge0241370beb0.jpg",
       "region": "India",
-      "id": "26619294db4e"
+      "id": "img8de01bd13"
     },
     {
       "is_event": true,
@@ -129,7 +129,7 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgff0bb28e4ee6.jpg",
       "region": "India",
-      "id": "e7f58c6894b1"
+      "id": "imgdc2996d93"
     },
     {
       "is_event": true,
@@ -148,7 +148,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc9096b9235a2.jpg",
       "region": "Asia",
-      "id": "dbd6d0cce250"
+      "id": "img8d7831951"
     },
     {
       "is_event": true,
@@ -167,7 +167,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img5b5dced07124.jpg",
       "region": "Asia",
-      "id": "936580872b5e"
+      "id": "imga82d27434"
     },
     {
       "is_event": true,
@@ -186,45 +186,47 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img9d5223c3238f.jpg",
       "region": "Asia",
-      "id": "4b326e179dd8"
+      "id": "img0c95b5b69"
     },
     {
       "is_event": true,
-      "type": "Camp",
-      "title": "Osho Meditation Camp",
+      "type": "Retreat",
+      "title": "Three-Day Vipassana Meditation Retreat",
       "start_date": "2026-05-27",
-      "end_date": "2026-06-30",
-      "venue": null,
+      "end_date": "2026-05-30",
+      "venue": "Nepal Vipassana Centre, Dharmashringa",
+      "city": "Kathmandu",
+      "state": null,
+      "country": "Nepal",
+      "phone": "015350581, 015315656",
+      "organizer": "Nepal Vipassana Centre",
+      "description": "Three-day Vipassana meditation retreat for experienced practitioners who have completed at least one 10-day course.",
+      "source_url": "https://www.facebook.com/permalink.php?story_fbid=pfbid02MSp6Bz72hb5djRnpa7aKiHG8Zh5d6bpf5gZj58daZPMwkBNSbmRWdUhorzTiLwvMl&id=61582686751531",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Asia",
+      "id": "b0bf8f72f753"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Meditation: Gateway to Supreme Health",
+      "start_date": "2026-05-27",
+      "end_date": "2026-05-31",
+      "venue": "Osho Gangadham Ashram",
       "city": "Rishikesh",
       "state": "Uttarakhand",
       "country": "India",
-      "phone": "9058967526",
-      "organizer": null,
-      "description": "Multiple daily meditations across separate spaces. Accommodation with 3 meals and drinks included daily.",
-      "source_url": "https://www.instagram.com/p/DXdu1eGEY53/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img69a49bf64ac1.jpg",
+      "phone": "9149323698, 9258160729",
+      "organizer": "Ma Prem Eisha (Dr. Eisha Singla, Punjab)",
+      "description": "4-day Osho meditation retreat focusing on supreme health and wellness at Osho Gangadham Ashram.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260421-WA0006.jpg",
       "region": "India",
-      "id": "321198f73640"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Freedom & Joy Of Being Yourself",
-      "start_date": "2026-05-27",
-      "end_date": null,
-      "venue": null,
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "917071042042",
-      "organizer": null,
-      "description": "Osho meditation course focusing on freedom and joy of being yourself through silent meditation practice.",
-      "source_url": "https://www.facebook.com/oshohimalayas/posts/pfbid0YXQUeUDzpbKsx9jRYYutqcPaNa3DVYquD5LB4GqdandzscufLeyDgkANajCXbb7El",
-      "source_platform": "Facebook",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga72919598c48.jpg",
-      "region": "India",
-      "id": "164cd377f007"
+      "_flyer_path": "flyers/IMG-20260421-WA0006.jpg",
+      "_fixed_id": "fly50ec34e68",
+      "id": "img50ec34e68"
     },
     {
       "is_event": true,
@@ -243,28 +245,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc5e3188ba419.jpg",
       "region": "Asia",
-      "id": "c3d23201e55f"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Meditation: Gateway to Supreme Health",
-      "start_date": "2026-05-27",
-      "end_date": "2026-05-31",
-      "venue": "Osho Gangadham Ashram",
-      "city": "Rishikesh",
-      "state": "Uttarakhand",
-      "country": "India",
-      "phone": "9149323698, 9258160729",
-      "organizer": "Ma Prem Esha (Dr. Esha Singla, Punjab)",
-      "description": "4-day Osho meditation retreat at Gangadham Ashram, Badrinath Road, Rishikesh. Supreme health through meditation.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260421-WA0006.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260421-WA0006.jpg",
-      "_fixed_id": "fly50ec34e68",
-      "id": "fly50ec34e68"
+      "id": "imgbf1ee8c5f"
     },
     {
       "is_event": true,
@@ -283,7 +264,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb7d0fc6351db.jpg",
       "region": "Asia",
-      "id": "ab85f927caa7"
+      "id": "img898e3f53a"
     },
     {
       "is_event": true,
@@ -302,7 +283,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2c7022539e4d.jpg",
       "region": "Asia",
-      "id": "54109c7a6e3c"
+      "id": "img219d1a3e0"
     },
     {
       "is_event": true,
@@ -321,7 +302,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img49770f735035.jpg",
       "region": "Asia",
-      "id": "c37d49dfbfd4"
+      "id": "img4df206b5e"
     },
     {
       "is_event": true,
@@ -340,7 +321,83 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgabc3479701b9.jpg",
       "region": "Asia",
-      "id": "ba89896d65a5"
+      "id": "imgd96529af6"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Osho Meditation Camp",
+      "start_date": "2026-05-28",
+      "end_date": "2026-06-30",
+      "venue": null,
+      "city": "Rishikesh",
+      "state": "Uttarakhand",
+      "country": "India",
+      "phone": "9058967526",
+      "organizer": null,
+      "description": "Daily meditations across multiple spaces. Accommodation with 3 meals daily and beverages included.",
+      "source_url": "https://www.instagram.com/p/DXdu1eGEY53/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img69a49bf64ac1.jpg",
+      "region": "India",
+      "id": "img41b4c9a78"
+    },
+    {
+      "is_event": true,
+      "type": "Festival",
+      "title": "Nataraj Spiritual Dance Festival",
+      "start_date": "2026-05-28",
+      "end_date": "2026-05-31",
+      "venue": "Zorba The Buddha, Ghitorni",
+      "city": "New Delhi",
+      "state": "Delhi",
+      "country": "India",
+      "phone": "93119 58352",
+      "organizer": "Zorba The Buddha",
+      "description": "Spiritual dance meditation festival combining movement, rhythm, and inner awakening. Open to all, no experience needed.",
+      "source_url": "https://www.instagram.com/p/DWyZc4TEoe-/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img780eb79db94d.jpg",
+      "region": "India",
+      "id": "img495732497"
+    },
+    {
+      "is_event": true,
+      "type": "Gathering",
+      "title": "Nataraj Spiritual Dance Festival",
+      "start_date": "2026-05-28",
+      "end_date": "2026-05-31",
+      "venue": "Zorba The Buddha",
+      "city": null,
+      "state": null,
+      "country": "India",
+      "phone": "93119 58352",
+      "organizer": null,
+      "description": "Ecstatic dance and meditation festival combining movement, celebration, and inner silence for spiritual transformation.",
+      "source_url": "https://www.instagram.com/p/DYzLnL3inWQ/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img0bf4f2e2e7e0.jpg",
+      "region": "India",
+      "id": "img0dc1bc8f7"
+    },
+    {
+      "is_event": true,
+      "type": "Festival",
+      "title": "Nataraj Spiritual Dance Festival",
+      "start_date": "2026-05-28",
+      "end_date": "2026-05-31",
+      "venue": "Zorba the Buddha",
+      "city": "Delhi",
+      "state": null,
+      "country": "India",
+      "phone": "97735 21700, 97172 99973",
+      "organizer": null,
+      "description": "Spiritual dance festival inspired by Osho teachings. Transform through movement, release stress, and experience meditation in motion. No experience needed.",
+      "source_url": "https://www.instagram.com/p/DXtySBDghtf/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img69ad7944884e.jpg",
+      "region": "India",
+      "id": "img65b712448"
     },
     {
       "is_event": true,
@@ -352,14 +409,33 @@
       "city": null,
       "state": null,
       "country": "India",
-      "phone": "93119 58352",
+      "phone": "+91 93119 58352",
       "organizer": null,
-      "description": "Ecstatic dance and meditation festival combining movement, music, and inner silence for spiritual transformation and healing.",
-      "source_url": "https://www.instagram.com/p/DYzLnL3inWQ/",
+      "description": "Ecstatic dance, music, and meditation festival for spiritual awakening and inner transformation through movement.",
+      "source_url": "https://www.instagram.com/p/DYwudMZN36q/",
       "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img0bf4f2e2e7e0.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img5ce336776bd0.jpg",
       "region": "India",
-      "id": "d9aaf9bb8571"
+      "id": "img0d48b0a20"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Wellness Journey - Eight Day Energy Meditation Camp",
+      "start_date": "2026-05-28",
+      "end_date": "2026-06-04",
+      "venue": "Tokha Ward 8",
+      "city": "Kathmandu",
+      "state": null,
+      "country": "Nepal",
+      "phone": null,
+      "organizer": "Life Science Institute, Social Welfare Environment Protection Society",
+      "description": "Eight-day energy meditation retreat. Daily sessions from 5:00 AM to 6:30 AM focusing on yoga and meditation for wellness.",
+      "source_url": "https://www.facebook.com/nirmala.kc.54/posts/pfbid08f4P5vV2VF2TghsNK1TMyfM9eUeAvFEWXM38Y3tn7LeunfgEu9FUD96hDtMh73k3l",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Asia",
+      "id": "5daa344a3f1b"
     },
     {
       "is_event": true,
@@ -378,45 +454,7 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img33d7458ea59e.jpg",
       "region": "India",
-      "id": "ad29cea2e86e"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Nataraj Spiritual Dance Festival",
-      "start_date": "2026-05-28",
-      "end_date": "2026-05-31",
-      "venue": "Zorba The Buddha, Ghitorni",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "93119 58352",
-      "organizer": null,
-      "description": "Spiritual dance festival combining movement and meditation. Experience rhythm as awakening and dance as doorway to divine consciousness.",
-      "source_url": "https://www.instagram.com/p/DWyZc4TEoe-/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img780eb79db94d.jpg",
-      "region": "India",
-      "id": "1bb3a4a2388f"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Nataraj Spiritual Dance Festival",
-      "start_date": "2026-05-28",
-      "end_date": "2026-05-31",
-      "venue": "Zorba the Buddha",
-      "city": "Delhi",
-      "state": null,
-      "country": "India",
-      "phone": "97735 21700, 97172 99973",
-      "organizer": null,
-      "description": "Residential dance meditation festival. Release stress, rediscover creativity through movement. No experience needed. Open to all genders.",
-      "source_url": "https://www.instagram.com/p/DXtySBDghtf/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img69ad7944884e.jpg",
-      "region": "India",
-      "id": "8e97eb075a42"
+      "id": "img895ada355"
     },
     {
       "is_event": true,
@@ -435,7 +473,7 @@
       "source_platform": "Osho Sadhana Path (Nargol) (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge9d457c4e226.jpg",
       "region": "India",
-      "id": "5fa65eb5992e"
+      "id": "imgfc3f1a891"
     },
     {
       "title": "4 Day Nataraj Spiritual Dance Festival Retreat in Delhi, India",
@@ -451,7 +489,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66702/p_2509289/1000_1773210337.jpg",
-      "id": "c98d6ed4b456"
+      "id": "02bc38a27fbe"
     },
     {
       "is_event": true,
@@ -470,7 +508,7 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf07b4822ca4c.jpg",
       "region": "India",
-      "id": "e9bdc87ddcb8"
+      "id": "img232311e6b"
     },
     {
       "is_event": true,
@@ -480,16 +518,54 @@
       "end_date": "2026-05-29",
       "venue": "Zorba The Buddha, Osho Mystical Village",
       "city": "New Delhi",
-      "state": null,
+      "state": "Delhi",
       "country": "India",
       "phone": "9810806501",
       "organizer": null,
-      "description": "Evening of Sufi music and devotional melodies with Kesari Band. Includes organic vegetarian dinner and live concert with ecstatic, meditative music.",
+      "description": "Evening of Sufi music and devotional melodies with live performance by Kesari Band. Includes organic vegetarian dinner at 7:30 PM, concert 8:45-10:30 PM.",
       "source_url": "https://www.instagram.com/p/DYzQ24VCvg2/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img932271b797b8.jpg",
       "region": "India",
-      "id": "06a7c0ba129f"
+      "id": "img8447977d7"
+    },
+    {
+      "is_event": true,
+      "type": "Gathering",
+      "title": "OSHO Festival",
+      "start_date": "2026-05-29",
+      "end_date": null,
+      "venue": "Bellaria",
+      "city": "Bellaria",
+      "state": null,
+      "country": "Italy",
+      "phone": null,
+      "organizer": null,
+      "description": "Two-day OSHO Festival with meditation and events starting Friday morning.",
+      "source_url": "https://www.facebook.com/maneesha.james.9/posts/pfbid02FezU4nJ3xrk4jp44BNPxTB5yWM4DNK75QHf3EHu43vkYWXMVAhAqU1LiEharmkmil",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Europe",
+      "id": "1dff9d07cc45"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Sannyas Celebration Days",
+      "start_date": "2026-05-29",
+      "end_date": "2026-05-31",
+      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
+      "city": "New Delhi",
+      "state": "Delhi",
+      "country": "India",
+      "phone": "011-25319026",
+      "organizer": "Osho Dham / Osho World",
+      "description": "Sannyas celebration meditation event",
+      "source_url": "https://oshoworld.com/events",
+      "source_platform": "Osho Dham / Osho World (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
+      "region": "India",
+      "id": "img87389b329"
     },
     {
       "is_event": true,
@@ -508,45 +584,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img09a116f4bc37.jpg",
       "region": "Europe",
-      "id": "5ae518eae60a"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Children Meditation Camp",
-      "start_date": "2026-05-29",
-      "end_date": "2026-05-31",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Prem Devyani, Ma Dev Priya & team",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
-      "region": "India",
-      "id": "604769dbe40f"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Parents Meditation Camp",
-      "start_date": "2026-05-29",
-      "end_date": "2026-05-31",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Dhyan Pulak",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
-      "region": "India",
-      "id": "c1da500d3d53"
+      "id": "img1947b11b7"
     },
     {
       "title": "3 Day Private Couples Retreat in Fort Lauderdale, FL, US",
@@ -562,7 +600,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/64k/64953/p_2437257/1000_1638139077.jpg",
-      "id": "35acb0badd07"
+      "id": "be710a87a448"
     },
     {
       "title": "3 Day Women's Vitality Wellness Retreat in Ontario, Canada",
@@ -578,7 +616,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65997/p_2481306/1000_1771858028.jpg",
-      "id": "1ddc05731bb6"
+      "id": "20327559099a"
     },
     {
       "title": "4 Day Rest, Relax , Reset Fall Retreat in Port Stanley, Canada",
@@ -594,7 +632,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/63k/63727/p_2385465/1000_1765310684.jpg",
-      "id": "f7c17c47deec"
+      "id": "3f7316666d2c"
     },
     {
       "is_event": true,
@@ -608,12 +646,69 @@
       "country": "India",
       "phone": null,
       "organizer": null,
-      "description": "20-hour online event with live meditations across time zones featuring guided practices, global community connection, and celebration.",
+      "description": "20-hour online event with live meditations across time zones featuring guided active meditations, global community connection, and celebration of transformation.",
       "source_url": "https://www.instagram.com/p/DYoMaHWG9te/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc7211e0b940d.jpg",
       "region": "India",
-      "id": "5f7ac773a451"
+      "id": "imgee5f6efe2"
+    },
+    {
+      "is_event": true,
+      "type": "Gathering",
+      "title": "OSHO Global Meditation Day",
+      "start_date": "2026-05-30",
+      "end_date": "2026-05-31",
+      "venue": null,
+      "city": null,
+      "state": null,
+      "country": "India",
+      "phone": null,
+      "organizer": null,
+      "description": "Full online day of OSHO Active Meditations including Dynamic Meditation and other embodied awareness practices.",
+      "source_url": "https://www.instagram.com/p/DYjf-OIxKFr/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb7957b3fd461.jpg",
+      "region": "India",
+      "id": "img732f4d6cd"
+    },
+    {
+      "is_event": true,
+      "type": "Gathering",
+      "title": "OSHO Global Meditation Day",
+      "start_date": "2026-05-30",
+      "end_date": "2026-05-31",
+      "venue": "Online",
+      "city": null,
+      "state": null,
+      "country": "India",
+      "phone": null,
+      "organizer": null,
+      "description": "Full online day of OSHO Active Meditations with live guided sessions across time zones. Movement, silence, laughter, dance, gibberish, relaxation.",
+      "source_url": "https://www.instagram.com/p/DYVGSN-AfFQ/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8a463bc776ba.jpg",
+      "region": "India",
+      "id": "img6ec56f573"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Osho Meditation Retreat",
+      "start_date": "2026-05-30",
+      "end_date": "2026-05-31",
+      "venue": "Osho Jetban Spiritual Village",
+      "city": "Lumbini",
+      "state": null,
+      "country": "Nepal",
+      "phone": "9857055704, 9843078997",
+      "organizer": "Swami Dhyan Punit",
+      "description": "Meditation retreat focusing on silence, awareness, and inner celebration. Facilitated by Swami Dhyan Punit.",
+      "source_url": "https://www.facebook.com/permalink.php?story_fbid=pfbid037TAP9mewTzJaxMso9EdndxxzbyFBXiqFNzcFdaYsR11HMSk97QwZRxEvNPjxCXB2l&id=61573979704283",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Asia",
+      "id": "a40bd927e230"
     },
     {
       "is_event": true,
@@ -632,7 +727,7 @@
       "source_platform": "Instagram",
       "flyer_url": "https://scontent-iad6-1.cdninstagram.com/v/t51.82787-15/702589123_18599020585049390_1324375809690290956_n.jpg?stp=dst-jpg_e15_fr_p1080x1080_tt6&_nc_ht=scontent-iad6-1.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2gH5dVQWZ612TwQeQS2iJ7e0mcSLmG2p4UdGRjx80ST_zLFkYQDAacBhTB5IPTXx-Iw&_nc_ohc=nTP0n4T9veQQ7kNvwGuJbN4&_nc_gid=tSXnrYUmg3SOrAvmR9S8RA&edm=APs17CUBAAAA&ccb=7-5&oh=00_Af58KMVg2GYRrgMN3jYlHsGjGqwXAxRdy-R9XBhIjV0SMw&oe=6A18F7A6&_nc_sid=10d13b",
       "region": "India",
-      "id": "bce63ca14233"
+      "id": "720dfed2d5f7"
     },
     {
       "is_event": true,
@@ -646,12 +741,12 @@
       "country": "India",
       "phone": "93119 58353",
       "organizer": "Zorba The Buddha",
-      "description": "Evening celebration with live drumming, ecstatic dance, performances, sacred circle, and organic dinner under open sky.",
+      "description": "Ecstatic drumming, free dance, performances, sacred circle, and organic dinner under open sky.",
       "source_url": "https://www.instagram.com/p/DYhOI7uCx_R/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img952130cbb00b.jpg",
       "region": "India",
-      "id": "e74ef0593b72"
+      "id": "img9b3f7487f"
     },
     {
       "is_event": true,
@@ -665,14 +760,52 @@
       "country": "India",
       "phone": "80549-33090, 94175-04040",
       "organizer": "Osho Bulla Meditation Centre",
-      "description": "Osho Sadhna Shivir with Camp Facilitator Swami Amrit Mehman. 7:00 AM to 5:00 PM. Contribution: 500/-",
+      "description": "Osho Sadhna Shivir meditation camp facilitated by Swami Amrit Mehman. 7:00 AM to 5:00 PM. Contribution: 500/-",
       "source_platform": "Flyer upload",
       "source_url": "",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260527-WA0007.jpg",
       "region": "India",
       "_flyer_path": "flyers/IMG-20260527-WA0007.jpg",
       "_fixed_id": "fly594e30d0c",
-      "id": "fly594e30d0c"
+      "id": "img594e30d0c"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "OSHO No Mind-Meditation Camp Nepal",
+      "start_date": "2026-06-01",
+      "end_date": null,
+      "venue": "Divine Door Nepal",
+      "city": null,
+      "state": null,
+      "country": "Nepal",
+      "phone": "+977 9824999770",
+      "organizer": "Divine Door Nepal",
+      "description": "Intimate retreat with facilitators Sitara and Tathagat. Limited accommodation and seats. First-time offering.",
+      "source_url": "https://www.facebook.com/oshomsnepal/posts/pfbid02u23kVZ95ScYvUkR3c5YrtUUqqWyhUne5HMBUCQ6bc1QJkwFHC8DDTJ4gvBqLRMeEl",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Asia",
+      "id": "db42566f1486"
+    },
+    {
+      "is_event": true,
+      "type": "Gathering",
+      "title": "Trance Dance XL with Apurva",
+      "start_date": "2026-06-01",
+      "end_date": null,
+      "venue": "Osho Festival",
+      "city": "Fucecchio",
+      "state": null,
+      "country": "Italy",
+      "phone": null,
+      "organizer": null,
+      "description": "Trance Dance XL with Apurva at Osho Festival in Fucecchio, June 2026.",
+      "source_url": "https://www.facebook.com/groups/504770760087222/posts/2110253966205552/",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Europe",
+      "id": "5af1dec6bece"
     },
     {
       "is_event": true,
@@ -691,7 +824,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img0d0371c70a90.jpg",
       "region": "Asia",
-      "id": "f8250be2c639"
+      "id": "imge9e3dd470"
     },
     {
       "is_event": true,
@@ -710,7 +843,7 @@
       "source_platform": "Osho Prabhu Kripal Ashram (Gorakhpur) (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img4c4824d79830.webp",
       "region": "India",
-      "id": "cc2a21988495"
+      "id": "imgdfed79624"
     },
     {
       "title": "7 Day Transformational Healing Retreat on Gozo Island, Malta",
@@ -726,7 +859,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/28k/28316/p_1165129/1000_1694080573.jpg",
-      "id": "4425e0546f9a"
+      "id": "14c0a2d03e8e"
     },
     {
       "title": "4 Day 'Healing From Within' Retreat in Newark, UK",
@@ -742,7 +875,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/20k/20433/p_595892/1000_1624507552.jpg",
-      "id": "8f3844b9fc2f"
+      "id": "ed3d35898c82"
     },
     {
       "title": "11 Day Vipassana Silent Awakening Meditation Program in India",
@@ -758,7 +891,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/50k/50358/p_1851126/1000_1738312858.jpg",
-      "id": "c439c9fb4f15"
+      "id": "e88a31988d20"
     },
     {
       "title": "8 Day Seven Chakra Journey: Yoga & Meditation Retreat, Himalayas",
@@ -774,7 +907,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69804/p_2634316/1000_1779201037.jpg",
-      "id": "7defdc5d221c"
+      "id": "829ceb4df679"
     },
     {
       "title": "4 Day Tibetan Epigenetics Yogic Healing Retreat in India",
@@ -790,7 +923,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "303f66154d75"
+      "id": "2de253225506"
     },
     {
       "title": "2 Day Romantic Honeymoon Couple Tantra Retreat in Bali",
@@ -806,7 +939,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/bali",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/62k/62572/p_2335768/1000_1741747906.jpg",
-      "id": "03a681212b5b"
+      "id": "a4347daa80ee"
     },
     {
       "title": "8 Day Seven Chakra Retreat in Bali",
@@ -822,7 +955,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/bali",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/27k/27004/p_892566/1000_1669120146.jpg",
-      "id": "b21c0435c7e5"
+      "id": "791985884c9d"
     },
     {
       "title": "28 Day Holina Wellness & Healing Retreat in Khao Yai, Thailand",
@@ -838,7 +971,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/thailand",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/31k/31540/p_1018424/1000_1680526846.jpg",
-      "id": "e7404e74b645"
+      "id": "0cf7fdb002e6"
     },
     {
       "title": "6 Day Find Your Flow: Writing & Yoga Women's Retreat, Costa Rica",
@@ -854,7 +987,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/costa-rica",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/48k/48531/p_2575429/1000_1776270378.jpg",
-      "id": "a0dcdb5334f6"
+      "id": "21d4dda3a006"
     },
     {
       "title": "7 Day Plant Ceremony Healing Retreat in Cancun, Mexico",
@@ -870,7 +1003,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/51k/51981/p_2569995/1000_1775958253.jpg",
-      "id": "86f65f19652f"
+      "id": "834466c74d0a"
     },
     {
       "title": "7 Day Zen Center Soul Alignment Retreat in Nayarit, Mexico",
@@ -886,7 +1019,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/34k/34888/p_2213984/1000_1737501070.jpg",
-      "id": "0f334bbb44e1"
+      "id": "32b3a5f814e8"
     },
     {
       "title": "10 Day Ultra-Luxury Immersive Retreat in Mexico",
@@ -902,7 +1035,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "20fad14a2780"
+      "id": "d021374a7a12"
     },
     {
       "title": "7 Day Las Brisas Zen Center \"Feel Your Flow Retreat\" in Mexico",
@@ -918,7 +1051,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69804/p_2634316/1000_1779201037.jpg",
-      "id": "514f6b2fb818"
+      "id": "f270dc09177e"
     },
     {
       "title": "7 Day Complete Cleanse: Reset Retreat in Nayarit, Mexico",
@@ -934,7 +1067,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/67k/67076/p_2524503/1000_1773210420.jpg",
-      "id": "6c94ae77e19a"
+      "id": "5e79e97459da"
     },
     {
       "title": "7 Day Zen Center Semi-Private Healing & Wellbeing Retreat Mexico",
@@ -950,7 +1083,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69805/p_2634300/1000_1779176514.jpg",
-      "id": "3310d8f43130"
+      "id": "d95bc8b97821"
     },
     {
       "title": "8 Day Chakra Healing, Meditation, Massage & Yoga Retreat in Nepal",
@@ -966,7 +1099,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/45k/45214/p_1799065/1000_1736158177.jpg",
-      "id": "d676ecc8d52b"
+      "id": "bb98f644ac5f"
     },
     {
       "title": "4 Day Transformative Meditation Retreat in Pokhara, Nepal",
@@ -982,7 +1115,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/27k/27516/p_916973/1000_1671720848.jpg",
-      "id": "ebe01616aad3"
+      "id": "beaf2e7e25b2"
     },
     {
       "title": "7 Day Mardi Himal Trek of Adventure & Himalayan Awakening, Nepal",
@@ -998,7 +1131,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "6387ef7eed37"
+      "id": "b751f387cbf4"
     },
     {
       "title": "29 Day Ayurveda & Yoga Retreat in Kathmandu, Nepal",
@@ -1014,7 +1147,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "2cebfa069d8e"
+      "id": "31a8072ec1b8"
     },
     {
       "title": "15 Day Ayurvedic Beauty Care & Yoga Retreat in Kathmandu, Nepal",
@@ -1030,7 +1163,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "69f5b879146f"
+      "id": "0a220ed49cbc"
     },
     {
       "title": "3 Day 1:1 Men's Nervous System Reset Retreat in Canada",
@@ -1046,7 +1179,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69805/p_2634300/1000_1779176514.jpg",
-      "id": "d7ee7781d727"
+      "id": "986b8f43e006"
     },
     {
       "title": "5 Day Reignite The Spark: Group Couples Intimacy Retreat, Ontario",
@@ -1062,7 +1195,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66073/p_2483263/1000_1772001234.jpg",
-      "id": "3a07f72d7870"
+      "id": "bbb836569a9c"
     },
     {
       "title": "9 Day She Walks the Desert, A Journey of Power & Peace, Morocco",
@@ -1078,7 +1211,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66702/p_2509289/1000_1773210337.jpg",
-      "id": "5cacfa234d9a"
+      "id": "fe513567fa1c"
     },
     {
       "title": "7 Day Return to Your Roots Yoga & Hiking Retreat, Imlil, Morocco",
@@ -1094,7 +1227,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69805/p_2634300/1000_1779176514.jpg",
-      "id": "6d26ecf7435e"
+      "id": "8c75ea52e097"
     },
     {
       "title": "6 Day The Essence Retreat, Yoga & Local Soul Marrakesh, Morocco",
@@ -1110,7 +1243,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/48k/48244/p_2273968/1000_1761915598.jpg",
-      "id": "d5376963a50a"
+      "id": "32d7b708b15e"
     },
     {
       "title": "3 Day Disconnecting from the Matrix & Awake Sovereignty, Colombia",
@@ -1126,7 +1259,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "eb01f87dedde"
+      "id": "463c146be065"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "6 Day Osho Meditation Retreat: Understanding Conscious and Unconscious Mind",
+      "start_date": "2026-06-02",
+      "end_date": "2026-06-07",
+      "venue": "OSHO PYRAMID, Gokulam Farm & Resort, Mota Gam",
+      "city": "Bardoli",
+      "state": "Gujarat",
+      "country": "India",
+      "phone": "93747 18325",
+      "organizer": "Swami Aatmabudh",
+      "description": "6-day meditation retreat exploring conscious and unconscious mind awareness, active and silent meditation techniques, inner transformation through mindful living practices.",
+      "source_url": "https://www.facebook.com/reel/1480498080187880/",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "India",
+      "id": "6fd506fee534"
     },
     {
       "is_event": true,
@@ -1145,7 +1297,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc45aab989a77.jpg",
       "region": "India",
-      "id": "d7e45577697d"
+      "id": "img8057b5117"
     },
     {
       "is_event": true,
@@ -1164,7 +1316,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf7492b762252.jpg",
       "region": "India",
-      "id": "a717d217e258"
+      "id": "img382fb9601"
     },
     {
       "is_event": true,
@@ -1183,7 +1335,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf30073d27d59.jpg",
       "region": "India",
-      "id": "0233f3885886"
+      "id": "img6f0e5ed24"
     },
     {
       "is_event": true,
@@ -1202,7 +1354,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgeda7ca938114.jpg",
       "region": "India",
-      "id": "b81ac9718d23"
+      "id": "img765f83363"
     },
     {
       "is_event": true,
@@ -1221,7 +1373,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2cd08ccfb527.jpg",
       "region": "India",
-      "id": "3f11ceb090d6"
+      "id": "imge77242ada"
     },
     {
       "is_event": true,
@@ -1240,7 +1392,26 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3304cc49d5d5.jpg",
       "region": "India",
-      "id": "cd2b6e5822bc"
+      "id": "imgf0ac44255"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Mystery of Love",
+      "start_date": "2026-06-03",
+      "end_date": "2026-06-07",
+      "venue": "O-Nisarga",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91 94180 37370",
+      "organizer": "O-Nisarga",
+      "description": "Osho meditation retreat exploring the mystery of love.",
+      "source_url": "https://www.facebook.com/reel/2056985038245587/",
+      "source_platform": "Facebook",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgee41530ee8e6.jpg",
+      "region": "India",
+      "id": "img1fbbb901c"
     },
     {
       "is_event": true,
@@ -1254,12 +1425,12 @@
       "country": "India",
       "phone": null,
       "organizer": "OSHO International Meditation Resort",
-      "description": "7-day meditative therapy to transcend mind's noise and experience deep silence through inner work and meditation practice.",
+      "description": "7-day meditative therapy to transcend mind's noise and access deep silence through intensive meditation practice.",
       "source_url": "https://www.facebook.com/reel/1544564947185746/",
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8977bc4a5f1a.jpg",
       "region": "India",
-      "id": "dc8c9567c3b0"
+      "id": "imgc1db9025e"
     },
     {
       "is_event": true,
@@ -1273,12 +1444,52 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Daily Tai Chi sessions. Facilitated by Swami Dhyan Pulak",
+      "description": "Relaxation with daily Tai Chi sessions by Swami Dhyan Pulak",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf4b20302e62a.jpg",
       "region": "India",
-      "id": "33d27f9fa41f"
+      "id": "img7a18a412c"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Mystery of Love (2026)",
+      "start_date": "2026-06-03",
+      "end_date": "2026-06-07",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "Hindi meditation program for beginners with Sw. Deva Naman",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
+      "region": "India",
+      "id": "77fc2770fa96"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Mystery of Love",
+      "start_date": "2026-06-03",
+      "end_date": "2026-06-07",
+      "venue": "Osho Nisarga",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91 94180 37370",
+      "organizer": "Swami Naman",
+      "description": "Love is the first step towards God. A transformative retreat exploring the mystery of love and spirituality.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260402-WA0011.jpg",
+      "region": "India",
+      "_flyer_path": "flyers/IMG-20260402-WA0011.jpg",
+      "_fixed_id": "flyf5c9b2854",
+      "id": "imgf5c9b2854"
     },
     {
       "is_event": true,
@@ -1297,7 +1508,7 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img0cc3178b2f2f.jpg",
       "region": "India",
-      "id": "7b6780dcd9c9"
+      "id": "imgbf7ee625c"
     },
     {
       "is_event": true,
@@ -1316,7 +1527,7 @@
       "source_platform": "Osho Nisarga (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3382f7aef2dd.jpg",
       "region": "India",
-      "id": "499b35fbb715"
+      "id": "imga903da377"
     },
     {
       "title": "5 Day Ancestral Ayurveda & Forest Medicina Immersion in Colombia",
@@ -1332,28 +1543,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65993/p_2481267/1000_1771857372.jpg",
-      "id": "601d740cb4e6"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Mystery of Love",
-      "start_date": "2026-06-03",
-      "end_date": "2026-06-07",
-      "venue": "Osho Nisarga",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91 94180 37370",
-      "organizer": "Swami Naman",
-      "description": "Love is the first step towards God. Meditation and spiritual camp exploring the mystery of love.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260402-WA0011.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260402-WA0011.jpg",
-      "_fixed_id": "flyf5c9b2854",
-      "id": "flyf5c9b2854"
+      "id": "39537d58c6cb"
     },
     {
       "is_event": true,
@@ -1367,12 +1557,31 @@
       "country": "India",
       "phone": "93119 58352",
       "organizer": null,
-      "description": "4-day transformative journey with sound healing, voice opening, breathwork, chanting, and expressive practices for emotional release and inner stillness.",
+      "description": "4-day immersive journey of emotional release, sacred sound healing, breath activation, meditation and reconnecting with authentic self.",
+      "source_url": "https://www.instagram.com/p/DYjywtbCviN/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga5370d782260.jpg",
+      "region": "India",
+      "id": "img5a09ef077"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Sound Healing & Voice Opening Retreat",
+      "start_date": "2026-06-04",
+      "end_date": "2026-06-08",
+      "venue": "Zorba The Buddha",
+      "city": null,
+      "state": null,
+      "country": "India",
+      "phone": "93119 58352",
+      "organizer": null,
+      "description": "4-day transformative retreat for emotional release, voice opening, stress relief through sound journeys, chanting, breathwork and expressive practices.",
       "source_url": "https://www.instagram.com/p/DYeXmZviPyb/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img6fe88520cd75.jpg",
       "region": "India",
-      "id": "24215c369f8b"
+      "id": "img58f039746"
     },
     {
       "is_event": true,
@@ -1386,12 +1595,33 @@
       "country": "India",
       "phone": "+91 93119 02245",
       "organizer": null,
-      "description": "Immersive healing journey through sound vibration, voice expression, and meditation. Experience gongs, singing bowls, and toning to release tension and reconnect with inner harmony.",
+      "description": "Immersive healing journey using gongs, singing bowls, voice toning, and meditation to release tension, reconnect with authentic expression, and experience deep stillness.",
       "source_url": "https://www.instagram.com/p/DXQu9D2kq26/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7b3fb2df37e7.jpg",
       "region": "India",
-      "id": "9b34750241cb"
+      "id": "img237604118"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Awakening Under The Trees Osho Meditation Camp",
+      "start_date": "2026-06-04",
+      "end_date": "2026-06-07",
+      "venue": "Into The Woods, Tulga",
+      "city": "Kullu",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "70180 81235, 78885 83061",
+      "organizer": "Satyam Prem",
+      "description": "Osho meditation camp in nature near Kasol, Parvati Valley. Facilitator: Satyam Prem (Osho manan, Mehsana).",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0024.jpg",
+      "region": "India",
+      "_flyer_path": "flyers/IMG-20260502-WA0024.jpg",
+      "_fixed_id": "flydfb623cd5",
+      "id": "imgdfb623cd5"
     },
     {
       "is_event": true,
@@ -1410,7 +1640,7 @@
       "source_platform": "Osho Sadhana Path (Nargol) (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc99457e15494.jpg",
       "region": "India",
-      "id": "960ef5c301d0"
+      "id": "img559a0a126"
     },
     {
       "is_event": true,
@@ -1429,7 +1659,7 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga94fd13c197b.jpg",
       "region": "India",
-      "id": "738f5c38a679"
+      "id": "img10e25b4d9"
     },
     {
       "is_event": true,
@@ -1450,28 +1680,7 @@
       "region": "India",
       "_flyer_path": "flyers/IMG-20260502-WA0023.jpg",
       "_fixed_id": "flyde6411858",
-      "id": "flyde6411858"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Awakening Under The Trees - Osho Meditation Camp",
-      "start_date": "2026-06-04",
-      "end_date": "2026-06-07",
-      "venue": "Into The Woods, Tulga",
-      "city": "Kullu",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "7018081235, 7888583061",
-      "organizer": "Satyam Prem (Osho manan, Mehsana)",
-      "description": "Osho meditation camp in forest near Kasol, Parvati Valley, Mankaran. Facilitator: Satyam Prem.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0024.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260502-WA0024.jpg",
-      "_fixed_id": "flydfb623cd5",
-      "id": "flydfb623cd5"
+      "id": "imgde6411858"
     },
     {
       "is_event": true,
@@ -1492,7 +1701,7 @@
       "region": "India",
       "_flyer_path": "flyers/IMG-20260502-WA0023(1).jpg",
       "_fixed_id": "fly8e4a77814",
-      "id": "fly8e4a77814"
+      "id": "img4c0e98312"
     },
     {
       "title": "3 Day Mother & Daughter Retreat in Texas, USA",
@@ -1508,7 +1717,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/55k/55878/p_2083929/1000_1638139077.jpg",
-      "id": "086553060015"
+      "id": "e8c3c1bbca4b"
     },
     {
       "title": "3 Day Women Wildheart Wellness & Horse Connection Retreat, Canada",
@@ -1524,7 +1733,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66702/p_2509289/1000_1773210337.jpg",
-      "id": "82c31b118bc4"
+      "id": "6b38611ddd82"
     },
     {
       "is_event": true,
@@ -1538,12 +1747,50 @@
       "country": "India",
       "phone": null,
       "organizer": null,
-      "description": "Live online course for women exploring body connection through feeling, awareness, relaxation, movement, and presence beyond self-judgment.",
+      "description": "Live online course for women on meditation, body awareness, and self-inquiry to reconnect with themselves.",
+      "source_url": "https://www.instagram.com/p/DY3DWYtF9yX/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img28aeb9127496.jpg",
+      "region": "India",
+      "id": "imge9e68ed6b"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "OSHO BodyLove for Women",
+      "start_date": "2026-06-06",
+      "end_date": "2026-06-07",
+      "venue": "Online",
+      "city": null,
+      "state": null,
+      "country": "India",
+      "phone": null,
+      "organizer": null,
+      "description": "Live online course exploring body connection through feeling, awareness, relaxation, movement, and presence for women seeking conscious self-relationship beyond judgment.",
       "source_url": "https://www.instagram.com/p/DYh2Q9EkQS1/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga698852c8260.jpg",
       "region": "India",
-      "id": "c0e837974977"
+      "id": "img4fca0e638"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "OSHO BodyLove for Women",
+      "start_date": "2026-06-06",
+      "end_date": "2026-06-07",
+      "venue": "Online",
+      "city": null,
+      "state": null,
+      "country": "India",
+      "phone": null,
+      "organizer": null,
+      "description": "Live online course for women to reconnect with their bodies through meditation, body awareness, and self-inquiry. Free preview on May 30th.",
+      "source_url": "https://www.facebook.com/reel/1335915598533784/",
+      "source_platform": "Facebook",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb770eafcecf4.jpg",
+      "region": "India",
+      "id": "img73b8709a6"
     },
     {
       "is_event": true,
@@ -1562,26 +1809,26 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc60f7d9f0985.jpg",
       "region": "Asia",
-      "id": "1296035c3a72"
+      "id": "imgddf6d5091"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "OSHO BodyLove for Women",
-      "start_date": "2026-06-06",
-      "end_date": "2026-06-07",
-      "venue": null,
-      "city": null,
+      "title": "Training for Transformation part 5 TT5: Family Constellation",
+      "start_date": "2026-06-08",
+      "end_date": "2026-06-14",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
       "state": null,
-      "country": "India",
-      "phone": null,
-      "organizer": null,
-      "description": "Live online course exploring loving and conscious connection with body through feeling, awareness, relaxation, movement, and presence beyond image or self-judgment.",
-      "source_url": "https://www.instagram.com/p/DYh2Q9EkQS1/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga698852c8260.jpg",
-      "region": "India",
-      "id": "c8aa319e8841"
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Reveals hidden family patterns holding us back",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1f2e3fec5757.jpg",
+      "region": "Europe",
+      "id": "imgee0ff5cb9"
     },
     {
       "title": "5 Day Meditation, Journaling and Digital Detox Retreat, Wales",
@@ -1597,7 +1844,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/42k/42042/p_1835485/1000_1755877177.jpg",
-      "id": "d4f18cf6fd8a"
+      "id": "3828cf1386c7"
     },
     {
       "is_event": true,
@@ -1616,7 +1863,26 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2fe737885d86.jpg",
       "region": "India",
-      "id": "0162c1b3f492"
+      "id": "imgc0c0d01d5"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Mystic Rose Therapy 21-Day Meditation Retreat",
+      "start_date": "2026-06-10",
+      "end_date": "2026-06-30",
+      "venue": "Tapoban International Commune, Nagarjun Hills",
+      "city": "Kathmandu",
+      "state": null,
+      "country": "Nepal",
+      "phone": "+977 9847807082",
+      "organizer": "Swami Anand Arhat",
+      "description": "21-day journey through laughter, tears, and silence to heal emotional wounds and awaken deep peace.",
+      "source_url": "https://www.facebook.com/permalink.php?story_fbid=pfbid02v65Zvfq4kkTaMBCQdkPdFbLS9zrD23eJ1kh2EQagsZwCCdGhczXQFmSzr9GzbHQ7l&id=61577331582498",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Asia",
+      "id": "100c2477e1bc"
     },
     {
       "is_event": true,
@@ -1635,7 +1901,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img0054b95d28d7.jpg",
       "region": "Asia",
-      "id": "d55e0c20b875"
+      "id": "img1155b1bcb"
     },
     {
       "is_event": true,
@@ -1654,7 +1920,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img84b911f9f0ab.jpg",
       "region": "Asia",
-      "id": "9816d63dc9b8"
+      "id": "imgfa9c1de14"
     },
     {
       "is_event": true,
@@ -1673,7 +1939,7 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb800da4ca2cf.jpg",
       "region": "India",
-      "id": "3c4a5a67e38b"
+      "id": "img81cc9e86e"
     },
     {
       "title": "7 Day Sound Healing, Yoga & Massage Wellness Retreat in Sri Lanka",
@@ -1689,7 +1955,45 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/sri-lanka",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "3f517c37a1bd"
+      "id": "1c8b75e7b636"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Osho Meditation Camp at Kasar Devi",
+      "start_date": "2026-06-11",
+      "end_date": "2026-06-14",
+      "venue": "Kasar Devi Temple",
+      "city": "Almora",
+      "state": "Uttarakhand",
+      "country": "India",
+      "phone": "+919058967526",
+      "organizer": null,
+      "description": "Active and passive meditations daily with Osho meditation therapy. Includes accommodation and meals.",
+      "source_url": "https://www.instagram.com/p/DY1f3cpB2Ik/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2704e391c712.jpg",
+      "region": "India",
+      "id": "imgc19635e74"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Meditation Camp at Kasar Devi",
+      "start_date": "2026-06-11",
+      "end_date": "2026-06-14",
+      "venue": "Kasar Devi",
+      "city": "Almora",
+      "state": "Uttarakhand",
+      "country": "India",
+      "phone": "+919058967526",
+      "organizer": null,
+      "description": "Meditation camp with Swami Antar Kranti, Christine, and Sarju. Includes 4 active meditations daily, meals, and accommodation in Himalayas.",
+      "source_url": "https://www.instagram.com/p/DY3wdiuBos-/",
+      "source_platform": "Instagram",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img130312dc41a1.jpg",
+      "region": "India",
+      "id": "img187904cf0"
     },
     {
       "is_event": true,
@@ -1703,12 +2007,71 @@
       "country": "India",
       "phone": "+919058967526",
       "organizer": "Osho Bliss Experiences",
-      "description": "Meditation camp in the Himalayas with indoor and outdoor sessions using Osho techniques for deep inner exploration.",
+      "description": "Indoor and outdoor meditation camp in Himalayas with Osho techniques, joy, acceptance and love practices.",
       "source_url": "https://www.instagram.com/p/DYyoBJ4hTPL/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img65f20d787df8.jpg",
       "region": "India",
-      "id": "a76e0d54df3d"
+      "id": "imge0443c40d"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "OSHO Mystic Rose",
+      "start_date": "2026-06-11",
+      "end_date": "2026-07-01",
+      "venue": "OSHO International Meditation Resort",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "country": "India",
+      "phone": null,
+      "organizer": "OSHO International Meditation Resort",
+      "description": "21-day meditation retreat: 7 days laughter, 7 days tears, 7 days silence. 3 hours daily practice.",
+      "source_url": "https://www.facebook.com/reel/742953785474364/",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "India",
+      "id": "23e46b59e564"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Creativity for Youth (2026)",
+      "start_date": "2026-06-11",
+      "end_date": "2026-06-14",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "Hindi meditation program for beginners with Sw. Anand Aseem",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
+      "region": "India",
+      "id": "2c81cac85db7"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Silence, Sky & Awareness",
+      "start_date": "2026-06-11",
+      "end_date": "2026-06-14",
+      "venue": "Into the Woods, Tulga",
+      "city": "Manali",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91 70180 81235, +91 78885 83061",
+      "organizer": "Dhyan Pratibha",
+      "description": "Osho meditation retreat on silence, sky and awareness with facilitator Dhyan Pratibha. Starts 11th evening.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0020.jpg",
+      "region": "India",
+      "_flyer_path": "flyers/IMG-20260502-WA0020.jpg",
+      "_fixed_id": "flyf8edf29de",
+      "id": "imgf8edf29de"
     },
     {
       "is_event": true,
@@ -1727,7 +2090,7 @@
       "source_platform": "Osho Nisarga (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1ca00600479a.jpg",
       "region": "India",
-      "id": "f51a56f5950f"
+      "id": "img1bbc06ae7"
     },
     {
       "title": "4 Day Osho Inner Child Retreat In Dharmashala, India",
@@ -1743,28 +2106,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/68k/68835/p_2594612/1000_1777222144.jpg",
-      "id": "f08cfe674d31"
+      "id": "fa1509662115"
     },
     {
       "is_event": true,
-      "type": "Retreat",
-      "title": "Silence, Sky & Awareness",
-      "start_date": "2026-06-11",
+      "type": "Camp",
+      "title": "Osho Transformation Meditation Camp",
+      "start_date": "2026-06-12",
       "end_date": "2026-06-14",
-      "venue": "Into the Woods, Tulga",
-      "city": "Manali",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91 70180 81235",
-      "organizer": "Dhyan Pratibha",
-      "description": "Osho meditation retreat on silence and awareness in the woods near Kasol. Starts 11th evening.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0020.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260502-WA0020.jpg",
-      "_fixed_id": "flyf8edf29de",
-      "id": "flyf8edf29de"
+      "venue": "Osho Upaban",
+      "city": "Pokhara",
+      "state": null,
+      "country": "Nepal",
+      "phone": "+977 984-0600056",
+      "organizer": "Swami Yoganand",
+      "description": "Three-day meditation camp with dynamic meditations, silence, emotional cleansing, discourses, and transformative guidance by Bodhisattva Swami Anand Arun.",
+      "source_url": "https://www.facebook.com/permalink.php?story_fbid=pfbid0qWvCWabLGZXVRbSTbc88tB6AAgUGQsKuso82eBG8nSum1V3Sb8aXj5JFcpDqNQ7wl&id=61571871103451",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Asia",
+      "id": "b2e7e86c2cfb"
     },
     {
       "is_event": true,
@@ -1783,26 +2144,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge5a27db3edc2.jpg",
       "region": "Asia",
-      "id": "ba7e274a062e"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Music & Meditation Retreat",
-      "start_date": "2026-06-12",
-      "end_date": "2026-06-14",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Let music guide you towards silence and bliss",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf4b20302e62a.jpg",
-      "region": "India",
-      "id": "511ea45e3a9c"
+      "id": "imga4f7aa665"
     },
     {
       "is_event": true,
@@ -1821,7 +2163,7 @@
       "source_platform": "Oshogram (Ensogram) (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgfebb3ac22aec.jpg",
       "region": "India",
-      "id": "c93c03d832bf"
+      "id": "img18f753173"
     },
     {
       "is_event": true,
@@ -1840,7 +2182,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgcebf2bea9299.jpg",
       "region": "Asia",
-      "id": "481b733c5d1e"
+      "id": "imga89c8bbbf"
     },
     {
       "title": "4 Day Himalayan Meditation Retreat in Rishikesh, India",
@@ -1856,7 +2198,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65997/p_2481306/1000_1771858028.jpg",
-      "id": "773b57877c77"
+      "id": "5b999797ba96"
     },
     {
       "is_event": true,
@@ -1870,12 +2212,12 @@
       "country": "India",
       "phone": "+919058967526",
       "organizer": null,
-      "description": "Mountain reset with Osho meditations. Swami Vatayan brings live music for evening meetings in the Himalayas.",
+      "description": "Mountain retreat with Osho meditations, live music by Swami Vatayan's band during evening meetings. Comfortable reset in the Himalayas.",
       "source_url": "https://www.instagram.com/p/DYuVWfOhJ53/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img4fc682b30dcf.jpg",
       "region": "India",
-      "id": "d85d2c20c239"
+      "id": "img53d5aefe7"
     },
     {
       "is_event": true,
@@ -1889,12 +2231,52 @@
       "country": "India",
       "phone": "9311958352",
       "organizer": null,
-      "description": "4-day soulful retreat exploring intimacy, awareness, and aliveness through Vigyan Bhairav Tantra practices inspired by Osho.",
+      "description": "4-day meditative retreat exploring intimacy, awareness, and conscious relating through Vigyan Bhairav Tantra practices inspired by Osho.",
       "source_url": "https://www.instagram.com/p/DYmctdQiXKZ/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8d08265fae2f.jpg",
       "region": "India",
-      "id": "3e5c23a8db61"
+      "id": "img5abc843f7"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Baajat Anhad Naad (2026)",
+      "start_date": "2026-06-18",
+      "end_date": "2026-06-21",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "Hindi meditation program for beginners with Ma Anand Sujati",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
+      "region": "India",
+      "id": "debdfaae5580"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Simple Yoga 3 Days OSHO Meditation Camp",
+      "start_date": "2026-06-18",
+      "end_date": "2026-06-21",
+      "venue": "Osho Gangadham Ashram, Badrinath Road, Brahapuri",
+      "city": "Rishikesh",
+      "state": "Uttarakhand",
+      "country": "India",
+      "phone": "92581-60729, 91493-23698",
+      "organizer": null,
+      "description": "3-day Osho meditation camp with facilitators Sw Amrit Mehman and Sw Parkashanand Bharti.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0021.jpg",
+      "region": "India",
+      "_flyer_path": "flyers/IMG-20260502-WA0021.jpg",
+      "_fixed_id": "fly5c8d885ef",
+      "id": "img5c8d885ef"
     },
     {
       "is_event": true,
@@ -1913,7 +2295,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2a35acfa990d.jpg",
       "region": "India",
-      "id": "38f67cc6d7cd"
+      "id": "imgc81c7a1d9"
     },
     {
       "is_event": true,
@@ -1932,104 +2314,7 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img57864f87aa49.jpg",
       "region": "India",
-      "id": "bd0190c8f736"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Baajat Anhad Naad (2026)",
-      "start_date": "2026-06-18",
-      "end_date": "2026-06-21",
-      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-9418037370",
-      "organizer": "Osho Nisarga",
-      "description": "Hindi language program facilitated by Ma Anand Sujati",
-      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
-      "source_platform": "Osho Nisarga (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img57864f87aa49.jpg",
-      "region": "India",
-      "id": "c024c6d3c77f"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Simple Yoga 3 Days OSHO Meditation Camp",
-      "start_date": "2026-06-18",
-      "end_date": "2026-06-21",
-      "venue": "Osho Gangadham Ashram, Badrinath Road, Brahapuri (Rishikesh)",
-      "city": "Rishikesh",
-      "state": "Uttarakhand",
-      "country": "India",
-      "phone": "92581-60729, 91493-23698",
-      "organizer": "Sw Amrit Mehman, Sw Parkashanand Bharti",
-      "description": "3-day Osho meditation camp featuring simple yoga practices and meditation techniques.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0021.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260502-WA0021.jpg",
-      "_fixed_id": "fly5c8d885ef",
-      "id": "fly5c8d885ef"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Osho Meditation Luxury Retreat with Swami Vatayan",
-      "start_date": "2026-06-18",
-      "end_date": "2026-06-21",
-      "venue": "Kasar Devi",
-      "city": "Kasar Devi",
-      "state": "Uttarakhand",
-      "country": "India",
-      "phone": "+919058967526",
-      "organizer": null,
-      "description": "Mountain retreat with Osho meditations, live music performances by Swami Vatayan's band for evening meetings.",
-      "source_url": "https://www.instagram.com/p/DYuVWfOhJ53/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img4fc682b30dcf.jpg",
-      "region": "India",
-      "id": "4328d1db76db"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Luxury Mountain Retreat with Swami Vatayan",
-      "start_date": "2026-06-18",
-      "end_date": "2026-06-21",
-      "venue": "Kasar Devi",
-      "city": "Almora",
-      "state": "Uttarakhand",
-      "country": "India",
-      "phone": "+919058967526",
-      "organizer": null,
-      "description": "Mountain retreat with Osho meditations, live music performances by Swami Vatayan, and evening meetings in the Himalayas.",
-      "source_url": "https://www.instagram.com/p/DYuVWfOhJ53/",
-      "source_platform": "Instagram",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img4fc682b30dcf.jpg",
-      "region": "India",
-      "id": "bc420302c376"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Taste of Silence",
-      "start_date": "2026-06-19",
-      "end_date": "2026-06-21",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Dhyan Pulak",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf4b20302e62a.jpg",
-      "region": "India",
-      "id": "96ae13a839a3"
+      "id": "imgcd33396cc"
     },
     {
       "title": "3 Day Burnout Recovery & Renewal Women's Retreat in Georgia, US",
@@ -2045,7 +2330,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/40k/40852/p_1418720/1000_1712715797.jpg",
-      "id": "900a237c60b5"
+      "id": "89832288ed0f"
     },
     {
       "is_event": true,
@@ -2064,7 +2349,7 @@
       "source_platform": "Osho San Diego (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbdf8bd186648.jpg",
       "region": "Americas",
-      "id": "e4752523e093"
+      "id": "img1ccaf54d6"
     },
     {
       "is_event": true,
@@ -2072,18 +2357,18 @@
       "title": "Osho Mystic Rose - 21 Days Deep Emotional Cleansing Therapy",
       "start_date": "2026-06-20",
       "end_date": "2026-07-11",
-      "venue": "Osho Sanzen India",
+      "venue": "Osho Sanzen India, Kotla",
       "city": "Solan",
       "state": "Himachal Pradesh",
       "country": "India",
-      "phone": "+91 8894351962",
+      "phone": "+91-8894351962",
       "organizer": "Osho Sanzen India",
-      "description": "21-day meditative therapy combining laughter, cathartic crying, and witness meditation with Osho techniques for deep emotional cleansing and transformation.",
-      "source_url": "https://www.facebook.com/OshoSanzen/posts/pfbid02UzCWKfpQpYzsARqcKef7dBJzXjSuPTkjULEMWSVaCNKc5tsTr9X6iPhuMHF4ddQLl",
+      "description": "21-day meditative therapy combining laughter, cathartic crying, and witnessing meditation for emotional cleansing and inner transformation.",
+      "source_url": "https://www.facebook.com/OshoSanzen/posts/pfbid0RSZKQWC3yR9qLFD2KW2Vhe4uPFygjy4wydp42rFF9kTGbsu7V7gdD3XqKNCgPPhYl",
       "source_platform": "Facebook",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga94fd13c197b.jpg",
+      "flyer_url": "",
       "region": "India",
-      "id": "358f146d3467"
+      "id": "49be04d80a4b"
     },
     {
       "is_event": true,
@@ -2093,16 +2378,16 @@
       "end_date": "2026-06-28",
       "venue": "Zorba The Buddha",
       "city": "Delhi",
-      "state": "Delhi",
+      "state": null,
       "country": "India",
       "phone": null,
       "organizer": null,
-      "description": "8-day immersive retreat using dynamic meditation, gibberish, and kundalini meditation to release stress and experience inner silence.",
+      "description": "8-day immersive retreat using dynamic meditation, gibberish, kundalini meditation to release suppressed emotions and experience inner silence beyond mind and language.",
       "source_url": "https://www.instagram.com/p/DXG3q_ikjni/",
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img5b9acbf6437a.jpg",
       "region": "India",
-      "id": "39e98954fe9a"
+      "id": "imge798d8335"
     },
     {
       "is_event": true,
@@ -2116,12 +2401,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Live Keertan 12:00 PM - 1:00 PM",
+      "description": "Live Keertan meditation experience",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf4b20302e62a.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8d5aa9f9a838.jpg",
       "region": "India",
-      "id": "ed2344bbca18"
+      "id": "img4ab549bac"
     },
     {
       "is_event": true,
@@ -2140,7 +2425,7 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img552c57982c78.jpg",
       "region": "India",
-      "id": "47892e4563d6"
+      "id": "img5fe81bf25"
     },
     {
       "title": "7 Day Kids & Family Adventure Retreat in Costa Rica",
@@ -2156,7 +2441,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/costa-rica",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "58d578200fb6"
+      "id": "21107a23ff73"
     },
     {
       "is_event": true,
@@ -2175,7 +2460,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgaf27a7e767d2.jpg",
       "region": "India",
-      "id": "205a654a8193"
+      "id": "img796702c1a"
     },
     {
       "is_event": true,
@@ -2194,7 +2479,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgab35ff6e39dd.jpg",
       "region": "Asia",
-      "id": "31c28ff06327"
+      "id": "imgf14175356"
     },
     {
       "title": "7 Day Plant Ceremony Retreat at an Authentic Finca in Mexico",
@@ -2210,7 +2495,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "e3f1bf4ccdd1"
+      "id": "13e6b481cb70"
     },
     {
       "title": "10 Day Nervous System Regulation for Stress Management, Mexico",
@@ -2226,7 +2511,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66073/p_2483263/1000_1772001234.jpg",
-      "id": "a26879253668"
+      "id": "67a1d01e5b69"
     },
     {
       "title": "5 Days Escape - Yoga, Meditation and Relaxation Retreat in Spain",
@@ -2242,26 +2527,47 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/19k/19671/p_548003/1000_1609921075.jpg",
-      "id": "3cfec0691c5a"
+      "id": "75698d1734df"
     },
     {
       "is_event": true,
-      "type": "Workshop",
-      "title": "OSHO HEART FESTIVAL",
+      "type": "Retreat",
+      "title": "Osho Tantra Prana Meditation Retreat (2026)",
       "start_date": "2026-06-25",
-      "end_date": "2026-06-29",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
+      "end_date": "2026-06-28",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
       "city": "Dharamshala",
       "state": "Himachal Pradesh",
       "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Open Your Heart, Embrace Love: Journey to Joy.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3382f7aef2dd.jpg",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "English and Hindi meditation retreat for beginners",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
       "region": "India",
-      "id": "b9e045f1c73b"
+      "id": "c8c0e95ea718"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Osho Meditation Retreat in Nature",
+      "start_date": "2026-06-25",
+      "end_date": "2026-06-28",
+      "venue": "OSHO Friends Home",
+      "city": "Manali",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "82190-99939",
+      "organizer": "Ma Amrit Varsha",
+      "description": "3-day silent meditation camp in nature with facilitators. Includes food and accommodation.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0019.jpg",
+      "region": "India",
+      "_flyer_path": "flyers/IMG-20260502-WA0019.jpg",
+      "_fixed_id": "fly42e026494",
+      "id": "img42e026494"
     },
     {
       "is_event": true,
@@ -2280,47 +2586,26 @@
       "source_platform": "Osho Nisarga (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb9a66dc5377d.jpg",
       "region": "India",
-      "id": "44b31f41b3cf"
+      "id": "imgea433419b"
     },
     {
       "is_event": true,
-      "type": "Camp",
-      "title": "Osho Meditation Camp - Silent Moments in Nature",
-      "start_date": "2026-06-25",
-      "end_date": "2026-06-28",
-      "venue": "Osho Friends Home",
-      "city": "Manali",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "99278-81134",
-      "organizer": "Ma Amrit Varsha",
-      "description": "3-day meditation camp with silent moments in nature. Accommodation and meals included. Advance booking from 1000 rupees.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260502-WA0019.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260502-WA0019.jpg",
-      "_fixed_id": "fly42e026494",
-      "id": "fly42e026494"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Yoga & Meditation Retreat",
+      "type": "Workshop",
+      "title": "5Rhythms® Sweat Your Prayers – Move and Be Moved",
       "start_date": "2026-06-26",
       "end_date": "2026-06-28",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Prem Lalit",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8d5aa9f9a838.jpg",
-      "region": "India",
-      "id": "1e5d30bf2f06"
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Dance and movement as spiritual practice",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7fad8378be24.jpg",
+      "region": "Europe",
+      "id": "img243f07908"
     },
     {
       "title": "3 Day The Victim to Victory, AR, USA",
@@ -2336,7 +2621,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/37k/37969/p_1290272/1000_1699042035.jpg",
-      "id": "d79348ed5be3"
+      "id": "6590166846a8"
     },
     {
       "is_event": true,
@@ -2355,7 +2640,7 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img28017486f271.jpg",
       "region": "India",
-      "id": "9c9a5cedc155"
+      "id": "img9b416651b"
     },
     {
       "title": "6 Day Spiritual Awakening Retreat in Newark, UK",
@@ -2371,7 +2656,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/31k/31292/p_1010430/1000_1679906118.jpg",
-      "id": "e3a72a355391"
+      "id": "285f33c9f649"
     },
     {
       "title": "7 Day Plant Ceremony Retreat at an Authentic Finca in Mexico",
@@ -2387,7 +2672,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66702/p_2509289/1000_1773210337.jpg",
-      "id": "b3018d749d9b"
+      "id": "d5ecff40a191"
     },
     {
       "title": "5 Day Silent Mindfulness Meditation & Yoga Retreat in Colombia",
@@ -2403,7 +2688,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "539cb4175e64"
+      "id": "a70d2663e1c5"
     },
     {
       "title": "8 Day Plant Ceremony Retreat in the Colombian Amazon",
@@ -2419,7 +2704,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66702/p_2509289/1000_1773210337.jpg",
-      "id": "7d4e68cd7eff"
+      "id": "087bbf7c738b"
     },
     {
       "title": "4 Day Conscious Relationship Retreat in Adelaide, South Australia",
@@ -2435,26 +2720,64 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "093ecefa783d"
+      "id": "05d76917494f"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "Sufi: The Flame of Love",
+      "title": "Awareness Intensive: Who is in? (2026)",
       "start_date": "2026-07-03",
       "end_date": "2026-07-05",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
       "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Anand Sujati",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8d5aa9f9a838.jpg",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "Advanced Hindi awareness program with Sw. Gyan Nirupam",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
       "region": "India",
-      "id": "2e79d7fe3243"
+      "id": "ac9ab9deccd1"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Weekend workshop Meditative Self-Inquiry: Finding a way home",
+      "start_date": "2026-07-03",
+      "end_date": "2026-07-05",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "For experienced meditators curious about meditation",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img97ea08f473cb.png",
+      "region": "Europe",
+      "id": "imgec923ef96"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Weekend Workshop The Magic of Watercolour with Nirvi",
+      "start_date": "2026-07-03",
+      "end_date": "2026-07-05",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Watercolour techniques supporting creative expression",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img5836c3946a92.png",
+      "region": "Europe",
+      "id": "imge6ed853d3"
     },
     {
       "is_event": true,
@@ -2473,7 +2796,7 @@
       "source_platform": "Osho Nisarga (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2cac99ea761a.jpg",
       "region": "India",
-      "id": "3910ae536bf2"
+      "id": "img8cd590583"
     },
     {
       "title": "4 Day July Self-Love & Reclamation Retreat in Lethbridge, Canada",
@@ -2489,45 +2812,28 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69804/p_2634316/1000_1779201037.jpg",
-      "id": "f035235fcfc9"
+      "id": "357339b15af8"
     },
     {
       "is_event": true,
-      "type": "Workshop",
-      "title": "Who am I?",
+      "type": "Camp",
+      "title": "Monsoon Festival Osho Meditation Camp",
       "start_date": "2026-07-09",
       "end_date": "2026-07-12",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
+      "venue": "Osho AbuDham Resort near Mount Abu, Village Peshua, Ahmedabad Delhi Highway",
+      "city": "Sirohi",
+      "state": "Rajasthan",
       "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Anand Kul Bhushan & Swami Anand Rajnish",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8d5aa9f9a838.jpg",
+      "phone": "9810672814",
+      "organizer": "Celebrate Life Retreat",
+      "description": "Loving presence meditation camp with Ma Prem Anjali and Ma Prasannata. Advance booking mandatory.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260312-WA0036.jpg",
       "region": "India",
-      "id": "d17e7e5522e4"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "INNER JOURNEY",
-      "start_date": "2026-07-09",
-      "end_date": "2026-07-13",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "And The Way Is Easy.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb800da4ca2cf.jpg",
-      "region": "India",
-      "id": "c9e59f1aabce"
+      "_flyer_path": "flyers/IMG-20260312-WA0036.jpg",
+      "_fixed_id": "fly67543085e",
+      "id": "img67543085e"
     },
     {
       "title": "4 Day Summer of the Senses: Yoga, Voice & Creative Flow in France",
@@ -2543,28 +2849,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "5084306946f2"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Monsoon Festival Osho Meditation Camp",
-      "start_date": "2026-07-09",
-      "end_date": "2026-07-12",
-      "venue": "Osho AbuDham Resort near Mount Abu, Village Peshua, Ahmedabad Delhi Highway",
-      "city": "Sirohi",
-      "state": "Rajasthan",
-      "country": "India",
-      "phone": "9810672814",
-      "organizer": "Celebrate Life Retreat",
-      "description": "Osho meditation camp with loving presence of Ma Prem Anjali and Ma Prasannata. Advance booking mandatory.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260312-WA0036.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260312-WA0036.jpg",
-      "_fixed_id": "fly67543085e",
-      "id": "fly67543085e"
+      "id": "5591d5d92f07"
     },
     {
       "title": "3 Day Soul-Full Cowgirls Retreat: Horseback Riding, Yoga, Canada",
@@ -2580,7 +2865,45 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/41k/41188/p_1679157/1000_1729460066.jpg",
-      "id": "fc162984f50b"
+      "id": "676e98453151"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Heatwave of the Heart – Summer Festival",
+      "start_date": "2026-07-11",
+      "end_date": "2026-07-18",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Summer Festival 2026 celebration",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge09b136642dd.png",
+      "region": "Europe",
+      "id": "img489092465"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Live Love Laugh (2026)",
+      "start_date": "2026-07-12",
+      "end_date": "2026-07-15",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "Hindi meditation program for beginners with Swami Antar Rahi",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
+      "region": "India",
+      "id": "bd31bff2dd3c"
     },
     {
       "is_event": true,
@@ -2599,45 +2922,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3b1a0a7b0d14.jpg",
       "region": "India",
-      "id": "fea9ca361f28"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Live Love Laugh (2026)",
-      "start_date": "2026-07-12",
-      "end_date": "2026-07-15",
-      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-9418037370",
-      "organizer": "Osho Nisarga",
-      "description": "Hindi language program facilitated by Swami Antar Rahi",
-      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
-      "source_platform": "Osho Nisarga (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2a35acfa990d.jpg",
-      "region": "India",
-      "id": "0b85e1f2d2ec"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Emotional Rebalancing Retreat",
-      "start_date": "2026-07-15",
-      "end_date": "2026-07-19",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Shallu Annand and Ma Dharm Jyoti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
-      "region": "India",
-      "id": "5fd1a418ceb6"
+      "id": "img57d7d2569"
     },
     {
       "title": "3 Day Special Spiritual Rath Yatra Retreat in Odisha, India",
@@ -2653,7 +2938,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69805/p_2634300/1000_1779176514.jpg",
-      "id": "439602451190"
+      "id": "0fcf177b97e4"
     },
     {
       "title": "12 Day Photography & Travel Retreat in Costa Rica",
@@ -2669,7 +2954,28 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/costa-rica",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/32k/32352/p_1048072/1000_1679887315.jpg",
-      "id": "b790f6d84223"
+      "id": "425dcef4d4a5"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Stress Management with Meditation - 3 Days Osho Meditation Camp",
+      "start_date": "2026-07-16",
+      "end_date": "2026-07-19",
+      "venue": "Osho Meditation Centre, Benad Road, Khora Bisal, Chatarpura",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "country": "India",
+      "phone": "9828843839, 8302371182",
+      "organizer": "Ma Prem Isha (Dr. Isha Singla Punjab)",
+      "description": "3-day Osho meditation camp on stress management. Facilitator: Ma Prem Isha. Learn meditation techniques for inner peace.",
+      "source_platform": "Flyer upload",
+      "source_url": "",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260402-WA0008.jpg",
+      "region": "India",
+      "_flyer_path": "flyers/IMG-20260402-WA0008.jpg",
+      "_fixed_id": "flycfaf76fba",
+      "id": "imgcfaf76fba"
     },
     {
       "title": "4 Day Rocky Mountain Yoga Adventure Retreat in Keystone, Colorado",
@@ -2685,7 +2991,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/34k/34618/p_1160678/1000_1693694580.jpg",
-      "id": "de1179df4672"
+      "id": "a8bb4f59f158"
     },
     {
       "title": "4 Day Transformational Tantra Festival in Alberta, Canada",
@@ -2701,28 +3007,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "384040c442a5"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Stress Management with Meditation - 3 Days Osho Meditation Camp",
-      "start_date": "2026-07-16",
-      "end_date": "2026-07-19",
-      "venue": "Osho Meditation Centre, Benad Road, Khora Bisal, Chatarpura",
-      "city": "Jaipur",
-      "state": "Rajasthan",
-      "country": "India",
-      "phone": "9828843839, 8302371182",
-      "organizer": "Ma Prem Isha (Dr. Isha Singla Punjab)",
-      "description": "3-day Osho meditation camp focused on stress management and meditation practices with facilitator Ma Prem Isha.",
-      "source_platform": "Flyer upload",
-      "source_url": "",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/flyers/IMG-20260402-WA0008.jpg",
-      "region": "India",
-      "_flyer_path": "flyers/IMG-20260402-WA0008.jpg",
-      "_fixed_id": "flycfaf76fba",
-      "id": "flycfaf76fba"
+      "id": "3f6137712593"
     },
     {
       "is_event": true,
@@ -2741,7 +3026,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img4fb15746000f.jpg",
       "region": "India",
-      "id": "607035307ce9"
+      "id": "img4a377aeb9"
     },
     {
       "title": "2 Day Mommy & Me Horse Retreat: Yoga, Camp & Adventure, Canada",
@@ -2757,7 +3042,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "90fb0a3c4f22"
+      "id": "f647e75bd518"
     },
     {
       "is_event": true,
@@ -2771,12 +3056,12 @@
       "country": "India",
       "phone": "+91-9418037370",
       "organizer": "Osho Nisarga",
-      "description": "English and Hindi program by Ma Shakti and Sw. Vimal Kirti",
+      "description": "English and Hindi healing program for beginners",
       "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
       "source_platform": "Osho Nisarga (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img57864f87aa49.jpg",
+      "flyer_url": "",
       "region": "India",
-      "id": "791717b3643d"
+      "id": "8ee60322cc74"
     },
     {
       "title": "4 Day 'Joy, Desire and Ecstasy' Gay Tantra Retreat near Paris",
@@ -2792,7 +3077,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "e2513704008f"
+      "id": "cb86e15ab2d1"
     },
     {
       "title": "3 Day Play, Activity & Yoga Weekend Retreat in Oklahoma, USA",
@@ -2808,7 +3093,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/43k/43902/p_2272906/1000_1761837752.jpg",
-      "id": "e633f13356ea"
+      "id": "30be724e89cc"
     },
     {
       "title": "3 Day Horseback Riding, Healing, Adventure & Brotherhood, Canada",
@@ -2824,26 +3109,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "8a295b9c2d21"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Guru Purnima Celebration",
-      "start_date": "2026-07-26",
-      "end_date": "2026-07-29",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Dharm Jyoti & Swami Chaitanya Keerti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
-      "region": "India",
-      "id": "f436306ccdd6"
+      "id": "595d96563042"
     },
     {
       "is_event": true,
@@ -2857,31 +3123,50 @@
       "country": "India",
       "phone": "+91-9418037370",
       "organizer": "Osho Nisarga",
-      "description": "English and Hindi celebration by Sw. Aatmo Neerav",
+      "description": "English and Hindi celebration for beginners",
       "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
       "source_platform": "Osho Nisarga (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb9a66dc5377d.jpg",
+      "flyer_url": "",
       "region": "India",
-      "id": "029bdc2d25b3"
+      "id": "77629d7fa0e9"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "FULL MOON FESTIVAL",
+      "title": "Training for Transformation 6 TT6: Dance Alchemy: Transform Your Emotional Life",
+      "start_date": "2026-07-26",
+      "end_date": "2026-08-01",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Change through dance, love, presence meditation",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge9f23b5c2cdc.png",
+      "region": "Europe",
+      "id": "img76470aaf5"
+    },
+    {
+      "is_event": true,
+      "type": "Camp",
+      "title": "Osho Guru Purnima Meditation Camp Celebration",
       "start_date": "2026-07-28",
-      "end_date": "2026-08-02",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
+      "end_date": "2026-07-30",
+      "venue": "Osho Universe",
+      "city": "Rudrapur",
+      "state": "Uttarakhand",
       "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Meditation camp that makes meditation playful and easy.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb9a66dc5377d.jpg",
+      "phone": null,
+      "organizer": null,
+      "description": "Three-day meditation camp with Osho techniques, spiritual atmosphere, AC rooms, meals included. Group tour on July 30.",
+      "source_url": "https://www.facebook.com/SwamiVidyashyam/posts/pfbid02tf5W7r1yigw8qqckxr44kthrbQP4qDBEZMyBi4QNhnEam3fSpEb8i5RkTKFnoeFl",
+      "source_platform": "Facebook",
+      "flyer_url": "",
       "region": "India",
-      "id": "2c72897965a6"
+      "id": "e87a1d737778"
     },
     {
       "is_event": true,
@@ -2895,12 +3180,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Live Keertan 11:30 AM - 1:00 PM",
+      "description": "Live Keertan for Guru Purnima celebration",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img97fcf6438f65.jpg",
       "region": "India",
-      "id": "aa44b24a866b"
+      "id": "img7942762c9"
     },
     {
       "title": "5 Day Luxury Retreat & Holistic Wellness Experience in Colombia",
@@ -2916,26 +3201,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "2dfa44edc8aa"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Youth Meditation Camp: Yes to Life",
-      "start_date": "2026-07-31",
-      "end_date": "2026-08-02",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Amit Saraswati & Ma Prem Devyani",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img97fcf6438f65.jpg",
-      "region": "India",
-      "id": "6bc50bcc7f3c"
+      "id": "33c41f8ef7a8"
     },
     {
       "title": "6 Day 'Healing From Within' Retreat in Newark, UK",
@@ -2951,7 +3217,45 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/63k/63055/p_2356174/1000_1766161137.jpg",
-      "id": "0b0c96a51a95"
+      "id": "718f836db3f2"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Osho Neo Reiki (2026)",
+      "start_date": "2026-08-03",
+      "end_date": "2026-08-09",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "English and Hindi reiki program for beginners",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
+      "region": "India",
+      "id": "27536099191e"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Osho Neo Vipassana (2026)",
+      "start_date": "2026-08-03",
+      "end_date": "2026-08-09",
+      "venue": "Osho Nisarga, Dharamshala, Himachal Pradesh",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91-9418037370",
+      "organizer": "Osho Nisarga",
+      "description": "Advanced English and Hindi vipassana program",
+      "source_url": "https://www.oshonisarga.com/upcoming-programs/calendar",
+      "source_platform": "Osho Nisarga (website)",
+      "flyer_url": "",
+      "region": "India",
+      "id": "b385d4967a7a"
     },
     {
       "is_event": true,
@@ -2970,7 +3274,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2b978beb35bc.jpg",
       "region": "India",
-      "id": "32a51854972a"
+      "id": "imgd05ea294b"
     },
     {
       "is_event": true,
@@ -2989,7 +3293,7 @@
       "source_platform": "Osho Nisarga (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img13e4b55b9de2.jpg",
       "region": "India",
-      "id": "56e73056c9f0"
+      "id": "img627c0fe57"
     },
     {
       "is_event": true,
@@ -3008,45 +3312,64 @@
       "source_platform": "Osho Nisarga (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf90432808b2d.jpg",
       "region": "India",
-      "id": "ddd005684f6c"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "EMOTIONAL WELLNESS RETREAT",
-      "start_date": "2026-08-06",
-      "end_date": "2026-08-10",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Master your emotions, turn negative into positive.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb9a66dc5377d.jpg",
-      "region": "India",
-      "id": "138a78057ecd"
+      "id": "imgd13848408"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "No Mind Group",
-      "start_date": "2026-08-07",
-      "end_date": "2026-08-13",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
+      "title": "Body Types and Body Reading Training Part I",
+      "start_date": "2026-08-09",
+      "end_date": "2026-08-16",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Each body type bright and dark aspects",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7c5e41049c50.jpg",
+      "region": "Europe",
+      "id": "img0b6003141"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Tibetan Pulsing Yoga Intensive Part I",
+      "start_date": "2026-08-13",
+      "end_date": "2026-08-26",
+      "venue": "O-Nisarga",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
       "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Ravindra Bharti. Full Participation Mandatory",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img97fcf6438f65.jpg",
+      "phone": "+91 94180 37370",
+      "organizer": "O-Nisarga",
+      "description": "Healing through the body's electrical pulse. Tibetan Pulsing Yoga Intensive.",
+      "source_url": "https://www.facebook.com/osnisarga/posts/pfbid0wWRc2hoJBKiZgyGGNY2ts7CdQghRxQuBnNqSmCucu6vzC8UMTKhwFFB4aoGd2YHZl",
+      "source_platform": "Facebook",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img240337fdc059.jpg",
       "region": "India",
-      "id": "4f8625ed2e20"
+      "id": "img774bf090e"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Art of Living & Dying",
+      "start_date": "2026-08-13",
+      "end_date": "2026-08-16",
+      "venue": "O-Nisarga",
+      "city": "Dharamshala",
+      "state": "Himachal Pradesh",
+      "country": "India",
+      "phone": "+91 94180 37370",
+      "organizer": "Osho Nisarga",
+      "description": "Embracing life and death with awareness through meditation and mindfulness practices.",
+      "source_url": "https://www.facebook.com/osnisarga/posts/pfbid0Jhuw7ZWDCFrNbAN93fCH1hiXXT79fvzNvFVJyo277S7BR4VzG7PMwGtztKfxYnKkl",
+      "source_platform": "Facebook",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8f007ffa3bbb.jpg",
+      "region": "India",
+      "id": "imgdd4d2378d"
     },
     {
       "is_event": true,
@@ -3065,26 +3388,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8a9d96492b5b.jpg",
       "region": "India",
-      "id": "29e61a0d2d86"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "FREEDOM & JOY TO BE YOURSELF",
-      "start_date": "2026-08-13",
-      "end_date": "2026-08-17",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Free your energies and discover the joy of being yourself.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf90432808b2d.jpg",
-      "region": "India",
-      "id": "28e08289e492"
+      "id": "img3ea212598"
     },
     {
       "is_event": true,
@@ -3103,7 +3407,45 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgd9a3c62c9496.jpg",
       "region": "India",
-      "id": "89444d187172"
+      "id": "img9b69f1bc7"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Mystic Rose Group",
+      "start_date": "2026-08-14",
+      "end_date": "2026-09-03",
+      "venue": "Osho Dham",
+      "city": "Delhi",
+      "state": "Delhi",
+      "country": "India",
+      "phone": null,
+      "organizer": "Osho Dham",
+      "description": "Meditation retreat program at Osho Dham, Delhi featuring the Mystic Rose Group experience.",
+      "source_url": "https://www.facebook.com/permalink.php?story_fbid=pfbid0EdakizFvCnzfVo2bApzZ8oppTw9QbLgMoZcMtXqwMPKpzHAJeRprHFySkyJwaqZkl&id=61579738157419",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "India",
+      "id": "088aba16ae6c"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Mystic Rose Group",
+      "start_date": "2026-08-14",
+      "end_date": "2026-09-03",
+      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
+      "city": "New Delhi",
+      "state": "Delhi",
+      "country": "India",
+      "phone": "011-25319026",
+      "organizer": "Osho Dham / Osho World",
+      "description": "Mystic Rose Group meditation, full participation mandatory",
+      "source_url": "https://oshoworld.com/events",
+      "source_platform": "Osho Dham / Osho World (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbec6c9dc4e07.webp",
+      "region": "India",
+      "id": "imge2f2a7119"
     },
     {
       "is_event": true,
@@ -3122,45 +3464,7 @@
       "source_platform": "Facebook",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1b98e67bc5f9.jpg",
       "region": "India",
-      "id": "b7eca2932979"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Mystic Rose Group",
-      "start_date": "2026-08-14",
-      "end_date": "2026-09-03",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Vivekanand (Vee) & Ma Anubodhi",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img97fcf6438f65.jpg",
-      "region": "India",
-      "id": "853c83297dc9"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Light Love Laughter: Osho Meditation Retreat",
-      "start_date": "2026-08-14",
-      "end_date": "2026-08-16",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Amit Saraswati & Ma Prem Devyani",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbec6c9dc4e07.webp",
-      "region": "India",
-      "id": "4e53fdb17129"
+      "id": "img6f5495a50"
     },
     {
       "is_event": true,
@@ -3179,7 +3483,7 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img9801e02af506.jpg",
       "region": "India",
-      "id": "e7e4d9b0837b"
+      "id": "img61002bb18"
     },
     {
       "title": "3 Day Soul & Saddle Retreat: Horseback Riding & Ceremony, Canada",
@@ -3195,7 +3499,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/63k/63119/p_2359157/1000_1752745120.jpg",
-      "id": "a4190d52ed39"
+      "id": "454d5c4a9498"
     },
     {
       "title": "4 Day Trauma Informed Retreat for Women in Australia",
@@ -3211,45 +3515,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65993/p_2481267/1000_1771857372.jpg",
-      "id": "c171da9ae8d7"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "OSHO TALKING TO YOUR BODYMIND & TRAINING",
-      "start_date": "2026-08-20",
-      "end_date": "2026-08-28",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Gain harmony in your body-mind in 7 days.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1ca00600479a.jpg",
-      "region": "India",
-      "id": "42cbd28f71d3"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Osho Meditation Retreat with introduction to Gurdjieff Movements",
-      "start_date": "2026-08-21",
-      "end_date": "2026-08-23",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Dhyan Prachi",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbec6c9dc4e07.webp",
-      "region": "India",
-      "id": "435d56731449"
+      "id": "fd503b5cf401"
     },
     {
       "is_event": true,
@@ -3263,50 +3529,50 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "2:30 to 4 pm. Facilitated by Swami Vivekanand (Vee)",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbec6c9dc4e07.webp",
-      "region": "India",
-      "id": "c70397d321b9"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Osho Meditation Retreat",
-      "start_date": "2026-08-28",
-      "end_date": "2026-08-30",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Dhyan Paltu",
+      "description": "Taster session on conscious living and dying",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf9009b31b092.jpg",
       "region": "India",
-      "id": "3d41300df627"
+      "id": "img61eb77c85"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "Transomatic Dialogue For Self Healing Training Level 1",
-      "start_date": "2026-08-29",
-      "end_date": "2026-09-03",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Learn the art of activating the inner healing.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img0cc3178b2f2f.jpg",
-      "region": "India",
-      "id": "b4e443e872ba"
+      "title": "Now or Never",
+      "start_date": "2026-08-25",
+      "end_date": "2026-08-30",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Five day meditation group with music",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7f745d63b8a0.jpg",
+      "region": "Europe",
+      "id": "imgde672e40c"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Osho Neo-Vipassana retreat with Shunyo",
+      "start_date": "2026-09-01",
+      "end_date": "2026-09-06",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Insight meditation for understanding",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img5c0923dd82b9.jpg",
+      "region": "Europe",
+      "id": "imga99279701"
     },
     {
       "title": "6 Day Sacred Journey with Yoga, Breathwork & Past Life, Jordan",
@@ -3322,45 +3588,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65993/p_2481267/1000_1771857372.jpg",
-      "id": "75352d5da18f"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Just Say Yes: Osho Meditation Retreat",
-      "start_date": "2026-09-04",
-      "end_date": "2026-09-08",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Ravindra Bharti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf9009b31b092.jpg",
-      "region": "India",
-      "id": "dfe381741bd0"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "ART OF LIVING & DYING",
-      "start_date": "2026-09-04",
-      "end_date": "2026-09-08",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "A course that makes us truly alive.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1ca00600479a.jpg",
-      "region": "India",
-      "id": "4302b389d4a3"
+      "id": "1de578aba01b"
     },
     {
       "is_event": true,
@@ -3379,7 +3607,7 @@
       "source_platform": "Osho San Diego (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img758dd13dbe55.jpg",
       "region": "Americas",
-      "id": "52b37ba488e1"
+      "id": "img74c9903be"
     },
     {
       "title": "5 Day Yoga Pilates Soundbath & Inner-Peace Retreat in France",
@@ -3395,7 +3623,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/41k/41497/p_2271973/1000_1761774627.jpg",
-      "id": "d9703808e320"
+      "id": "4e232a902441"
     },
     {
       "title": "3 Day Raven Yoga & Wellness Freedom Retreat, Oklahoma, USA",
@@ -3411,7 +3639,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/34k/34550/p_1135142/1000_1692014625.jpg",
-      "id": "2950370f1d0d"
+      "id": "cd25c8144067"
     },
     {
       "is_event": true,
@@ -3425,31 +3653,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Ravindra Bharti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf9009b31b092.jpg",
-      "region": "India",
-      "id": "df5c93cfcdcb"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Conscious Living & Dying",
-      "start_date": "2026-09-09",
-      "end_date": "2026-09-13",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Vivekanand (Vee). Full Participation Mandatory",
+      "description": "Mahaparinirvana Day meditation celebration",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img6e2b40c0dbcc.jpg",
       "region": "India",
-      "id": "777b15f70585"
+      "id": "img5a2c63e61"
     },
     {
       "title": "5 Day Integration of Service & Authentic Self Embodiment , Mexico",
@@ -3465,7 +3674,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66662/p_2508251/1000_1773083785.jpg",
-      "id": "fe73f49fc104"
+      "id": "7515e9edd674"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Weekend Workshop Power of Love with Vadano",
+      "start_date": "2026-09-11",
+      "end_date": "2026-09-13",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Discover your real power through love",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img119727876e3f.jpg",
+      "region": "Europe",
+      "id": "img2c70196ce"
     },
     {
       "title": "6 Day Bufo Camp Men's Retreat in Mexico",
@@ -3481,7 +3709,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65993/p_2481267/1000_1771857372.jpg",
-      "id": "0cbcdd9676ba"
+      "id": "89d19b6b2caa"
     },
     {
       "title": "6 Day Yoga Retreat: Explore Two Magical Locations in Morocco",
@@ -3497,26 +3725,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "b0229511e018"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "MEDITATION FOR BUSY PEOPLE",
-      "start_date": "2026-09-17",
-      "end_date": "2026-09-21",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "For those with no time to meditate.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1ca00600479a.jpg",
-      "region": "India",
-      "id": "7a638546cb44"
+      "id": "d1887da52960"
     },
     {
       "title": "6 Day Women on a Mission: Healing Adventure Retreat in Colombia",
@@ -3532,26 +3741,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "c55e2627d2f4"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Osho Meditation Retreat",
-      "start_date": "2026-09-18",
-      "end_date": "2026-09-20",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Premgeet",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img6e2b40c0dbcc.jpg",
-      "region": "India",
-      "id": "739da3c816d6"
+      "id": "bef26ffd8e89"
     },
     {
       "title": "7 Day Woman's Reset Retreat in Morocco",
@@ -3567,7 +3757,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65997/p_2481306/1000_1771858028.jpg",
-      "id": "7c9f2ce300af"
+      "id": "e0b17ecaea2a"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Training for Transformation 7 TT7: Love, Responsibility and Freedom",
+      "start_date": "2026-09-20",
+      "end_date": "2026-09-26",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Life's mysterious unfolding with new information",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc0f6747b33cb.jpg",
+      "region": "Europe",
+      "id": "img297c80145"
     },
     {
       "title": "6 Day Writing, Meditation and Digital Detox Retreat, Wales, UK",
@@ -3583,7 +3792,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/43k/43282/p_1531776/1000_1682254587.jpg",
-      "id": "b1cc7d7a2d1a"
+      "id": "5f049e18ce9f"
     },
     {
       "is_event": true,
@@ -3597,12 +3806,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Vivekanand (Vee). Advance Booking Mandatory",
+      "description": "Foundation meditation facilitator training",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img6e2b40c0dbcc.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc7fe3b29563b.jpg",
       "region": "India",
-      "id": "02ad44a08dcc"
+      "id": "img0f3cf52d0"
     },
     {
       "is_event": true,
@@ -3621,7 +3830,7 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img25df296abf6b.jpg",
       "region": "India",
-      "id": "fa7e897fd2e9"
+      "id": "img10d3f64fc"
     },
     {
       "is_event": true,
@@ -3640,7 +3849,7 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga72919598c48.jpg",
       "region": "India",
-      "id": "15cc1028d000"
+      "id": "img9acfe8673"
     },
     {
       "title": "5 Day Yoga Retreat with Red Rocks Hikes and Vortexes, Sedona, US",
@@ -3656,26 +3865,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/41k/41940/p_1839885/1000_1737834478.jpg",
-      "id": "c0bf1d1ac47c"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Osho Neo Sannyas Celebration",
-      "start_date": "2026-09-25",
-      "end_date": "2026-09-27",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Chaitanya Keerti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc7fe3b29563b.jpg",
-      "region": "India",
-      "id": "2afd62a0cb7b"
+      "id": "39b51e1e3be1"
     },
     {
       "title": "8 Day Soulful Desert Retreat Dance, Somatics & Healing in Morocco",
@@ -3691,7 +3881,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69804/p_2634316/1000_1779201037.jpg",
-      "id": "4e2348b47af4"
+      "id": "90dc8bf89601"
     },
     {
       "title": "9 Day Mystical & Spiritual Wellness Retreat for Women in Morocco",
@@ -3707,7 +3897,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/67k/67076/p_2524503/1000_1773210420.jpg",
-      "id": "d8393addb3b1"
+      "id": "48fc7c92a654"
     },
     {
       "title": "5 Day Salt & Stillness: A Yoga and Scuba Diving Retreat, Mexico",
@@ -3723,26 +3913,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65997/p_2481306/1000_1771858028.jpg",
-      "id": "18c74a281d5e"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "AUTUMN AWAKENING: THE ART OF LETTING GO",
-      "start_date": "2026-10-01",
-      "end_date": "2026-10-05",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Color-filled camp to celebrate and meditate in Himalayas.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img1ca00600479a.jpg",
-      "region": "India",
-      "id": "75132fb5f796"
+      "id": "ecb7e0ed28b5"
     },
     {
       "is_event": true,
@@ -3761,7 +3932,7 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3263f5a78176.jpg",
       "region": "India",
-      "id": "689ee5f72a3a"
+      "id": "img58faee498"
     },
     {
       "title": "9 Day Finding Inner Strength: Yoga & Exploration Retreat, Morocco",
@@ -3777,45 +3948,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "9964f7de3e02"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Children Meditation Camp",
-      "start_date": "2026-10-02",
-      "end_date": "2026-10-04",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Prem Devyani & Team",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc7fe3b29563b.jpg",
-      "region": "India",
-      "id": "8e7526d09879"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Parents Meditation Camp",
-      "start_date": "2026-10-02",
-      "end_date": "2026-10-04",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Shiv Bharti & Ma Yog Madhu",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgc7fe3b29563b.jpg",
-      "region": "India",
-      "id": "ec57fb60d7a4"
+      "id": "232d57ee5329"
     },
     {
       "title": "4 Day \"Rise Above and Believe in Yourself in ON, Canada",
@@ -3831,64 +3964,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/67k/67076/p_2524503/1000_1773210420.jpg",
-      "id": "75d3268e36ad"
+      "id": "7f749216655c"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "Born Again Group",
-      "start_date": "2026-10-05",
-      "end_date": "2026-10-11",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Shiv Bharti & Ma Yog Madhu",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
-      "region": "India",
-      "id": "cc8caf0f3fd2"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "OSHO MYSTIC ROSE",
-      "start_date": "2026-10-06",
-      "end_date": "2026-10-28",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Let the scars of the past be dissolved.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb9a66dc5377d.jpg",
-      "region": "India",
-      "id": "864eba3d4941"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "Osho Meditation Retreat",
+      "title": "Part 2 Star Sapphire Energywork Training – Part 2",
       "start_date": "2026-10-09",
-      "end_date": "2026-10-11",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Prem Lalit",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
-      "region": "India",
-      "id": "f31e9d1a12c2"
+      "end_date": "2026-10-24",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Completes Star Sapphire Energywork Training",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img738b07843c99.jpg",
+      "region": "Europe",
+      "id": "img21531619d"
     },
     {
       "is_event": true,
@@ -3907,7 +4002,7 @@
       "source_platform": "Osho Ramana (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/card56ad67bff6df.jpg",
       "region": "India",
-      "id": "c2b519ffda67"
+      "id": "img7d7e0f471"
     },
     {
       "title": "4 Day Desert & Yoga Retreat From Marrakesh To M'Hamid, Morocco",
@@ -3923,7 +4018,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/35k/35951/p_1992369/1000_1745258068.jpg",
-      "id": "4bf52dc44a47"
+      "id": "a356ba36945c"
     },
     {
       "is_event": true,
@@ -3937,12 +4032,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Dhyan Pulak. Full Participation Mandatory",
+      "description": "No Mind Group meditation, full participation mandatory",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge41deb3cb9be.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img349dbd1f7f7a.jpg",
       "region": "India",
-      "id": "3d3306b75748"
+      "id": "img4069c8f72"
     },
     {
       "title": "3 Day Autumn Lake Retreat in AB, Canada",
@@ -3958,26 +4053,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "e9a99d2f18ce"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Who am I?",
-      "start_date": "2026-10-17",
-      "end_date": "2026-10-20",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Anand Kul Bhushan & Swami Anand Rajnish",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img349dbd1f7f7a.jpg",
-      "region": "India",
-      "id": "7230b225aa94"
+      "id": "d9d99faacf1a"
     },
     {
       "is_event": true,
@@ -3996,7 +4072,7 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb2b88f126e8d.jpg",
       "region": "India",
-      "id": "d809ee4a6118"
+      "id": "img92c69321d"
     },
     {
       "title": "5 Day Private 1:1 Wellness Retreat in Marrakech, Morocco",
@@ -4012,7 +4088,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "be2d7b41f160"
+      "id": "18147a6022d6"
     },
     {
       "title": "4 Day Magnetic Womban Retreat In Adelaide, South Australia",
@@ -4028,7 +4104,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "cde8ad308d23"
+      "id": "1daccaab0740"
     },
     {
       "title": "6 Day Luxury Couples Escape: Coffee Region Retreat in Colombia",
@@ -4044,26 +4120,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69804/p_2634316/1000_1779201037.jpg",
-      "id": "1efbc0c4b7d9"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Introduction to Gurdjieff Sacred Dances",
-      "start_date": "2026-10-23",
-      "end_date": "2026-10-24",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Prem Amiyo & Swami Prem Chetan",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img349dbd1f7f7a.jpg",
-      "region": "India",
-      "id": "9c2346f27f05"
+      "id": "6ce380d13ec1"
     },
     {
       "title": "15 Day Sacred Pilgrimage Women's Yoga & Ayurveda Retreat in India",
@@ -4079,7 +4136,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/india",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "4d8af051a85c"
+      "id": "019ef8941e9c"
     },
     {
       "title": "2 Day Horses & Wellbeing: Women's EmPOWERment Retreat, Australia",
@@ -4095,7 +4152,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66702/p_2509289/1000_1773210337.jpg",
-      "id": "a5b200a5b1af"
+      "id": "20e2288b1f0f"
     },
     {
       "title": "8 Day Yoga, Meditation & Walk: Essence of the Desert, Morocco",
@@ -4111,7 +4168,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "6d1411a3acca"
+      "id": "2d03a4bf04a2"
     },
     {
       "title": "6 Day Autumn Sun Adventure Yoga Holiday in Essaouira, Morocco",
@@ -4127,7 +4184,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66073/p_2483263/1000_1772001234.jpg",
-      "id": "419ae7b3a540"
+      "id": "ab4f0b435e17"
     },
     {
       "is_event": true,
@@ -4141,12 +4198,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Prem Amiyo & Swami Prem Chetan",
+      "description": "Gurdjieff sacred dances for conscious harmony",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img349dbd1f7f7a.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7bc57b2e753e.jpg",
       "region": "India",
-      "id": "aa3491306c4b"
+      "id": "img5b704af79"
     },
     {
       "title": "7 Day \"Magic\" Ceremony Retreat at an Authentic Finca in Mexico",
@@ -4162,7 +4219,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "32f590f80c61"
+      "id": "88995e5ca897"
     },
     {
       "title": "6 Day Deep Rest on Magnetic Island in Queensland, Australia",
@@ -4178,26 +4235,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69989/p_2641879/1000_1779523030.jpg",
-      "id": "eb32efbcf66b"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Taste of Silence",
-      "start_date": "2026-10-28",
-      "end_date": "2026-11-01",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Dhyan Pulak",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7bc57b2e753e.jpg",
-      "region": "India",
-      "id": "ab5d8a376373"
+      "id": "f0635c02f048"
     },
     {
       "title": "5 Day Relaxing Voice, Yoga & Wellness Retreat in Rayong, Thailand",
@@ -4213,7 +4251,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/thailand",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "b68a57d33ada"
+      "id": "f4c7af629697"
     },
     {
       "title": "7 Day Deepen Your Practice Yoga Immersion Retreat, Sri Lanka",
@@ -4229,7 +4267,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/sri-lanka",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66116/p_2485110/1000_1772001234.jpg",
-      "id": "02d1946727f8"
+      "id": "20a1c3fe638d"
     },
     {
       "title": "15 Day Photography Retreat & Tour in Magical Morocco",
@@ -4245,7 +4283,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/65k/65993/p_2481267/1000_1771857372.jpg",
-      "id": "06854dd35f76"
+      "id": "e39dca489d8a"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Dimensions of Being Soul Gathering",
+      "start_date": "2026-11-03",
+      "end_date": "2026-11-08",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Soul attunement and expansion gathering",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img26b1e30bab3e.jpg",
+      "region": "Europe",
+      "id": "img6f2d8135a"
     },
     {
       "title": "7 Day \"The Miracle\" Retreat in Baja California Sur, Mexico",
@@ -4261,45 +4318,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/58k/58655/p_2194432/1000_1757066390.jpg",
-      "id": "0ff12db67773"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "App Deepo Bhava (Be a light unto yourself)",
-      "start_date": "2026-11-06",
-      "end_date": "2026-11-10",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Yog Shukla & Swami Dhyan Pulak",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7bc57b2e753e.jpg",
-      "region": "India",
-      "id": "f7e36962633b"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "FESTIVAL OF LIGHTS",
-      "start_date": "2026-11-06",
-      "end_date": "2026-11-10",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Explore your inner light in nature.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2cac99ea761a.jpg",
-      "region": "India",
-      "id": "4b727b66e78e"
+      "id": "8d77e32e9273"
     },
     {
       "title": "19 Day Sound Healing, Qigong & Meditation in the Himalayas, Nepal",
@@ -4315,26 +4334,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/57k/57647/p_2154346/1000_1754736305.jpg",
-      "id": "20fe18737a0e"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "THE CHAKRA EXPERIENCE",
-      "start_date": "2026-11-12",
-      "end_date": "2026-11-16",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Explore seven energy centers through meditation.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3382f7aef2dd.jpg",
-      "region": "India",
-      "id": "732e6f18c301"
+      "id": "9af3f13fdd45"
     },
     {
       "title": "7 Day Wellness, Yoga, Culture & Joy Retreat in Sri Lanka",
@@ -4350,7 +4350,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/sri-lanka",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69788/p_2633432/1000_1779182947.jpg",
-      "id": "1e7fdd3d5e36"
+      "id": "0680c88276e9"
     },
     {
       "is_event": true,
@@ -4364,12 +4364,31 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Dharm Jyoti, Swami Avinash Bharti & Ma Deva Samvega",
+      "description": "Mystic Rose Group meditation, full participation mandatory",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7bc57b2e753e.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbb515254f791.jpg",
       "region": "India",
-      "id": "0798e18c6aed"
+      "id": "img89d0e44d5"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Training for Transformation part 8 TT8: Satori – Who is In?",
+      "start_date": "2026-11-15",
+      "end_date": "2026-11-21",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Quest for self understanding ancient humanity",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3969d0feb25a.jpg",
+      "region": "Europe",
+      "id": "img0d74f06dc"
     },
     {
       "is_event": true,
@@ -4388,45 +4407,26 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3a679a8b4f6a.jpg",
       "region": "India",
-      "id": "3dd482cbba4c"
+      "id": "img739ac5c10"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "Transomatic Dialogue For Self Healing Training Level 1 & 2",
-      "start_date": "2026-11-20",
-      "end_date": "2026-11-30",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Learn the art of activating the inner healing.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3382f7aef2dd.jpg",
-      "region": "India",
-      "id": "ddb17efcada3"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "VIGYAN BHAIRAV TANTRA",
-      "start_date": "2026-12-03",
-      "end_date": "2026-12-07",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Explore the depths of meditation.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imga72919598c48.jpg",
-      "region": "India",
-      "id": "acf9c174b40f"
+      "title": "Honoring Life's End",
+      "start_date": "2026-11-28",
+      "end_date": "2026-12-03",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Sacred end of life moment honoring",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img7af9bc8e0e71.jpg",
+      "region": "Europe",
+      "id": "img20507d50a"
     },
     {
       "title": "5 Day All Levels Yoga, Surf, Adventure Retreat, Costa Rica",
@@ -4442,7 +4442,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/costa-rica",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "428686da4ad4"
+      "id": "e9e445011cac"
     },
     {
       "title": "4 Day Transforming Trauma Workshop Retreat in South Australia",
@@ -4458,45 +4458,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/69k/69804/p_2634316/1000_1779201037.jpg",
-      "id": "92b49aa26ca4"
+      "id": "b6aa7f341149"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "Meditate Celebrate",
-      "start_date": "2026-12-05",
-      "end_date": "2026-12-06",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Osho Dham meditation celebration event",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbb515254f791.jpg",
-      "region": "India",
-      "id": "529bff5bd0b2"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Osho Birthday Celebration",
-      "start_date": "2026-12-09",
+      "title": "Weekend Workshop From Self-care to Self-Love: working with Trauma and the Body",
+      "start_date": "2026-12-11",
       "end_date": "2026-12-13",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Dharm Jyoti & Swami Chaitanya Keerti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbb515254f791.jpg",
-      "region": "India",
-      "id": "c55512907458"
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Self-care skill layers with trauma work",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgef42d78475db.png",
+      "region": "Europe",
+      "id": "img229cea9c0"
     },
     {
       "is_event": true,
@@ -4515,7 +4496,7 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge87f6c72b0a6.jpg",
       "region": "India",
-      "id": "5cc1b8f14a37"
+      "id": "imgf6102fe7d"
     },
     {
       "title": "4 Day Pilates & Pickleball Retreat in the Mekong",
@@ -4531,7 +4512,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/vietnam",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "29e2a339a4fa"
+      "id": "0bdb1808dfec"
     },
     {
       "is_event": true,
@@ -4545,12 +4526,12 @@
       "country": "India",
       "phone": "011-25319026",
       "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Dhyan Abha & Swami Antar Jagdish",
+      "description": "Osho meditation retreat in December",
       "source_url": "https://oshoworld.com/events",
       "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgbb515254f791.jpg",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge5d5426a5653.jpg",
       "region": "India",
-      "id": "c4ca258b400b"
+      "id": "img6ea08c991"
     },
     {
       "title": "7 Day EVOLVE Vikasa Yoga & Meditation Retreat, Koh Samui Thailand",
@@ -4566,64 +4547,7 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/thailand",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/31k/31291/p_1006944/1000_1681157584.jpg",
-      "id": "c5d147b008cb"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "PATH OF LOVE",
-      "start_date": "2026-12-24",
-      "end_date": "2026-12-28",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Course in conscious relating and intimacy.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge87f6c72b0a6.jpg",
-      "region": "India",
-      "id": "23893f0ac519"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Children Meditation Camp",
-      "start_date": "2026-12-25",
-      "end_date": "2026-12-27",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Prem Devyani & Team",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge5d5426a5653.jpg",
-      "region": "India",
-      "id": "337d7e5cf4c8"
-    },
-    {
-      "is_event": true,
-      "type": "Camp",
-      "title": "Parents Meditation Camp",
-      "start_date": "2026-12-25",
-      "end_date": "2026-12-27",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Ma Dhyan Prachi",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge5d5426a5653.jpg",
-      "region": "India",
-      "id": "bcc9a5bcc270"
+      "id": "83b78396e914"
     },
     {
       "title": "5 Day Emotional Wellness Winter Retreat, Cancun, Mexico",
@@ -4639,45 +4563,26 @@
       "source_url": "https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",
       "source_platform": "BookRetreats",
       "flyer_url": "https://bookretreats.com/assets/photo/retreat/0m/66k/66114/p_2485043/1000_1772110352.jpg",
-      "id": "21f54b89c01d"
+      "id": "9f380bf62af7"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "NEW BEGINNINGS MEDITATE & CELEBRATE",
-      "start_date": "2026-12-29",
-      "end_date": "2027-01-03",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "New Year, New You: Find Joy through Meditation.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2a35acfa990d.jpg",
-      "region": "India",
-      "id": "aa791bdda568"
-    },
-    {
-      "is_event": true,
-      "type": "Workshop",
-      "title": "Zorba the Buddha Celebration",
-      "start_date": "2026-12-31",
-      "end_date": "2027-01-01",
-      "venue": "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043",
-      "city": "New Delhi",
-      "state": "Delhi",
-      "country": "India",
-      "phone": "011-25319026",
-      "organizer": "Osho Dham / Osho World",
-      "description": "Facilitated by Swami Ravindra Bharti",
-      "source_url": "https://oshoworld.com/events",
-      "source_platform": "Osho Dham / Osho World (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imge5d5426a5653.jpg",
-      "region": "India",
-      "id": "cfd8f6f2e994"
+      "title": "The Mystic Rose",
+      "start_date": "2027-01-01",
+      "end_date": null,
+      "venue": "The World of Meditation Center",
+      "city": "Dallas",
+      "state": null,
+      "country": "United States",
+      "phone": null,
+      "organizer": null,
+      "description": "The Mystic Rose workshop facilitated in January at The World of Meditation Center.",
+      "source_url": "https://www.facebook.com/shanti.schenkerskye/posts/pfbid033K1WN6zXyzWXY1HhR3Mn8TtAfq3YQkxW2XesaJQPSsMPmTZ1xf7cmREAp7uZLiLal",
+      "source_platform": "Facebook",
+      "flyer_url": "",
+      "region": "Americas",
+      "id": "6a55275cebc5"
     },
     {
       "is_event": true,
@@ -4696,45 +4601,26 @@
       "source_platform": "Osho Sanzen (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img6c6a06a0e1f0.jpg",
       "region": "India",
-      "id": "df52e4d990d0"
-    },
-    {
-      "is_event": true,
-      "type": "Retreat",
-      "title": "MEDITATION INTENSIVE SILENT RETREAT",
-      "start_date": "2027-01-13",
-      "end_date": "2027-01-17",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Experience peace inside.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img13e4b55b9de2.jpg",
-      "region": "India",
-      "id": "b67f479fe8ce"
+      "id": "img62dafa6fe"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "THE HEART SUTRA",
-      "start_date": "2027-01-22",
-      "end_date": "2027-01-26",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Open Your Heart, Embrace Love: Journey to Joy.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2a35acfa990d.jpg",
-      "region": "India",
-      "id": "775cb3cff975"
+      "title": "Training for Transformation 9 TT9: Intimacy and Healing Relationships",
+      "start_date": "2027-01-10",
+      "end_date": "2027-01-16",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Discover inner wholeness already present",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgdacaf0378ac6.png",
+      "region": "Europe",
+      "id": "img8f795f2da"
     },
     {
       "is_event": true,
@@ -4753,26 +4639,83 @@
       "source_platform": "Osho Himalayas (website)",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img2a3ed1226844.jpg",
       "region": "India",
-      "id": "c9ae67ac9157"
+      "id": "img696b068f5"
+    },
+    {
+      "is_event": true,
+      "type": "Retreat",
+      "title": "Osho Neo Vipassana Retreat: 10 Days in Silence",
+      "start_date": "2027-02-11",
+      "end_date": "2027-02-21",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Ten day silent vipassana meditation retreat",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgd08d115915c1.png",
+      "region": "Europe",
+      "id": "imgcfe430a72"
     },
     {
       "is_event": true,
       "type": "Workshop",
-      "title": "OSHO MYSTIC ROSE",
-      "start_date": "2027-02-03",
-      "end_date": "2027-02-25",
-      "venue": "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)",
-      "city": "Dharamshala",
-      "state": "Himachal Pradesh",
-      "country": "India",
-      "phone": "+91-7071042042",
-      "organizer": "Osho Himalayas",
-      "description": "Let the scars of the past be dissolved.",
-      "source_url": "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses",
-      "source_platform": "Osho Himalayas (website)",
-      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img3382f7aef2dd.jpg",
-      "region": "India",
-      "id": "692f9fbfd7cf"
+      "title": "Learning Love 1 – The foundation of love",
+      "start_date": "2027-03-06",
+      "end_date": "2027-03-11",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Learning to love foundational skills",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img8d81321a5f24.png",
+      "region": "Europe",
+      "id": "img625766dcc"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Body Types Training Part II",
+      "start_date": "2027-03-20",
+      "end_date": "2027-03-29",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Body Types map tools for people",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img980458af67fc.jpg",
+      "region": "Europe",
+      "id": "img26035d1ac"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Tantra Life Style",
+      "start_date": "2027-05-02",
+      "end_date": "2027-05-08",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Inclusive sensuous living everyday experience",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img770745a4c7b7.jpg",
+      "region": "Europe",
+      "id": "imgb4eb7052e"
     },
     {
       "is_event": true,
@@ -4791,7 +4734,102 @@
       "source_platform": "Instagram",
       "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img961b2f3fdfb0.jpg",
       "region": "India",
-      "id": "924c5de0f151"
+      "id": "img426964d93"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Learning Love 2 – Living and Loving in Truth",
+      "start_date": "2027-06-05",
+      "end_date": "2027-06-10",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Healthy nourishing relationship truth learning",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img507b3077a458.jpg",
+      "region": "Europe",
+      "id": "img895c11301"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Training for Transformation 1 TT1: Breathing into Life: A Journey Beyond Trauma",
+      "start_date": "2027-10-31",
+      "end_date": "2027-11-06",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Conscious breathing liberates trauma reconnect",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/img03462da1cb2c.jpg",
+      "region": "Europe",
+      "id": "img24ab8e1ce"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Training for Transformation 2 TT2: Meeting the Inner Child",
+      "start_date": "2028-01-16",
+      "end_date": "2028-01-22",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Childhood behavior fears survival strategies",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgb42c121d5d39.jpg",
+      "region": "Europe",
+      "id": "img63fd4f195"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Training for Transformation part 3 TT3: Body Types and Body Reading",
+      "start_date": "2028-03-18",
+      "end_date": "2028-03-25",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Bodies reveal lives learning opportunity",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf6720e470375.png",
+      "region": "Europe",
+      "id": "img80dee98b8"
+    },
+    {
+      "is_event": true,
+      "type": "Workshop",
+      "title": "Training for Transformation 4 TT4: Sexual Deconditioning and Inner Teenager",
+      "start_date": "2028-05-14",
+      "end_date": "2028-05-20",
+      "venue": "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark",
+      "city": "",
+      "state": null,
+      "country": "Denmark",
+      "phone": "+45 75752500",
+      "organizer": "Osho Risk",
+      "description": "Teenage years healing wounds process",
+      "source_url": "https://www.oshorisk.com/events/",
+      "source_platform": "Osho Risk (website)",
+      "flyer_url": "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/imgf79aa8ee5410.png",
+      "region": "Europe",
+      "id": "imgc72381491"
     }
   ]
 }
