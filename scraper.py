@@ -142,7 +142,7 @@ HTML_EVENT_PAGES = [
     ("https://oshoworld.com/events", "India", "Osho Dham / Osho World",
      "011-25319026",
      "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043"),
-    ("https://wellness.oshohimalayas.com/all_upcoming_meditation_courses", "India", "Osho Himalayas",
+    ("https://wellness.oshohimalayas.com/all_upcoming_meditation_courses?gad_source=1", "India", "Osho Himalayas",
      "+91-7071042042",
      "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)"),
     ("https://www.oshonisarga.com/upcoming-programs/calendar", "India", "Osho Nisarga",
@@ -160,6 +160,9 @@ HTML_EVENT_PAGES = [
     ("https://www.oshouta.de/de/programm", "Germany", "Osho Uta",
      "+49 221 9520320",
      "Osho UTA Institut, Venloer Str. 5-7, 50672 Köln, Germany"),
+    ("https://www.humaniversity.com/courses/", "Netherlands", "Osho Humaniversity",
+     "+31 72 506 4114",
+     "OSHO Humaniversity, Dr. Wiardi Beckmanlaan 8, Egmond aan Zee, Netherlands"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -655,6 +658,8 @@ def read_html_event_pages():
                 city, state = "Braedstrup", None
             elif "Uta" in organizer:
                 city, state = "Köln", None
+            elif "Humaniversity" in organizer:
+                city, state = "Egmond aan Zee", None
             else:
                 city, state = "", None
             ev_obj = {
