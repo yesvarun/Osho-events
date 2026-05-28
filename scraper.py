@@ -24,7 +24,7 @@ BROWSER_HEADERS = {
                   "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate",
+    "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive",
     "Upgrade-Insecure-Requests": "1",
 }
@@ -56,8 +56,6 @@ FB_PAGES = [
     "https://www.facebook.com/oshotapoban1/",         # Osho Tapoban, Nepal
     "https://www.facebook.com/zorbathebuddhaindia/",  # Zorba the Buddha India
     "https://www.facebook.com/oshosadhanapath/",      # Osho Sadhana Path, Nargol
-    "https://www.facebook.com/OshoManan/",            # Osho Manan, Mehsana (site is JS-only; FB is the reliable route)
-    "https://www.facebook.com/OshoSanzen/",           # Osho Sanzen, Solan HP (active page, 2026 camps)
 ]
 
 # Public Osho Facebook GROUPS to scrape. Groups are where many regional camps get
@@ -69,64 +67,25 @@ FB_GROUPS = [
 ]
 
 # What we look for. Trimmed to the most productive tags to save credit.
-# These run through Apify; each one is one query. More tags = more reach but more cost.
-IG_HASHTAGS = [
-    # Core Osho meditation tags (English)
-    "oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
-    "oshoshivir", "oshofestival", "oshosadhana", "oshocelebration",
-    "dynamicmeditation", "kundalinimeditation", "mysticrose",
-    # Hindi script (covers most regional posts from north & central India)
-    "ओशो", "ओशोध्यान", "ध्यानशिविर", "ओशोशिविर", "साधनाशिविर", "ओशोकैंप",
-    # Punjabi script — Punjab/Haryana regional camps
-    "ਓਸ਼ੋ", "ਧਿਆਨ", "ਓਸ਼ੋਧਿਆਨ",
-    # Nepal
-    "oshotapoban", "oshonepal", "meditationnepal", "ओशोनेपाल", "ध्यानशिविरनेपाल",
-    # State-tagged English hashtags — these are how regional organisers tag their camps
-    "oshopunjab", "oshohimachal", "oshorajasthan", "oshogujarat",
-    "oshokerala", "oshokarnataka", "oshomaharashtra", "oshodelhi",
-    "oshouttarakhand", "oshouttarpradesh", "oshobihar", "oshomp",
-    "oshorishikesh", "oshodharamshala", "oshopune", "oshogoa",
-]
+IG_HASHTAGS = ["oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
+               # Hindi / Punjabi / Nepali / regional tags to catch regional-language posts:
+               "ओशो", "ओशोध्यान", "ध्यानशिविर", "ओशोशिविर", "साधनाशिविर",
+               "ਓਸ਼ੋ", "ਧਿਆਨ",
+               # Nepal-focused:
+               "oshotapoban", "oshonepal", "meditationnepal", "ओशोनेपाल", "ध्यानशिविरनेपाल"]
 # Specific Instagram PROFILES to scrape (more reliable than hashtags).
-# Profile scrapes work even WITHOUT the IG_SESSION_COOKIE (Apify can read public profiles
-# anonymously). So adding profiles is the safest way to widen reach without depending
-# on the cookie.
-#
 # Paste profile URLs, e.g. "https://www.instagram.com/oshointernational/".
-# To add a new centre: search Instagram for "osho <city>" or "osho <state>" and verify
-# they post camp flyers (not just photos). Remove any handle that returns nothing
-# after a few runs — dead profiles waste Apify credits.
 IG_PROFILES = [
-    # Major international + India hubs (verified active)
-    "https://www.instagram.com/oshointernational/",       # Osho International, Pune
-    "https://www.instagram.com/tapobaninternational/",    # Osho Tapoban, Nepal
-    "https://www.instagram.com/oshobliss_experiences/",   # Osho Bliss, Rishikesh
-    "https://www.instagram.com/zorbathebuddhaindia/",     # Zorba the Buddha, India
-    "https://www.instagram.com/oshogangadham_ashram/",    # Osho Gangadham, Rishikesh
-    "https://www.instagram.com/oshogram.himachal/",       # Oshogram/Ensogram, HP
-    # ----
-    # ADD MORE REGIONAL HANDLES HERE as you find them. Suggested research path on Instagram:
-    #   search "osho <state name>" — e.g. osho punjab, osho rajasthan, osho gujarat
-    #   search "osho <city>"       — e.g. osho chandigarh, osho jaipur, osho ahmedabad
-    #   look at "Suggested for you" when viewing oshointernational
-    #   check the followers of the existing profiles above
-    # Each new active handle is worth 5–30 events/month.
+    "https://www.instagram.com/oshointernational/",
+    "https://www.instagram.com/tapobaninternational/",   # Osho Tapoban, Nepal — correct handle
+    "https://www.instagram.com/oshobliss_experiences/",  # Osho Bliss, Rishikesh
+    "https://www.instagram.com/zorbathebuddhaindia/",    # Zorba the Buddha, India
+    # add more Osho centre / organiser accounts here
 ]
-# Facebook SEARCH terms — searched ONE AT A TIME, so each adds a small Apify cost.
-# Each term is a separate Facebook keyword search. Covers Osho camps across India.
-# Trim if cost matters; add if you want wider reach.
-SEARCH_TERMS = [
-    # Core camp types
-    "osho meditation camp", "osho retreat", "osho meditation shivir",
-    "mystic rose meditation", "osho festival", "osho dynamic meditation",
-    "ध्यान शिविर", "साधना शिविर", "ओशो शिविर",
-    # Nepal
-    "osho tapoban",
-    # State-level searches — capture regional camps you'd otherwise miss
-    "osho punjab", "osho himachal", "osho rajasthan", "osho gujarat",
-    "osho kerala", "osho karnataka", "osho maharashtra", "osho delhi",
-    "osho uttarakhand", "osho uttar pradesh", "osho madhya pradesh",
-]
+# Facebook SEARCH terms — searched ONE AT A TIME, so each adds a small cost.
+# Covers common camp types. Trim if cost matters; add if you want wider reach.
+SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation shivir",
+                "mystic rose meditation", "osho festival", "ध्यान शिविर", "osho tapoban"]
 
 # IMPORTANT: Instagram now blocks most ANONYMOUS hashtag browsing, which is the #1 reason
 # a hashtag scrape returns 0 posts. If your Apify test confirms this, paste a logged-in
@@ -154,29 +113,6 @@ FLYERS_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/h
 # DOWNLOAD them into this repo folder and serve from our own URL (never blocked, never expires).
 CARD_IMG_DIR = "card_images"
 CARD_IMG_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/"
-
-# FALLBACK IMAGES (Unsplash): when an event has NO real photo, fetch a RELEVANT stock photo
-# (based on its city/region + meditation/serenity) so every card has a fitting image.
-# Free key: sign up at unsplash.com/developers → create an app → copy the "Access Key" →
-# add it as a GitHub secret named UNSPLASH_ACCESS_KEY. Without the key, we draw a calm
-# gradient card instead (no crash, no cost). Images are re-hosted in CARD_IMG_DIR (fetched
-# once ever) and a ledger prevents the same photo being reused for two different events.
-UNSPLASH_ACCESS_KEY = os.environ.get("UNSPLASH_ACCESS_KEY", "")
-FALLBACK_LEDGER = os.path.join(CARD_IMG_DIR, "_fallback_ledger.json")
-# City → evocative search terms, so a Rishikesh camp gets Ganga/Himalaya imagery, etc.
-FALLBACK_CITY_TERMS = {
-    "rishikesh": "Rishikesh Ganges Himalayas river",
-    "dharamshala": "Dharamshala Himalayas mountains",
-    "solan": "Himachal pine forest hills",
-    "mehsana": "Gujarat serene landscape",
-    "gorakhpur": "India ashram garden",
-    "new delhi": "India garden temple",
-    "delhi": "India garden temple",
-    "nargol": "beach ocean serene shore",
-    "tiruvannamalai": "Arunachala hill temple",
-    "pune": "India meditation garden",
-    "kathmandu": "Nepal Himalayas hills",
-}
 
 # WORDPRESS "The Events Calendar" sites — these expose a clean JSON API of their events.
 # FREE to read (no Apify, no AI). Add any Osho centre that runs this plugin.
@@ -218,43 +154,9 @@ HTML_EVENT_PAGES = [
     ("https://oshoramana.com/upcoming-events", "India", "Osho Ramana",
      "",
      "Osho Ramana, Tiruvannamalai, Tamil Nadu"),
-    ("https://oshogorakhpur.com/category/forthcoming/", "India", "Osho Prabhu Kripal Ashram (Gorakhpur)",
-     "+91-9839501228",
-     "Osho Prabhu Kripal Ashram, Algatpur via Ghaghsara Bazar, Gorakhpur, Uttar Pradesh 273209"),
-    ("https://oshomanan.com/", "India", "Osho Manan (Mehsana)",
-     "+91-9428959979",
-     "Osho Manan Neo-Sannyas Commune, Palavasana, Mehsana, Gujarat"),
-    ("https://www.oshosanzen.in/events", "India", "Osho Sanzen",
-     "+91-8894351962",
-     "Osho Sanzen, Solan, Himachal Pradesh"),
-    ("https://www.osho.com/whats-on", "India", "OSHO International Meditation Resort",
-     "+91-20-6601-9999",
-     "OSHO International Meditation Resort, 17 Koregaon Park, Pune, Maharashtra 411001"),
-    ("https://www.oshogram.com/events", "India", "Oshogram (Ensogram)",
-     "+91-8278805130",
-     "Oshogram, Pandar, Sundernagar, Distt. Mandi, Himachal Pradesh 175038"),
-]
-
-# BOOKRETREATS.COM — third-party Osho retreat directory with global coverage.
-# Listed retreats are commercial offerings (paid) but they're real, dated, and add
-# substantial INTERNATIONAL coverage (Europe, Americas, Pacific) that we otherwise miss.
-# Each URL is a region/country listing page; Claude extracts the retreats from each one.
-# Add or remove URLs to focus on regions that matter most.
-BOOKRETREATS_PAGES = [
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/europe",       "Germany", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/united-states","USA", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/india",        "India", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/bali",         "Indonesia", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/thailand",     "Thailand", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/costa-rica",   "Costa Rica", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/mexico",       "Mexico", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/nepal",        "Nepal", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/canada",       "Canada", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/australia",    "Australia", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/morocco",      "Morocco", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/sri-lanka",    "Sri Lanka", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/vietnam",      "Vietnam", "BookRetreats"),
-    ("https://bookretreats.com/s/meditation-retreats/osho-retreats/colombia",     "Colombia", "BookRetreats"),
+    ("https://www.oshorisk.com/events/", "Denmark", "Osho Risk",
+     "+45 75752500",
+     "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -481,57 +383,6 @@ EXTRACT_SYSTEM = (
 )
 
 _extract_fail_count = [0]   # mutable counter shared across calls
-_credit_exhausted = [False]  # set True once Anthropic reports the balance is too low
-
-def _is_credit_error(status, body):
-    """True if an Anthropic error means the account is out of credit, so we should stop
-    hammering the API with calls that will all fail the same way."""
-    return status == 400 and "credit balance is too low" in (body or "").lower()
-
-
-# --- ROBUST PARSERS (added to fix JSONDecodeError "Extra data" + flyer AttributeError) ----
-def _parse_event_json(text):
-    """Turn Claude's reply into a SINGLE event dict, defensively.
-    Handles: code fences, trailing 'Extra data' after the JSON, a JSON ARRAY wrapper,
-    a bare `null`, or prose around the object. ALWAYS returns a dict so callers can
-    safely do ev.get(...) — never raises JSONDecodeError or AttributeError."""
-    if not text:
-        return {"is_event": False}
-    s = text.strip()
-    if s.startswith("```"):
-        s = s.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-    try:
-        # raw_decode parses the FIRST json value and ignores anything after it → fixes "Extra data"
-        obj, _end = json.JSONDecoder().raw_decode(s)
-    except json.JSONDecodeError:
-        # last resort: grab the first {...} block if the value didn't start at char 0
-        m = _re.search(r"\{[\s\S]*\}", s)
-        if not m:
-            return {"is_event": False}
-        try:
-            obj = json.loads(m.group(0))
-        except json.JSONDecodeError:
-            return {"is_event": False}
-    if isinstance(obj, list):                       # array wrapper → take the first event object
-        obj = next((x for x in obj if isinstance(x, dict)), None)
-    if not isinstance(obj, dict):                   # null / string / number → not an event
-        return {"is_event": False}
-    return obj
-
-def _image_media_type(raw):
-    """Identify a Claude-supported image type from its MAGIC BYTES (not the HTTP header,
-    which often lies). Returns the media_type or None if it isn't a real, supported image —
-    so we never send Claude something it will reject with HTTP 400 'Could not process image'."""
-    if not raw or len(raw) < 12:
-        return None
-    if raw[:3] == b"\xff\xd8\xff":                  return "image/jpeg"
-    if raw[:8] == b"\x89PNG\r\n\x1a\n":             return "image/png"
-    if raw[:6] in (b"GIF87a", b"GIF89a"):           return "image/gif"
-    if raw[:4] == b"RIFF" and raw[8:12] == b"WEBP": return "image/webp"
-    return None
-
-MAX_IMAGE_BYTES = 4_800_000   # Claude rejects very large images; stay safely under the limit
-
 
 def check_anthropic_key():
     """Verify the Anthropic key works BEFORE processing 130 posts. Fail loudly if not."""
@@ -554,20 +405,16 @@ def check_anthropic_key():
         return False
 
 def _download_image_b64(url):
-    """Fetch an image URL and return (base64, media_type) or (None, None).
-    Validates the bytes are a real, supported, not-too-large image so vision calls
-    never fail with HTTP 400 'Could not process image' (we fall back to caption text)."""
+    """Fetch an image URL and return (base64, media_type) or (None, None)."""
     try:
-        r = requests.get(url, timeout=30, headers=BROWSER_HEADERS)
+        r = requests.get(url, timeout=30)
         if r.status_code != 200 or not r.content:
             return None, None
-        mtype = _image_media_type(r.content)        # trust the bytes, not the content-type header
-        if not mtype:                               # not a real/supported image → don't send it
-            return None, None
-        if len(r.content) > MAX_IMAGE_BYTES:        # too big for the API → skip vision
-            return None, None
+        ctype = r.headers.get("content-type", "").split(";")[0].strip()
+        if ctype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
+            ctype = "image/jpeg"   # most IG/FB flyers are jpeg
         import base64
-        return base64.standard_b64encode(r.content).decode(), mtype
+        return base64.standard_b64encode(r.content).decode(), ctype
     except Exception:
         return None, None
 
@@ -590,18 +437,6 @@ def extract_event(caption, image_url=None):
     else:
         content = (caption or "")[:4000]
 
-    # Guard: if we have neither a usable image nor any caption text, the API rejects an
-    # empty message ("messages.0: user messages must have non-empty content"). Skip the call.
-    if isinstance(content, str) and not content.strip():
-        return {"is_event": False}
-    if isinstance(content, list) and not content:
-        return {"is_event": False}
-
-    # If we already know the account is out of credit, don't bother calling — every
-    # call would fail identically and just flood the log + waste time.
-    if _credit_exhausted[0]:
-        return {"is_event": False}
-
     body = {
         "model": EXTRACT_MODEL,
         "max_tokens": 600,
@@ -619,19 +454,12 @@ def extract_event(caption, image_url=None):
                 json=body, timeout=90)
             if r.status_code != 200:
                 last_err = f"HTTP {r.status_code}: {r.text[:150]}"
-                if _is_credit_error(r.status_code, r.text):
-                    _credit_exhausted[0] = True   # stop all further Claude calls this run
-                    break
                 if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
                     time.sleep(2); continue       # transient — retry once
-                # If a bad image triggered a 400, retry once WITHOUT the image (caption only).
-                if r.status_code == 400 and use_image and attempt == 0:
-                    body["messages"] = [{"role": "user", "content": (caption or "")[:4000]}]
-                    use_image = False
-                    continue
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
-            return _parse_event_json(text)         # robust: tolerates extra data / arrays / null
+            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            return json.loads(text)
         except Exception as e:
             last_err = f"{type(e).__name__}: {e}"
             if attempt == 0:
@@ -644,23 +472,16 @@ def extract_event(caption, image_url=None):
 
 def extract_event_from_file(path):
     """Read a local flyer image file with Claude vision → event dict."""
-    import base64
+    import base64, mimetypes
     try:
         with open(path, "rb") as f:
             raw = f.read()
-        mtype = _image_media_type(raw)              # detect real format from bytes
-        if not mtype:                               # corrupt / unsupported (e.g. HEIC) → skip cleanly
-            print(f"  ! flyer {os.path.basename(path)} → unsupported or corrupt image, skipped")
-            return {"is_event": False}
-        if len(raw) > MAX_IMAGE_BYTES:              # too big for the API → skip cleanly
-            print(f"  ! flyer {os.path.basename(path)} → too large ({len(raw)//1024} KB), skipped")
-            return {"is_event": False}
+        mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
+        if mtype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
+            mtype = "image/jpeg"
         b64 = base64.standard_b64encode(raw).decode()
     except Exception as e:
         print(f"  ! couldn't read flyer {path}: {e}")
-        return {"is_event": False}
-
-    if _credit_exhausted[0]:
         return {"is_event": False}
 
     body = {
@@ -676,16 +497,13 @@ def extract_event_from_file(path):
                 headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
                          "content-type": "application/json"}, json=body, timeout=90)
             if r.status_code != 200:
-                if _is_credit_error(r.status_code, r.text):
-                    _credit_exhausted[0] = True
-                    print("  ! Anthropic credit exhausted — skipping remaining flyer/post extraction this run.")
-                    break
                 if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
                     time.sleep(2); continue
                 print(f"  ! flyer vision HTTP {r.status_code}: {r.text[:150]}")
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
-            return _parse_event_json(text)         # robust: never returns a list/None to the caller
+            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            return json.loads(text)
         except Exception as e:
             if attempt == 0:
                 time.sleep(2); continue
@@ -765,7 +583,7 @@ def read_html_event_pages():
             text = _re.sub(r"<script[\s\S]*?</script>", " ", raw_html)
             text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
             text = _re.sub(r"<[^>]+>", " ", text)
-            text = _re.sub(r"\s+", " ", text)[:45000]   # raised from 12000: big landing pages (e.g. Swipepages) push the event list far down
+            text = _re.sub(r"\s+", " ", text)[:12000]
         except Exception as e:
             print(f"  ! {organizer}: fetch failed ({type(e).__name__})")
             continue
@@ -779,9 +597,6 @@ def read_html_event_pages():
             "Infer the year from context (events are 2026 unless stated). No prose, just the JSON array.\n\n"
             + text
         )
-        if _credit_exhausted[0]:
-            print(f"  ! {organizer}: skipped — Anthropic credit exhausted this run.")
-            continue
         try:
             resp = requests.post("https://api.anthropic.com/v1/messages",
                 headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
@@ -789,10 +604,6 @@ def read_html_event_pages():
                 json={"model": EXTRACT_MODEL, "max_tokens": 8000,
                       "messages": [{"role": "user", "content": prompt}]}, timeout=120)
             if resp.status_code != 200:
-                if _is_credit_error(resp.status_code, resp.text):
-                    _credit_exhausted[0] = True
-                    print(f"  ! {organizer}: Anthropic credit exhausted — skipping remaining web pages.")
-                    continue
                 print(f"  ! {organizer}: Claude HTTP {resp.status_code}")
                 continue
             rawtext = "".join(b.get("text", "") for b in resp.json().get("content", []))
@@ -833,16 +644,6 @@ def read_html_event_pages():
                 city, state = "Nargol", "Gujarat"
             elif "Ramana" in organizer:
                 city, state = "Tiruvannamalai", "Tamil Nadu"
-            elif "Gorakhpur" in organizer:
-                city, state = "Gorakhpur", "Uttar Pradesh"
-            elif "Manan" in organizer:
-                city, state = "Mehsana", "Gujarat"
-            elif "Sanzen" in organizer:
-                city, state = "Solan", "Himachal Pradesh"
-            elif "Pune" in organizer or "Resort" in organizer:
-                city, state = "Pune", "Maharashtra"
-            elif "Oshogram" in organizer or "Ensogram" in organizer:
-                city, state = "Sundernagar", "Himachal Pradesh"
             else:
                 city, state = "", None
             ev_obj = {
@@ -859,11 +660,6 @@ def read_html_event_pages():
             out.append(ev_obj)
             page_events.append(ev_obj)
             got += 1
-        if got == 0:
-            snippet = text[:300].replace("\n", " ")
-            print(f"    (0 events — Claude was given {len(text)} chars of page text. "
-                  f"If that number is small, the page is JS-rendered or bot-blocked, so the "
-                  f"events never reached Claude. Start of text: {snippet!r})")
         print(f"  → {got} events from {organizer} (web page)")
         # Save today's results so later runs today reuse them (once-a-day fetch).
         if got > 0:
@@ -872,150 +668,6 @@ def read_html_event_pages():
                     json.dump({"date": today, "events": page_events}, f)
             except Exception:
                 pass
-    return out
-
-def read_bookretreats():
-    """Read Osho retreats from BookRetreats.com region pages.
-    BookRetreats lists commercial retreats globally; one page = one country/region with many retreats.
-    Fetch each page, strip to text, let Claude extract titles + locations + dates.
-    Uses the same once-a-day cache as the HTML event pages (no re-fetch in the same day)."""
-    out = []
-    if not BOOKRETREATS_PAGES:
-        return out
-    cache_dir = "feed_cache"
-    os.makedirs(cache_dir, exist_ok=True)
-    today = dt.date.today().isoformat()
-    for url, default_country, organizer in BOOKRETREATS_PAGES:
-        cache_file = os.path.join(cache_dir, "br_" + hashlib.md5(url.encode()).hexdigest()[:12] + ".json")
-        cached = None
-        if os.path.exists(cache_file):
-            try:
-                with open(cache_file) as f:
-                    cached = json.load(f)
-            except Exception:
-                cached = None
-        if cached and cached.get("date") == today:
-            evs = cached.get("events", [])
-            out.extend(evs)
-            print(f"  → {len(evs)} retreats from BookRetreats / {default_country} (cached today)")
-            continue
-        page_events = []
-        try:
-            hdrs = dict(BROWSER_HEADERS)
-            hdrs["Referer"] = "https://bookretreats.com/"
-            r = requests.get(url, timeout=45, headers=hdrs)
-            if r.status_code != 200:
-                print(f"  ! BookRetreats / {default_country}: HTTP {r.status_code} — skipping")
-                continue
-            raw_html = r.text
-            # Extract retreat-image URLs in page order (so we can match images to retreats by index).
-            imgs = []
-            for m in _re.finditer(r'(https?://bookretreats\.com/[^\s"\']+/p_\d+/[^\s"\'?]+\.(?:jpg|jpeg|png|webp))', raw_html):
-                if m.group(1) not in imgs:
-                    imgs.append(m.group(1))
-            # Strip HTML for Claude
-            text = _re.sub(r"<script[\s\S]*?</script>", " ", raw_html)
-            text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
-            text = _re.sub(r"<[^>]+>", " ", text)
-            text = _re.sub(r"\s+", " ", text)[:50000]
-        except Exception as e:
-            print(f"  ! BookRetreats / {default_country}: fetch failed ({type(e).__name__})")
-            continue
-
-        prompt = (
-            f"Today is {TODAY}. Below is the text content of a BookRetreats.com listing page for "
-            f"Osho retreats in {default_country}. Extract EVERY retreat that has a clear UPCOMING date "
-            "or date range, IN THE ORDER they appear on the page. "
-            "Reply with ONLY a JSON array; each item: "
-            "{title, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', city, country, description}. "
-            "Rules: "
-            "- title: the retreat name as listed (e.g. '7 Day Transformational Healing Retreat on Gozo Island, Malta'). "
-            "- start_date / end_date: parse formats like 'Jun 11 - 14, 2026' or 'Sep 5 - 9, 2026'. "
-            "  If only month(s) are listed like 'Jun | Jul | Aug, 2026', use the FIRST day of the EARLIEST listed month "
-            "  that is in the future (relative to today) as start_date, and the LAST day of that month as end_date. "
-            "  Skip the retreat entirely if you cannot determine any specific upcoming month/dates. "
-            "  Skip 'Available all year round' retreats — they aren't time-bound events. "
-            "- city: the city/town from the location line (e.g. 'Gozo' from 'Gozo, Malta'). If multiple parts, take the most specific. "
-            "- country: the country from the location line. Default to '" + default_country + "' if unclear. "
-            "- description: under 15 words, summarising what the retreat offers. "
-            "Output the JSON array only — no prose, no code fences.\n\n"
-            "PAGE TEXT:\n" + text
-        )
-        try:
-            resp = requests.post("https://api.anthropic.com/v1/messages",
-                headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
-                         "content-type": "application/json"},
-                json={"model": EXTRACT_MODEL, "max_tokens": 4000,
-                      "messages": [{"role": "user", "content": prompt}]}, timeout=120)
-            if resp.status_code != 200:
-                if _is_credit_error(resp.status_code, resp.text):
-                    _credit_exhausted[0] = True
-                    print(f"  ! BookRetreats / {default_country}: Anthropic credit exhausted — skipping remaining pages.")
-                    continue
-                print(f"  ! BookRetreats / {default_country}: Claude HTTP {resp.status_code}")
-                continue
-            rawtext = "".join(b.get("text", "") for b in resp.json().get("content", []))
-            rawtext = rawtext.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            try:
-                items = json.loads(rawtext)
-            except json.JSONDecodeError:
-                # Response may have been truncated mid-array — salvage each complete {...} object.
-                items = []
-                for m in _re.finditer(r"\{[^{}]*\}", rawtext):
-                    try:
-                        items.append(json.loads(m.group(0)))
-                    except Exception:
-                        pass
-                if items:
-                    print(f"  (recovered {len(items)} retreats from a long BookRetreats / {default_country} page)")
-            if isinstance(items, dict) and isinstance(items.get("events"), list):
-                items = items["events"]
-            if not isinstance(items, list):
-                items = []
-        except Exception as e:
-            print(f"  ! BookRetreats / {default_country}: extraction failed ({type(e).__name__})")
-            continue
-
-        kept = 0
-        for i, it in enumerate(items):
-            if not isinstance(it, dict):
-                continue
-            title = (it.get("title") or "").strip()
-            sd = (it.get("start_date") or "").strip()
-            ed = (it.get("end_date") or sd).strip()
-            if not title or not sd:
-                continue
-            # validate dates parse
-            try:
-                dt.date.fromisoformat(sd)
-                dt.date.fromisoformat(ed)
-            except Exception:
-                continue
-            city = (it.get("city") or "").strip()
-            country = (it.get("country") or default_country).strip()
-            desc = (it.get("description") or "").strip()
-            # match an image by position (best effort; safe if it's missing)
-            img = imgs[i] if i < len(imgs) else ""
-            ev = {
-                "title": title,
-                "start_date": sd, "end_date": ed,
-                "city": city, "country": country,
-                "venue": "", "organizer": organizer,
-                "phone": "", "description": desc,
-                "type": "Retreat",
-                "source_url": url, "source_platform": "BookRetreats",
-                "flyer_url": img,
-            }
-            page_events.append(ev)
-            kept += 1
-        out.extend(page_events)
-        print(f"  → {kept} retreats from BookRetreats / {default_country} (web page)")
-        # cache
-        try:
-            with open(cache_file, "w") as f:
-                json.dump({"date": today, "events": page_events}, f)
-        except Exception:
-            pass
     return out
 
 def read_ical_feeds():
@@ -1140,8 +792,6 @@ def read_local_flyers():
     for path in files:
         try:
             ev = extract_event_from_file(path)
-            if not isinstance(ev, dict):            # belt-and-braces: never trust a non-dict here
-                ev = {"is_event": False}
             if ev.get("is_event"):
                 ev["source_platform"] = "Flyer upload"
                 ev["source_url"] = ""
@@ -1166,55 +816,22 @@ def read_local_flyers():
     return events
 
 
-_STOPWORDS = {
-    # generic filler that Claude adds/drops between runs, causing false "new" events
-    "osho", "meditation", "camp", "retreat", "workshop", "gathering", "shivir",
-    "the", "a", "an", "of", "and", "with", "for", "in", "at", "on", "by",
-    "days", "day", "3", "5", "7", "10", "21", "neo", "sannyas", "international",
-    "ध्यान", "शिविर", "ओशो", "साधना", "ਓਸ਼ੋ", "ਧਿਆਨ",
-}
-
-def _norm_title(title):
-    """Reduce a title to its distinctive core so the SAME camp matches across runs
-    even when Claude extracts a slightly different wording each time.
-    'Awakening Under The Trees', 'Awakening Under The Trees - Osho Meditation Camp',
-    and 'Awakening Under The Trees Osho Meditation Camp' all collapse to 'awakeningtrees...'."""
-    t = (title or "").lower()
-    # strip everything after a dash/pipe/colon (Claude often appends "- Osho Meditation Camp")
-    t = _re.split(r"[-|:–—]", t)[0]
-    # keep letters/numbers only, split to words
-    words = _re.findall(r"[a-z0-9\u0900-\u097f\u0a00-\u0a7f]+", t)
-    core = [w for w in words if w not in _STOPWORDS and len(w) > 1]
-    # if filtering removed everything (title WAS all filler), fall back to the raw words
-    if not core:
-        core = words
-    core.sort()                      # word order varies between extractions → sort for stability
-    return "".join(core)
-
 def make_id(ev):
-    """Stable, content-FIRST dedup id that survives across runs and collapses near-duplicates.
-    Identity = normalized-core-title + start_date + city. The image is NOT part of identity
-    (an event keeps the same id before and after a fallback image is attached), which removes
-    the 'same camp twice' problem. Genuine flyer uploads with no title still key off the file."""
-    if ev.get("_fixed_id"):
-        return ev["_fixed_id"]
-    core = _norm_title(ev.get("title"))
-    city = (ev.get("city") or ev.get("venue") or "").strip().lower()
-    sd = (ev.get("start_date") or "").strip()
-    # If there is real content to key on, use it (this is the normal path).
-    if core or city or sd:
-        return hashlib.md5(f"{core}|{sd}|{city}".encode()).hexdigest()[:12]
-    # No usable content at all → fall back to the image filename so an untitled flyer
-    # at least dedupes against its own carried-forward copy.
+    """Stable dedup id that survives across runs.
+    - Flyer uploads & re-hosted images: id from the IMAGE FILENAME (stored in flyer_url),
+      so a carried-forward copy and a freshly-read copy always get the SAME id → no repeats.
+    - Everything else: exact title + start date + city."""
     fu = ev.get("flyer_url") or ""
-    if isinstance(fu, dict):
-        fu = fu.get("url") or fu.get("src") or ""
-    elif not isinstance(fu, str):
-        fu = ""
-    if fu:
+    # Our own repo images (flyers/ or card_images/) have stable filenames — key off them.
+    if "/flyers/" in fu or "/card_images/" in fu:
         fname = fu.rstrip("/").split("/")[-1]
         return "img" + hashlib.md5(fname.encode()).hexdigest()[:9]
-    return hashlib.md5(repr(ev).encode()).hexdigest()[:12]
+    if ev.get("_fixed_id"):
+        return ev["_fixed_id"]
+    title = (ev.get("title") or "").strip().lower()
+    city = (ev.get("city") or ev.get("venue") or "").strip().lower()
+    sd = (ev.get("start_date") or "").strip()
+    return hashlib.md5(f"{title}|{sd}|{city}".encode()).hexdigest()[:12]
 
 def keep_upcoming(ev):
     end = ev.get("end_date") or ev.get("start_date")
@@ -1258,125 +875,6 @@ def rehost_image(img_url, key):
         return CARD_IMG_BASE_URL + name
     except Exception:
         return ""
-
-
-def _load_fallback_ledger():
-    """Map of {event_id: unsplash_photo_id} so a photo is never reused for two events,
-    and the same event keeps its image across runs."""
-    try:
-        with open(FALLBACK_LEDGER, encoding="utf-8") as f:
-            d = json.load(f)
-            return d if isinstance(d, dict) else {}
-    except Exception:
-        return {}
-
-def _save_fallback_ledger(ledger):
-    try:
-        os.makedirs(CARD_IMG_DIR, exist_ok=True)
-        with open(FALLBACK_LEDGER, "w", encoding="utf-8") as f:
-            json.dump(ledger, f)
-    except Exception:
-        pass
-
-def _fallback_query(ev):
-    city = (ev.get("city") or "").strip().lower()
-    base = FALLBACK_CITY_TERMS.get(city, "")
-    if not base:
-        base = f"{(ev.get('state') or '').strip()} {(ev.get('country') or 'India').strip()}".strip()
-    return (base + " meditation serenity nature").strip()
-
-def _gradient_card(ev):
-    """Last-resort image: draw a calm, UNIQUE gradient card (title + city) so no card is
-    ever blank. Colours are derived from the event id, so each card looks different and is
-    stable for that event. Returns a re-hosted URL or '' on failure."""
-    try:
-        from PIL import Image, ImageDraw, ImageFont
-    except Exception:
-        return ""
-    try:
-        eid = ev.get("id") or hashlib.md5((ev.get("title", "")).encode()).hexdigest()
-        h = hashlib.md5(eid.encode()).hexdigest()
-        # two calm, deep hues from the hash for a vertical gradient
-        c1 = (int(h[0:2], 16) % 90 + 30, int(h[2:4], 16) % 90 + 40, int(h[4:6], 16) % 90 + 70)
-        c2 = (int(h[6:8], 16) % 60 + 10, int(h[8:10], 16) % 60 + 15, int(h[10:12], 16) % 70 + 35)
-        W, Hh = 1200, 800
-        img = Image.new("RGB", (W, Hh), c1)
-        draw = ImageDraw.Draw(img)
-        for y in range(Hh):
-            t = y / Hh
-            col = tuple(int(c1[i] * (1 - t) + c2[i] * t) for i in range(3))
-            draw.line([(0, y), (W, y)], fill=col)
-        title = (ev.get("title") or "Osho Meditation").strip()[:60]
-        city = (ev.get("city") or ev.get("country") or "").strip()
-        try:
-            ftitle = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 56)
-            fcity = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 36)
-        except Exception:
-            ftitle = ImageFont.load_default(); fcity = ImageFont.load_default()
-        # word-wrap the title
-        words, lines, cur = title.split(), [], ""
-        for w in words:
-            if len(cur + " " + w) > 22:
-                lines.append(cur.strip()); cur = w
-            else:
-                cur += " " + w
-        if cur.strip():
-            lines.append(cur.strip())
-        y = Hh // 2 - (len(lines) * 64) // 2 - 40
-        for ln in lines:
-            draw.text((80, y), ln, font=ftitle, fill=(245, 245, 240)); y += 70
-        if city:
-            draw.text((80, y + 20), city, font=fcity, fill=(220, 220, 210))
-        os.makedirs(CARD_IMG_DIR, exist_ok=True)
-        name = "card" + hashlib.md5(eid.encode()).hexdigest()[:12] + ".jpg"
-        img.save(os.path.join(CARD_IMG_DIR, name), "JPEG", quality=82)
-        return CARD_IMG_BASE_URL + name
-    except Exception:
-        return ""
-
-def fallback_image(ev, ledger):
-    """Return a re-hosted image URL for an event that has no real photo.
-    1) Try Unsplash with a city/region-relevant query (no repeats via the ledger).
-    2) If no key / API fails / rate-limited → calm gradient card (always unique).
-    Mutates `ledger` to record the chosen Unsplash photo id."""
-    eid = ev.get("id") or hashlib.md5((ev.get("title", "") + ev.get("start_date", "")).encode()).hexdigest()
-    if not UNSPLASH_ACCESS_KEY:
-        return _gradient_card(ev)
-    try:
-        q = _fallback_query(ev)
-        r = requests.get(
-            "https://api.unsplash.com/search/photos",
-            params={"query": q, "per_page": 15, "orientation": "landscape", "content_filter": "high"},
-            headers={"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}",
-                     "Accept-Version": "v1"},
-            timeout=30)
-        if r.status_code != 200:
-            print(f"    (Unsplash HTTP {r.status_code} — using gradient card)")
-            return _gradient_card(ev)
-        results = r.json().get("results", [])
-        if not results:
-            return _gradient_card(ev)
-        used = set(ledger.values())
-        # deterministic start offset from the event id, then walk to first unused photo
-        start = int(hashlib.md5(eid.encode()).hexdigest(), 16) % len(results)
-        chosen = None
-        for k in range(len(results)):
-            cand = results[(start + k) % len(results)]
-            if cand.get("id") and cand["id"] not in used:
-                chosen = cand; break
-        if chosen is None:
-            chosen = results[start]   # all used (rare) — deterministic, still relevant
-        photo_id = chosen.get("id", "")
-        img_url = (chosen.get("urls") or {}).get("regular") or (chosen.get("urls") or {}).get("full")
-        if not img_url:
-            return _gradient_card(ev)
-        hosted = rehost_image(img_url, "unsplash_" + photo_id)
-        if hosted:
-            ledger[eid] = photo_id   # record so no other event reuses this photo
-            return hosted
-        return _gradient_card(ev)
-    except Exception:
-        return _gradient_card(ev)
 
 def build():
     print("="*60)
@@ -1461,7 +959,7 @@ def build():
     # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
     print("\nReading website event feeds…")
-    for ev in (read_ical_feeds() + read_wp_event_sites() + read_html_event_pages() + read_bookretreats()):
+    for ev in (read_ical_feeds() + read_wp_event_sites() + read_html_event_pages()):
         try:
             if not keep_upcoming(ev):
                 continue
@@ -1524,15 +1022,10 @@ def build():
         existing = []
 
     merged, seen_ids = [], set()
-    dropped_past = 0
     for ev in events:                       # new finds first (freshest data wins on dupes)
         ev["id"] = make_id(ev)              # recompute with aggressive dedup
-        if ev["id"] in seen_ids:
-            continue
-        if not keep_upcoming(ev):           # NEW: drop past/dateless finds before they bloat the file
-            dropped_past += 1
-            continue
-        seen_ids.add(ev["id"]); merged.append(ev)
+        if ev["id"] not in seen_ids:
+            seen_ids.add(ev["id"]); merged.append(ev)
     carried = 0
     for ev in existing:
         eid = make_id(ev)                    # recompute (ignore old weak IDs) so dupes collapse
@@ -1541,76 +1034,8 @@ def build():
         if keep_upcoming(ev):               # only carry forward events that haven't passed
             ev["id"] = eid
             seen_ids.add(eid); merged.append(ev); carried += 1
-    if dropped_past:
-        print(f"  🧹 dropped {dropped_past} past/dateless event(s) so the file matches the page")
-
-    # --- MANUAL BLOCK LIST: human override for cards that should NOT appear ---
-    # Read block_list.txt from the repo root. Each line is a SUBSTRING match against the
-    # event's id, title, city, or venue (case-insensitive). Lines starting with # are
-    # comments. Match anywhere in the field. This lets you kill a wrong card by adding,
-    # for example, "Mystery of Love|2026-06-01|Pune" or just "wrong title fragment".
-    blocked_terms = []
-    try:
-        if os.path.exists("block_list.txt"):
-            with open("block_list.txt", encoding="utf-8") as f:
-                for raw in f:
-                    line = raw.strip()
-                    if line and not line.startswith("#"):
-                        blocked_terms.append(line.lower())
-    except Exception as e:
-        print(f"  ! could not read block_list.txt: {e}")
-
-    if blocked_terms:
-        def _is_blocked(ev):
-            blob = " | ".join([
-                str(ev.get("id") or ""),
-                str(ev.get("title") or ""),
-                str(ev.get("city") or ""),
-                str(ev.get("venue") or ""),
-                str(ev.get("start_date") or ""),
-                str(ev.get("organizer") or ""),
-            ]).lower()
-            return any(t in blob for t in blocked_terms)
-        before = len(merged)
-        merged = [e for e in merged if not _is_blocked(e)]
-        blocked_count = before - len(merged)
-        if blocked_count:
-            print(f"  🚫 block_list.txt removed {blocked_count} card(s) you marked for removal")
 
     merged.sort(key=lambda e: e.get("start_date") or "9999")
-
-    # --- FALLBACK IMAGES: give every event without a real photo a relevant stock image ---
-    # (Unsplash by city/region, no repeats; gradient card if no key / API down.)
-    ledger = _load_fallback_ledger()
-    n_fallback = 0
-    for ev in merged:
-        if not ev.get("id"):
-            ev["id"] = make_id(ev)
-        fu = ev.get("flyer_url") or ""
-        # Defensive: some old/carried-forward data stored flyer_url as a dict (e.g. {"url": ...})
-        # or other non-string. Normalise to a plain string URL before any string ops.
-        if isinstance(fu, dict):
-            fu = fu.get("url") or fu.get("src") or ""
-        elif not isinstance(fu, str):
-            fu = ""
-        ev["flyer_url"] = fu                       # write back the cleaned value
-        # already has a real, re-hosted photo? leave it. (Unsplash/gradient images are keyed
-        # by 'unsplash_'/'card' filenames — treat those as already-handled fallbacks.)
-        if fu and "/card_images/" in fu and ("unsplash_" not in fu and "/cardimg" not in fu):
-            continue
-        if fu and "/flyers/" in fu:
-            continue
-        if fu and fu.startswith("http") and "/card_images/" not in fu:
-            continue   # external real image (rare) — keep
-        # no usable image → give it a relevant fallback
-        if not fu:
-            ev["flyer_url"] = fallback_image(ev, ledger)
-            if ev["flyer_url"]:
-                n_fallback += 1
-    _save_fallback_ledger(ledger)
-    if n_fallback:
-        kind = "Unsplash" if UNSPLASH_ACCESS_KEY else "gradient-card"
-        print(f"  🖼  added {n_fallback} fallback images ({kind}) for events with no photo")
 
     # SAFETY: warn loudly if this run drastically shrinks the directory — a sign something
     # went wrong (bad scrape, over-merge). The data is still written, but you'll see the alert.
@@ -1629,16 +1054,11 @@ def build():
     print(f"  extraction failures .. {_extract_fail_count[0]}  (if this ≈ posts scraped, your ANTHROPIC_API_KEY is the problem)")
     print(f"  judged real events ... {n_is_event}")
     print(f"  still upcoming ....... {n_upcoming}")
-    print(f"  website feeds ........ {n_wp}  (centres + BookRetreats global)")
+    print(f"  website feeds ........ {n_wp}  (intl centres: Nisarga, Osho World, San Diego…)")
     print(f"  flyer uploads ........ {n_flyer}  (from your '{FLYERS_DIR}/' folder)")
     print(f"  new this run ......... {len(events)}")
     print(f"  TOTAL in directory ... {len(merged)}  (new + carried forward)")
     print("="*60)
-    if _credit_exhausted[0]:
-        print("🛑 ANTHROPIC CREDIT RAN OUT during this run — extraction stopped early to avoid")
-        print("   flooding the log with failed calls. Events above are partial (mostly carried")
-        print("   forward + free website feeds). Top up at console.anthropic.com → Billing,")
-        print("   then re-run. (Today's scraped posts are cached, so re-extraction is Apify-free.)")
     print(f"✓ events.json now holds {len(merged)} upcoming events")
 
 
