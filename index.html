@@ -91,6 +91,8 @@
   .card.fresh{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber),0 10px 30px rgba(216,165,52,.28);animation:freshpulse 1.6s ease-in-out infinite}
   @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
   .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+  .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#6b5040;padding:0 4px;align-self:center}
+  .pinned-grid{margin-bottom:22px}
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(122,38,24,.3)}
   .flyer{position:relative;aspect-ratio:16/10;background:var(--paper-2);overflow:hidden}
   .flyer img{width:100%;height:100%;object-fit:cover;display:block}
@@ -224,6 +226,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
         Inform a Camp
       </button>
+      <span class="cta-or">or</span>
       <button class="inform-btn" id="uploadFlyerBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3M12 3v13M7 8l5-5 5 5"/></svg>
         Upload Flyer
@@ -516,6 +519,16 @@ function currentList(){
       if(!hay.includes(ui.q.toLowerCase())) return false;
     }
     return true;
+  }).sort((a,b)=>{
+    // Re-apply fresh-pin at render time too (belt and suspenders): a card added in
+    // the last 2 minutes sits at the very top, newest first; otherwise by start date.
+    const now = Date.now();
+    const aFresh = a._added && (now - a._added) < 120000;
+    const bFresh = b._added && (now - b._added) < 120000;
+    if(aFresh && bFresh) return b._added - a._added;
+    if(aFresh) return -1;
+    if(bFresh) return 1;
+    return a._start - b._start;
   });
 }
 function render(){
@@ -526,18 +539,33 @@ function render(){
     root.innerHTML = `<div class="empty"><div class="om">ૐ</div><h3>No upcoming gatherings here yet</h3><p>Try another state / region, clear the filters, or add one with “Inform a Camp”.</p></div>`;
     return;
   }
+  // Freshly added cards (last 2 min) are pinned at the ABSOLUTE top of the page,
+  // regardless of the current view, region, state, or filters. They show here even
+  // if they wouldn't match the current filter, so the person always sees their upload.
+  const now = Date.now();
+  const fresh = ALL_EVENTS.filter(e=> e._added && (now - e._added) < 120000)
+                    .sort((a,b)=> b._added - a._added);
+  const freshIds = new Set(fresh.map(e=>e.id));
+  const freshStrip = fresh.length
+    ? `<div class="grid pinned-grid">${fresh.map(card).join("")}</div>` : "";
+
   if(ui.view==="world" && !ui.region){
-    let html="";
+    let html = freshStrip;
     REGION_ORDER.forEach(reg=>{
-      const items=list.filter(e=>e.region===reg);
+      const items=list.filter(e=>e.region===reg && !freshIds.has(e.id));
       if(!items.length) return;
       html += `<div class="region-head"><h2>${reg}</h2><span class="ct">${items.length}</span><span class="ln"></span></div>`;
-      html += `<div class="grid">${items.map(card).join("")}</div>`;
+      html += `<div class="grid">${cardsWithCTA(items)}</div>`;
     });
     root.innerHTML = html;
   } else {
-    root.innerHTML = `<div class="grid">${list.map(card).join("")}</div>`;
+    // flat view: show the pinned strip, then the rest of the filtered list (minus fresh, to avoid dupes)
+    const rest = list.filter(e=> !freshIds.has(e.id));
+    root.innerHTML = freshStrip + `<div class="grid">${cardsWithCTA(rest)}</div>`;
   }
+}
+function cardsWithCTA(items){
+  return items.map(card).join("");
 }
 function card(e){
   // FOOLPROOF IMAGE: use the real image if present; if it's missing OR fails to load,
