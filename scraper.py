@@ -46,6 +46,15 @@ FB_GROUPS_ACTOR = "apify~facebook-groups-scraper"           # scrapes public gro
 FB_SEARCH_ACTOR = "danek~facebook-search-ppr"
 FB_SEARCH_ENABLED = True          # ON: searches Facebook by keyword (like IG hashtag search)
 
+# JS-rendered websites: pages whose events only appear after JavaScript runs.
+# Plain HTTP fetch gets an empty shell, so we use Apify's web-scraper (real browser)
+# ONLY for these URLs — the other sources keep the cheap HTTP path.
+JS_RENDER_URLS = {
+    "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses?gad_source=1",
+    "https://www.humaniversity.com/courses/",
+}
+JS_RENDER_ACTOR = "apify~web-scraper"
+
 # Known, active Osho Facebook PAGES — adds a reliable source beyond search.
 FB_PAGES = [
     "https://www.facebook.com/osho.international.meditation.resort/",
@@ -80,6 +89,8 @@ IG_PROFILES = [
     "https://www.instagram.com/tapobaninternational/",   # Osho Tapoban, Nepal — correct handle
     "https://www.instagram.com/oshobliss_experiences/",  # Osho Bliss, Rishikesh
     "https://www.instagram.com/zorbathebuddhaindia/",    # Zorba the Buddha, India
+    "https://www.instagram.com/osho_humaniversity/",     # Osho Humaniversity, Netherlands
+    "https://www.instagram.com/oshohimalayas/",          # Osho Himalayas (website is JS-rendered)
     # add more Osho centre / organiser accounts here
 ]
 # Facebook SEARCH terms — searched ONE AT A TIME, so each adds a small cost.
@@ -218,6 +229,40 @@ def run_actor(actor, payload):
     except Exception as e:
         print(f"    !! request failed: {type(e).__name__}: {e}")
         return []
+
+def render_with_browser(url):
+    """Fetch a URL through Apify web-scraper (real browser, runs JS) so we can read
+    pages whose events only appear after JavaScript renders. Returns rendered HTML, or "" on failure.
+    Used ONLY for URLs in JS_RENDER_URLS — other sources keep the cheap HTTP path."""
+    if not APIFY_TOKEN:
+        return ""
+    # web-scraper needs a pageFunction returning JSON. We grab outerHTML + scroll to load lazy content.
+    page_function = (
+        "async function pageFunction(context){"
+        "  const {page,log} = context;"
+        "  // give JS a moment to render, then scroll to trigger any lazy loading"
+        "  try{ await page.waitForTimeout(2500); }catch(e){}"
+        "  try{ await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight)); }catch(e){}"
+        "  try{ await page.waitForTimeout(1500); }catch(e){}"
+        "  const html = await page.content();"
+        "  return { html };"
+        "}"
+    )
+    payload = {
+        "startUrls": [{"url": url}],
+        "pageFunction": page_function,
+        "maxRequestRetries": 1,
+        "maxPagesPerCrawl": 1,
+        "useChrome": True,
+        "headless": True,
+    }
+    try:
+        items = run_actor(JS_RENDER_ACTOR, payload)
+        if items and items[0].get("html"):
+            return items[0]["html"]
+    except Exception as e:
+        print(f"    !! JS render failed: {type(e).__name__}: {e}")
+    return ""
 
 def scrape_instagram():
     print("Scraping Instagram…")
@@ -562,18 +607,26 @@ def read_html_event_pages():
             continue
         page_events = []  # collect this page's events to cache
         try:
-            # Polite fetch: a referer + small delay + one retry reduces 403 bot-blocking.
-            hdrs = dict(BROWSER_HEADERS)
-            hdrs["Referer"] = url.rsplit("/", 1)[0] + "/"
-            r = requests.get(url, timeout=45, headers=hdrs)
-            if r.status_code == 403:
-                time.sleep(5)                       # brief cool-off, then one retry
+            if url in JS_RENDER_URLS:
+                # JavaScript-rendered page — fetch via Apify browser so events actually load
+                print(f"  → using JS renderer for {organizer}")
+                raw_html = render_with_browser(url)
+                if not raw_html:
+                    print(f"  ! {organizer}: JS render returned empty — skipping")
+                    continue
+            else:
+                # Polite fetch: a referer + small delay + one retry reduces 403 bot-blocking.
+                hdrs = dict(BROWSER_HEADERS)
+                hdrs["Referer"] = url.rsplit("/", 1)[0] + "/"
                 r = requests.get(url, timeout=45, headers=hdrs)
-            if r.status_code != 200:
-                print(f"  ! {organizer}: events page HTTP {r.status_code} "
-                      f"(site is blocking automated requests — try again later)")
-                continue
-            raw_html = r.text
+                if r.status_code == 403:
+                    time.sleep(5)                       # brief cool-off, then one retry
+                    r = requests.get(url, timeout=45, headers=hdrs)
+                if r.status_code != 200:
+                    print(f"  ! {organizer}: events page HTTP {r.status_code} "
+                          f"(site is blocking automated requests — try again later)")
+                    continue
+                raw_html = r.text
             # Pull real image URLs (e.g. https://oshoworld.com/uploads/xxx.jpg) in page order.
             # Next.js wraps them as /_next/image?url=<ENCODED>&w=...  — decode those too.
             import urllib.parse as _up
