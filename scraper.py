@@ -510,7 +510,14 @@ def extract_event(caption, image_url=None):
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
             text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            return json.loads(text)
+            data = json.loads(text)
+            # Defensive: Claude sometimes returns a list wrapping a single event.
+            # Unwrap to a dict so the caller's .get(...) calls don't crash.
+            if isinstance(data, list):
+                data = data[0] if data and isinstance(data[0], dict) else {"is_event": False}
+            if not isinstance(data, dict):
+                data = {"is_event": False}
+            return data
         except Exception as e:
             last_err = f"{type(e).__name__}: {e}"
             if attempt == 0:
@@ -554,7 +561,14 @@ def extract_event_from_file(path):
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
             text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            return json.loads(text)
+            data = json.loads(text)
+            # Defensive: Claude sometimes returns a list wrapping a single event.
+            # Unwrap to a dict so the caller's .get(...) calls don't crash.
+            if isinstance(data, list):
+                data = data[0] if data and isinstance(data[0], dict) else {"is_event": False}
+            if not isinstance(data, dict):
+                data = {"is_event": False}
+            return data
         except Exception as e:
             if attempt == 0:
                 time.sleep(2); continue
