@@ -88,6 +88,9 @@
 
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin:16px 0}
   .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.22s;position:relative}
+  .card.fresh{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber),0 10px 30px rgba(216,165,52,.28);animation:freshpulse 1.6s ease-in-out infinite}
+  @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
+  .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(122,38,24,.3)}
   .flyer{position:relative;aspect-ratio:16/10;background:var(--paper-2);overflow:hidden}
   .flyer img{width:100%;height:100%;object-fit:cover;display:block}
@@ -483,7 +486,18 @@ function normalise(events){
     const k = ((e.title||"")+"|"+(e.start_date||"")+"|"+(e.city||"")).toLowerCase();
     if(seen.has(k)) return false; seen.add(k); return true;
   })
-  .sort((a,b)=> a._start - b._start);
+  .sort((a,b)=>{
+    // Freshly added cards (within 2 minutes) stay pinned at the very top,
+    // newest first, so the person sees their upload land. After 2 min they
+    // fall into the normal date-sorted position automatically.
+    const now = Date.now();
+    const aFresh = a._added && (now - a._added) < 120000;
+    const bFresh = b._added && (now - b._added) < 120000;
+    if(aFresh && bFresh) return b._added - a._added;   // both fresh → newest first
+    if(aFresh) return -1;                              // a fresh → a on top
+    if(bFresh) return 1;                               // b fresh → b on top
+    return a._start - b._start;                        // normal: by start date
+  });
 }
 function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
 
@@ -573,9 +587,11 @@ function card(e){
   if(e._mine) stamp = `<span class="stamp submitted">⊕ Submitted by you</span>`;
   else if(e._sample) stamp = `<span class="stamp sample">● SAMPLE DATA — not a real camp</span>`;
   else stamp = `<span class="stamp live">✓ Live · fetched ${fmtStamp(e._built)}</span>`;
-  return `<article class="card">
+  const isFresh = e._added && (Date.now() - e._added) < 120000;
+  const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
+  return `<article class="card${isFresh?' fresh':''}">
     ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
-    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}
+    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}
     <div class="body">
       ${stamp}
       <span class="dateline">${dateRange(e)} ${countdownTag(e)}</span>
@@ -661,7 +677,7 @@ function loadMine(){
   catch(_){ return []; }
 }
 function saveMine(){
-  try{ localStorage.setItem(LS_KEY, JSON.stringify(MY_EVENTS.map(({_mine,_start,_end,...rest})=>rest))); }
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(MY_EVENTS.map(({_mine,_start,_end,_added,...rest})=>rest))); }
   catch(_){ /* private mode / storage off — card still shows this session */ }
 }
 
@@ -799,7 +815,8 @@ flyerInput.addEventListener("change", async (e)=>{
         source_platform: "Flyer upload",
         organizer: ev.organizer || "",
         description: ev.description || "",
-        _mine:true
+        _mine:true,
+        _added: Date.now()        // timestamp so it pins to top for 2 minutes
       };
       MY_EVENTS.unshift(card);
       saveMine();
@@ -809,6 +826,8 @@ flyerInput.addEventListener("change", async (e)=>{
       if(card.country==="India"){ const t=document.querySelector('.tab[data-view="india"]'); if(t)t.click(); }
       else { const t=document.querySelector('.tab[data-view="world"]'); if(t)t.click(); }
       render();
+      // After 2 minutes, re-render so the pinned card settles into its date position.
+      setTimeout(()=>{ rebuild(new Date().toISOString()); render(); }, 121000);
     } else {
       // Couldn't read a clear dated camp from the flyer. Do NOT open the form —
       // the two buttons are independent. Just tell the person kindly.
