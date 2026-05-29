@@ -682,7 +682,8 @@ def read_html_event_pages():
             # so the extractor focuses on the dated courses, not testimonials.
             for endmarker in ("About  OSHO", "About OSHO Himalayas", "Our Reviews",
                               "Why Meditators", "Frequently Asked", "Got Questions",
-                              "About Us About"):
+                              "About Us About", "Dr. Wiardi Beckmanlaan", "Newsletter",
+                              "Pin It on Pinterest", "Share This"):
                 epos = text.find(endmarker)
                 if epos > 500:           # keep at least the courses before cutting
                     text = text[:epos]
