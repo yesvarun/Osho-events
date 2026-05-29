@@ -1,7 +1,7 @@
 // Minimal service worker — enough for PWABuilder to recognise the app as installable
 // and to give a basic offline fallback. Caches the app shell on install.
 const CACHE = "sannyas-v1";
-const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192.png", "/icon-512.png"];
+const SHELL = ["/", "/index.html", "/manifest.json", "/icon-192-1.png", "/icon-512-1.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(

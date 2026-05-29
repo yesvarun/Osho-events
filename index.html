@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sannyas Gatherings — Osho Camps, Retreats & Meditation Worldwide</title>
+<!-- PWA: makes the site installable as an app (Add to Home Screen / full-screen) -->
+<meta name="theme-color" content="#7a1f1f" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Sannyas Gatherings" />
+<link rel="apple-touch-icon" href="/icon-192-1.png" />
+<link rel="icon" type="image/png" href="/icon-192-1.png" />
+<!-- Inline SVG favicon (scales crisply, never depends on a separate file loading) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%237a1f1f'/%3E%3Cpath d='M50 2a48 48 0 000 96 24 24 0 010-48 24 24 0 000-48z' fill='%23fbeede'/%3E%3Ccircle cx='50' cy='26' r='7' fill='%237a1f1f'/%3E%3Ccircle cx='50' cy='74' r='7' fill='%23fbeede'/%3E%3C/svg%3E" />
+<link rel="manifest" href="/manifest.json" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#2a1d16;--paper:#f3e9dc;--paper-2:#ece0cf;--card:#fbf4ea;
+    --maroon:#7a2618;--rust:#c45524;--amber:#e08a1e;--gold:#d8a534;--moss:#5a6440;
+    --line:rgba(42,29,22,.14);--line-2:rgba(42,29,22,.08);
+    --shadow:0 1px 2px rgba(42,29,22,.06), 0 12px 30px -18px rgba(42,29,22,.35);
+    --shadow-hi:0 2px 4px rgba(42,29,22,.08), 0 26px 50px -24px rgba(122,38,24,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{max-width:100%;overflow-x:hidden}
+  *{overflow-wrap:break-word;word-break:break-word}
+  img{max-width:100%;height:auto}
+  body{font-family:"Spline Sans",system-ui,sans-serif;color:var(--ink);
+    background:radial-gradient(120% 80% at 50% -10%, rgba(224,138,30,.18), transparent 60%),radial-gradient(90% 60% at 100% 0%, rgba(122,38,24,.12), transparent 55%),var(--paper);
+    min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+
+  header{padding:40px 0 22px}
+  .brand-row{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:14px}
+  .mark{width:46px;height:46px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(from 210deg,var(--gold),var(--rust),var(--maroon),var(--amber),var(--gold));
+    box-shadow:inset 0 0 0 4px var(--paper), var(--shadow);position:relative}
+  .mark::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--rust)}
+  .title h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(26px,4vw,40px);line-height:.98;letter-spacing:-.5px}
+  .title .sub{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:600;margin-top:6px}
+  .status{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size:12.5px}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+    padding:7px 13px;border-radius:999px;box-shadow:var(--shadow);color:var(--ink);font-weight:500;white-space:nowrap}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--moss);box-shadow:0 0 0 4px rgba(90,100,64,.18)}
+  .dot.warn{background:var(--amber);box-shadow:0 0 0 4px rgba(224,138,30,.2)}
+  .pill button{all:unset;cursor:pointer;color:var(--rust);font-weight:600;border-bottom:1px dotted var(--rust)}
+  .pill button:hover{color:var(--maroon)}
+  .tagline{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(15px,2.1vw,19px);color:#5a4234;margin-top:18px;max-width:640px}
+  .share-invite{font-size:14px;color:#6b5040;margin-top:12px;max-width:640px;line-height:1.55}
+  .share-invite b{color:var(--maroon)}
+
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+  .inform-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:9px;
+    background:var(--maroon);color:#fbeede;font-weight:600;font-size:15px;padding:13px 22px;border-radius:13px;
+    box-shadow:0 10px 24px -10px rgba(122,38,24,.7);transition:.18s}
+  .inform-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .inform-btn svg{flex:0 0 auto}
+
+  .controls{position:sticky;top:0;z-index:30;margin:24px 0 8px;padding:14px 0;
+    background:linear-gradient(var(--paper) 70%, transparent);backdrop-filter:blur(2px)}
+  .tabs{display:inline-flex;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
+  .tab{all:unset;cursor:pointer;padding:9px 20px;border-radius:999px;font-weight:600;font-size:14px;color:#6b5040;transition:.2s}
+  .tab.active{background:var(--maroon);color:#fbeede;box-shadow:0 6px 16px -8px rgba(122,38,24,.7)}
+  .bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+  .field{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 12px;box-shadow:var(--shadow);height:46px}
+  .field label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8a6c57;font-weight:600;white-space:nowrap}
+  select,input[type=search]{all:unset;font-family:inherit;font-size:14.5px;color:var(--ink);min-width:120px;cursor:pointer}
+  input[type=search]{cursor:text;min-width:180px}
+  .field.search{flex:1;min-width:220px}.field.search input{width:100%}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;
+    border:1px solid var(--line);background:var(--card);color:#6b5040;box-shadow:var(--shadow);transition:.18s}
+  .chip[aria-pressed=true]{background:var(--rust);color:#fff5ec;border-color:transparent}
+  .count{font-size:13px;color:#8a6c57;margin-left:auto;font-weight:500}.count b{color:var(--maroon)}
+
+  .region-head{display:flex;align-items:center;gap:14px;margin:34px 0 6px}
+  .region-head h2{font-family:"Fraunces",serif;font-size:clamp(20px,3vw,28px);font-weight:600;letter-spacing:-.4px}
+  .region-head .ct{font-size:13px;color:#8a6c57;font-weight:600;background:var(--paper-2);padding:3px 11px;border-radius:999px;border:1px solid var(--line)}
+  .region-head .ln{flex:1;height:1px;background:var(--line)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin:16px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.22s;position:relative}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(122,38,24,.3)}
+  .flyer{position:relative;aspect-ratio:16/10;background:var(--paper-2);overflow:hidden}
+  .flyer img{width:100%;height:100%;object-fit:cover;display:block}
+  .flyer.placeholder{display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 30% 20%,var(--amber),var(--rust) 55%,var(--maroon));color:#fbeede}
+  .flyer.placeholder .om{font-family:"Fraunces",serif;font-size:46px;opacity:.92}
+  .type-tag{position:absolute;top:12px;left:12px;background:rgba(43,29,22,.82);color:#f7ecdd;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;backdrop-filter:blur(4px)}
+  .src-tag{position:absolute;top:12px;right:12px;background:rgba(251,244,234,.92);color:var(--maroon);font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px}
+  .body{padding:16px 17px 17px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .dateline{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.02em}
+  .countdown{font-size:11px;font-weight:600;color:#fff;background:var(--moss);padding:2px 8px;border-radius:999px}
+  .countdown.soon{background:var(--rust)}
+  .card h3{font-family:"Fraunces",serif;font-size:19px;font-weight:600;line-height:1.12;letter-spacing:-.2px}
+  .titleorig{font-family:"Fraunces",serif;font-size:14px;font-style:italic;color:var(--amber);margin-top:2px;letter-spacing:.1px;opacity:.95}
+  .loc{font-size:13.5px;color:#6b5040;display:flex;align-items:center;gap:7px}
+  .loc svg{flex:0 0 auto;opacity:.7}
+  .desc{font-size:13px;color:#74584a;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .meta{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--line-2)}
+  .org{font-size:12px;color:#8a6c57;flex:1;min-width:90px}
+  .btn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;display:inline-flex;align-items:center;gap:6px;transition:.16s}
+  .btn.call{background:var(--moss);color:#f4f1e6}.btn.call:hover{filter:brightness(1.08)}
+  .btn.map{background:#3a6ea5;color:#f4f1e6}.btn.map:hover{filter:brightness(1.1)}
+  .btn.flyer-btn{background:var(--paper-2);color:var(--maroon);border:1px solid var(--line)}
+  .btn.src{background:var(--maroon);color:#fbeede}.btn.src:hover{filter:brightness(1.1)}
+  .mine-tag{position:absolute;bottom:0;left:0;right:0;background:rgba(90,100,64,.92);color:#f4f1e6;font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:3px}
+  .stamp{display:inline-flex;align-items:center;align-self:flex-start;gap:5px;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:999px;text-transform:uppercase}
+  .stamp.sample{background:rgba(196,85,36,.14);color:#9a3414;border:1px solid rgba(196,85,36,.4)}
+  .stamp.live{background:rgba(90,100,64,.16);color:#46502f;border:1px solid rgba(90,100,64,.4)}
+  .stamp.submitted{background:rgba(216,165,52,.18);color:#8a6410;border:1px solid rgba(216,165,52,.5)}
+
+  .empty{text-align:center;padding:70px 20px;color:#8a6c57}
+  .empty .om{font-family:"Fraunces",serif;font-size:60px;color:var(--rust);opacity:.5}
+  .empty h3{font-family:"Fraunces",serif;font-size:22px;color:var(--ink);margin:10px 0 6px}
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:18px;height:330px;overflow:hidden;position:relative}
+  .loadwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;gap:18px}
+  .loadlogo{animation:spin 2.4s linear infinite;filter:drop-shadow(0 4px 14px rgba(122,31,31,.25))}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loadtext{color:var(--maroon);font-size:15px;letter-spacing:.3px;opacity:.85;animation:pulse 1.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.5}50%{opacity:1}}
+  .skeleton::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:sh 1.3s infinite}
+  @keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+  footer{padding:48px 0 40px;color:#8a6c57;font-size:12.5px;border-top:1px solid var(--line);margin-top:40px}
+  footer b{color:var(--maroon)}
+  footer .support{margin-top:10px;font-size:12.5px}
+  footer .support a{color:var(--maroon);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(122,38,24,.35)}
+  footer .support a:hover{border-bottom-color:var(--maroon)}
+  .grid .card,.region-head{animation:rise .5s both}
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ---- Modal form ---- */
+  .overlay{position:fixed;inset:0;z-index:100;background:rgba(42,29,22,.55);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
+  .overlay.open{display:flex}
+  .modal{background:var(--paper);border-radius:22px;max-width:560px;width:100%;box-shadow:0 40px 80px -30px rgba(42,29,22,.7);border:1px solid var(--line);animation:pop .25s both;margin:auto}
+  @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 14px;border-bottom:1px solid var(--line)}
+  .modal-head h2{font-family:"Fraunces",serif;font-size:23px;font-weight:600}
+  .modal-head .x{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--paper-2);color:var(--ink);font-size:18px}
+  .modal-head .x:hover{background:var(--rust);color:#fff}
+  .modal-body{padding:20px 24px 8px}
+  .form-note{font-size:12.5px;color:#8a6c57;background:rgba(224,138,30,.1);border:1px solid rgba(196,85,36,.25);border-radius:10px;padding:10px 12px;margin-bottom:16px;line-height:1.45}
+  .fg{margin-bottom:14px}
+  .fg label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;color:#6b5040;margin-bottom:5px}
+  .fg label .req{color:var(--rust)}
+  .fg input,.fg select,.fg textarea{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);
+    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;transition:.16s}
+  .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--rust);box-shadow:0 0 0 3px rgba(196,85,36,.14)}
+  .fg textarea{resize:vertical;min-height:64px}
+  .fg.invalid input,.fg.invalid select{border-color:#b3402a;box-shadow:0 0 0 3px rgba(179,64,42,.16)}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  #countryWrap{display:none}
+  .modal-foot{display:flex;gap:10px;align-items:center;justify-content:flex-end;padding:14px 24px 22px;border-top:1px solid var(--line);margin-top:6px}
+  .modal-foot .err{margin-right:auto;color:#b3402a;font-size:13px;font-weight:500;display:none}
+  .btn-ghost{all:unset;cursor:pointer;padding:11px 18px;border-radius:11px;font-weight:600;font-size:14px;color:#6b5040;background:var(--paper-2);border:1px solid var(--line)}
+  .btn-primary{all:unset;cursor:pointer;padding:12px 22px;border-radius:11px;font-weight:600;font-size:14.5px;color:#fbeede;background:var(--maroon);box-shadow:0 8px 18px -8px rgba(122,38,24,.7)}
+  .btn-primary:hover{filter:brightness(1.08)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);z-index:200;
+    background:var(--moss);color:#f4f1e6;padding:13px 22px;border-radius:13px;font-weight:600;font-size:14px;
+    box-shadow:0 14px 30px -12px rgba(42,29,22,.6);opacity:0;transition:.35s;pointer-events:none}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+  @media(max-width:560px){
+    header{padding:26px 0 14px}
+    .status{align-items:flex-start}
+    .controls{position:static}
+    .row2{grid-template-columns:1fr}
+    .wrap{padding:0 14px}
+    .grid{grid-template-columns:1fr}
+    .field.search{min-width:0}
+    .field.search input{min-width:0}
+    select,input[type=search]{min-width:0}
+    .bar{gap:8px}
+    .tagline{font-size:15px}
+  }
+</style>
+<!-- ============================================================
+     GOOGLE ANALYTICS
+     Replace BOTH copies of G-XXXXXXXXXX below with YOUR Measurement ID
+     (get it free at analytics.google.com → it looks like G-ABC1234XYZ).
+     Until you replace it, analytics simply won't record — no harm done.
+     ============================================================ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+</head>
+<body>
+<div class="grain"></div>
+<div class="wrap">
+
+  <header>
+    <div class="brand-row">
+      <div class="logo">
+        <div class="mark" aria-hidden="true"></div>
+        <div class="title">
+          <h1>Sannyas Gatherings</h1>
+          <div class="sub">Osho Camps · Retreats · Workshops · Meditation</div>
+        </div>
+      </div>
+      <div class="status">
+        <span class="pill"><span class="dot" id="liveDot"></span><span id="updatedLabel">Loading…</span></span>
+        <span class="pill"><span>Auto-refresh hourly</span> · <button id="refreshBtn">refresh now</button></span>
+      </div>
+    </div>
+    <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
+    <p class="share-invite">Know of a camp that's not listed? Anyone can add it — <b>Inform a Camp</b> with the details, or just <b>Upload a Flyer</b> from your phone and we'll read the date, place and title automatically.</p>
+    <div class="cta-row">
+      <button class="inform-btn" id="informBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        Inform a Camp
+      </button>
+      <button class="inform-btn" id="uploadFlyerBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3M12 3v13M7 8l5-5 5 5"/></svg>
+        Upload Flyer
+      </button>
+      <input type="file" id="flyerFileInput" accept="image/*" style="display:none" />
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-view="india" role="tab">🇮🇳 India · by State</button>
+      <button class="tab" data-view="world" role="tab">🌏 World · by Region</button>
+    </div>
+    <div class="bar">
+      <div class="field" id="indiaFilter">
+        <label>State</label>
+        <select id="stateSelect"></select>
+      </div>
+      <div class="field" id="worldFilter" style="display:none">
+        <label>Region</label>
+        <select id="regionSelect">
+          <option value="">All regions</option>
+          <option value="India">India</option><option value="Asia">Asia</option>
+          <option value="Europe">Europe</option><option value="Americas">Americas</option>
+          <option value="Pacific">Pacific</option><option value="Russia">Russia</option>
+        </select>
+      </div>
+      <div class="field" id="countryFilter" style="display:none">
+        <label>Country</label>
+        <select id="countrySelect">
+          <option value="">All countries</option>
+        </select>
+      </div>
+      <div class="chips" id="typeChips">
+        <button class="chip" data-type="Camp" aria-pressed="false">Camps</button>
+        <button class="chip" data-type="Retreat" aria-pressed="false">Retreats</button>
+        <button class="chip" data-type="Workshop" aria-pressed="false">Workshops</button>
+        <button class="chip" data-type="Gathering" aria-pressed="false">Gatherings</button>
+      </div>
+      <div class="field search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a6c57" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="search" id="searchInput" placeholder="Search by name, city, organiser…" />
+      </div>
+      <span class="count" id="countLabel"></span>
+    </div>
+  </div>
+
+  <main id="results"></main>
+
+  <footer>
+    <p>This directory aggregates publicly posted gatherings and organiser submissions. Always verify dates and details with the organiser before travelling. Camps you submit via “Inform a Camp” appear instantly and are saved on this device. <b>Last data build:</b> <span id="buildTime">—</span>.</p>
+    <p class="support">This directory is free and ad-free. <a id="supportLink" href="#" target="_blank" rel="noopener">Help keep it that way ♡</a></p>
+  </footer>
+</div>
+
+<!-- ===== Inform-a-Camp modal ===== -->
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal-head">
+      <h2 id="mTitle">Inform a Camp</h2>
+      <button class="x" id="closeModal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="form-note">Fill in the camp details below and tap <b>Add to Directory</b>. Your camp appears instantly as a card. Note: submissions are saved on this device — to publish permanently for everyone, add it to your data feed too.</p>
+
+      <div class="fg" data-field="title">
+        <label>Camp / Event name <span class="req">*</span></label>
+        <input id="f_title" placeholder="e.g. Mystic Rose Meditation Camp" />
+      </div>
+      <div class="row2">
+        <div class="fg" data-field="type">
+          <label>Type <span class="req">*</span></label>
+          <select id="f_type">
+            <option value="">Choose…</option>
+            <option>Camp</option><option>Retreat</option><option>Workshop</option><option>Gathering</option>
+          </select>
+        </div>
+        <div class="fg" data-field="organizer">
+          <label>Organiser <span class="req">*</span></label>
+          <input id="f_organizer" placeholder="Centre / host name" />
+        </div>
+      </div>
+      <div class="row2">
+        <div class="fg" data-field="start_date">
+          <label>Start date <span class="req">*</span></label>
+          <input id="f_start" type="date" />
+        </div>
+        <div class="fg" data-field="end_date">
+          <label>End date <span style="color:#a78">(optional)</span></label>
+          <input id="f_end" type="date" />
+        </div>
+      </div>
+      <div class="fg" data-field="country">
+        <label>Country <span class="req">*</span></label>
+        <select id="f_country"></select>
+      </div>
+      <div class="row2">
+        <div class="fg" data-field="state" id="stateWrap">
+          <label>State (India) <span class="req">*</span></label>
+          <select id="f_state"></select>
+        </div>
+        <div class="fg" data-field="city">
+          <label>City / Town <span class="req">*</span></label>
+          <input id="f_city" placeholder="e.g. Dharamshala" />
+        </div>
+      </div>
+      <div class="fg" data-field="venue">
+        <label>Venue <span style="color:#a78">(optional)</span></label>
+        <input id="f_venue" placeholder="e.g. Osho Nisarga" />
+      </div>
+      <div class="fg" data-field="phone">
+        <label>Contact phone <span class="req">*</span></label>
+        <input id="f_phone" placeholder="e.g. +91 98160 12345" />
+      </div>
+      <div class="fg" data-field="flyer_url">
+        <label>Flyer image link / JPG URL <span style="color:#a78">(optional)</span></label>
+        <input id="f_flyer" placeholder="https://… link to a flyer image" />
+      </div>
+      <div class="fg" data-field="source_url">
+        <label>Post / website link <span style="color:#a78">(optional)</span></label>
+        <input id="f_source" placeholder="https://instagram.com/… or website" />
+      </div>
+      <div class="fg" data-field="description">
+        <label>Short description <span style="color:#a78">(optional)</span></label>
+        <textarea id="f_desc" placeholder="A line or two about the camp…"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span class="err" id="formErr">Please fill in the required fields marked *</span>
+      <button class="btn-ghost" id="cancelBtn">Cancel</button>
+      <button class="btn-primary" id="submitBtn">Add to Directory</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Camp added to the directory ✓</div>
+
+<script>
+/* ============================================================
+   CONFIG — connected to your live scraped feed.
+   ============================================================ */
+const DATA_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/events.json";
+/* OPTIONAL: paste your support/donation link here (Ko-fi, Buy Me a Coffee, UPI page, etc.).
+   Leave "" and the "Help keep it free" line is hidden automatically. */
+const SUPPORT_URL = "";
+const REFRESH_MS = 60 * 60 * 1000;          // auto-refresh hourly
+const LS_KEY     = "sannyas_submitted_camps_v1";
+
+/* ---- Flyer upload: free ImgBB image host. Get a free key at https://api.imgbb.com/ ---- */
+/* Paste your ImgBB API key between the quotes below. Until then, upload shows a friendly notice. */
+const IMGBB_API_KEY = "8a328a42131bc60c633939564741f7d5";
+
+/* ---- Content moderation ----
+   Blocks submissions / uploads containing offensive language. Words below are matched
+   as whole words, case-insensitive. Keep this list editable so the owner can adjust it.
+   (Kept deliberately compact; covers slurs, sexual, and abusive terms.) */
+const BLOCKED_WORDS = [
+  "fuck","fucking","fucker","shit","bitch","bastard","asshole","dick","pussy","cunt",
+  "slut","whore","nigger","nigga","faggot","fag","retard","rape","rapist","porn",
+  "pornography","nude","nudes","naked","sex","sexy","xxx","horny","cock","penis",
+  "vagina","boobs","tits","scam","fraud","viagra","casino","escort","molest","pedophile",
+  "terrorist","kill you","gandu","madarchod","behenchod","bhenchod","chutiya","chutiye",
+  "lund","randi","gaand","harami","kamina","bsdk","mc","bc"
+];
+function moderateText(...parts){
+  // Returns the first blocked word found in the combined text, or null if clean.
+  const text = parts.filter(Boolean).join(" ").toLowerCase();
+  for(const w of BLOCKED_WORDS){
+    // whole-word match (so "scunthorpe"-type false positives are avoided where possible)
+    const re = new RegExp("(^|[^a-z])" + w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&") + "([^a-z]|$)", "i");
+    if(re.test(text)) return w;
+  }
+  return null;
+}
+
+
+/* ---- All Indian states (28) + Union Territories (8) ---- */
+const INDIA_STATES = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal"];
+const INDIA_UTS = ["Andaman & Nicobar Islands","Chandigarh","Dadra & Nagar Haveli and Daman & Diu","Delhi","Jammu & Kashmir","Ladakh","Lakshadweep","Puducherry"];
+
+/* ---- Country → region grouping ---- */
+const REGION_MAP = {
+  "India":"India",
+  "Nepal":"Asia","Sri Lanka":"Asia","Thailand":"Asia","Japan":"Asia","China":"Asia","Indonesia":"Asia","Singapore":"Asia","Malaysia":"Asia","Vietnam":"Asia","South Korea":"Asia","Israel":"Asia","Iran":"Asia","UAE":"Asia","Taiwan":"Asia","Philippines":"Asia","Bhutan":"Asia","Bangladesh":"Asia",
+  "Germany":"Europe","Italy":"Europe","Spain":"Europe","France":"Europe","UK":"Europe","United Kingdom":"Europe","Netherlands":"Europe","Switzerland":"Europe","Greece":"Europe","Portugal":"Europe","Sweden":"Europe","Austria":"Europe","Denmark":"Europe","Ireland":"Europe","Poland":"Europe","Czech Republic":"Europe","Hungary":"Europe","Croatia":"Europe","Norway":"Europe","Belgium":"Europe","Finland":"Europe",
+  "USA":"Americas","United States":"Americas","Canada":"Americas","Mexico":"Americas","Brazil":"Americas","Argentina":"Americas","Chile":"Americas","Colombia":"Americas","Peru":"Americas","Costa Rica":"Americas",
+  "Australia":"Pacific","New Zealand":"Pacific","Fiji":"Pacific",
+  "Russia":"Russia"
+};
+const REGION_ORDER = ["India","Asia","Europe","Americas","Pacific","Russia"];
+const COUNTRY_LIST = Object.keys(REGION_MAP).filter((c,i,a)=>a.indexOf(c)===i).sort((a,b)=> a==="India"?-1:b==="India"?1:a.localeCompare(b));
+
+/* ============================================================
+   SAMPLE DATA — fallback if the live feed is empty/unreachable
+   ============================================================ */
+const SAMPLE_DATA = { generated_at:new Date().toISOString(), events:[
+  {id:"s1",title:"Mystic Rose Meditation Camp",type:"Camp",start_date:offset(9),end_date:offset(29),venue:"Osho Nisarga",city:"Dharamshala",state:"Himachal Pradesh",country:"India",phone:"+91 98160 12345",flyer_url:"",source_url:"https://www.instagram.com/p/Cx1example/",source_platform:"Instagram",organizer:"Osho Nisarga Meditation Centre",description:"21-day Mystic Rose process — three weeks of laughter, tears and watchful silence in the Himalayas."},
+  {id:"s2",title:"Dynamic Meditation Morning Retreat",type:"Retreat",start_date:offset(4),end_date:offset(6),venue:"Osho Dham",city:"New Delhi",state:"Delhi",country:"India",phone:"+91 99100 44556",flyer_url:"",source_url:"https://www.facebook.com/oshoworld/posts/example/",source_platform:"Facebook",organizer:"Osho World Foundation",description:"Weekend immersion in Osho's active meditations starting at dawn. Catharsis, celebration, silence."},
+  {id:"s3",title:"No-Mind & Born Again Workshop",type:"Workshop",start_date:offset(13),end_date:offset(14),venue:"Osho Leela",city:"Pune",state:"Maharashtra",country:"India",phone:"+91 90280 77881",flyer_url:"",source_url:"https://www.threads.net/@osho/post/example",source_platform:"Threads",organizer:"Pune Sannyas Circle",description:"Two playful days rediscovering the child within through gibberish, dance and the No-Mind technique."},
+  {id:"s4",title:"Full-Moon Celebration Gathering",type:"Gathering",start_date:offset(2),end_date:offset(2),venue:"Riverside Grounds",city:"Rishikesh",state:"Uttarakhand",country:"India",phone:"+91 70118 23344",flyer_url:"",source_url:"https://www.instagram.com/p/Cx1example/",source_platform:"Instagram",organizer:"Ganga Osho Friends",description:"Evening of music, Sufi whirling and Kundalini meditation under the full moon by the Ganga."},
+  {id:"s5",title:"Osho Humaniversity Encounter",type:"Workshop",start_date:offset(16),end_date:offset(19),venue:"Humaniversity",city:"Egmond aan Zee",state:"",country:"Netherlands",phone:"+31 72 506 4114",flyer_url:"",source_url:"https://www.facebook.com/oshoworld/posts/example/",source_platform:"Facebook",organizer:"Osho Humaniversity",description:"Intensive group therapy in the AUM Meditation tradition on the Dutch coast."},
+  {id:"s6",title:"Desert Silence Retreat",type:"Retreat",start_date:offset(22),end_date:offset(27),venue:"Joshua Tree Centre",city:"Joshua Tree",state:"California",country:"USA",phone:"+1 760 555 0182",flyer_url:"",source_url:"https://www.instagram.com/p/Cx1example/",source_platform:"Instagram",organizer:"Osho California Sangha",description:"Five days of meditation and stargazing in the high desert."}
+]};
+function offset(days){const d=new Date();d.setDate(d.getDate()+days);return d.toISOString().slice(0,10);}
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let FEED_EVENTS = [];      // from live feed / sample
+let MY_EVENTS = [];        // submitted on this device
+let ALL_EVENTS = [];       // merged + normalised + upcoming
+let usingSample = true;
+const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"" };
+
+/* ============================================================
+   LOAD
+   ============================================================ */
+async function loadData(){
+  setLoading();
+  let raw = SAMPLE_DATA; usingSample = true;
+  if(DATA_URL){
+    try{
+      // cache-buster (?t=…) forces GitHub's CDN to serve the freshest file, not a stale cached copy
+      const url = DATA_URL + (DATA_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
+      const res = await fetch(url,{cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const j = await res.json();
+      if(j && Array.isArray(j.events) && j.events.length){ raw = j; usingSample = false; }
+    }catch(err){ console.warn("Live feed unavailable, using sample:",err); }
+  }
+  FEED_EVENTS = (raw.events || []).map(e=>({...e, _sample: usingSample, _built: raw.generated_at}));
+  MY_EVENTS = loadMine();
+  rebuild(raw.generated_at);
+}
+
+function rebuild(genAt){
+  ALL_EVENTS = normalise([...MY_EVENTS, ...FEED_EVENTS]);
+  document.getElementById("buildTime").textContent = fmtBuild(genAt);
+  const dot = document.getElementById("liveDot");
+  dot.className = "dot" + (usingSample ? " warn" : "");
+  document.getElementById("updatedLabel").textContent =
+     (usingSample ? "Sample + your camps" : "Live") + " · updated " + new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});
+  populateStates();
+  populateCountries();
+  render();
+}
+
+function normalise(events){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const seen = new Set();
+  return events.map(e=>{
+    const start = parseDate(e.start_date);
+    const end = parseDate(e.end_date || e.start_date);
+    const country = e.country || "India";
+    const region = e.region || REGION_MAP[country] || "Asia";
+    return {...e, country, region, _start:start, _end:end};
+  })
+  .filter(e=> e._end && e._end >= today)              // upcoming only
+  .filter(e=>{                                         // dedupe
+    const k = ((e.title||"")+"|"+(e.start_date||"")+"|"+(e.city||"")).toLowerCase();
+    if(seen.has(k)) return false; seen.add(k); return true;
+  })
+  .sort((a,b)=> a._start - b._start);
+}
+function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
+
+/* ============================================================
+   FILTER + RENDER
+   ============================================================ */
+function currentList(){
+  return ALL_EVENTS.filter(e=>{
+    if(ui.view==="india" && e.country!=="India") return false;
+    if(ui.view==="india" && ui.state && e.state!==ui.state) return false;
+    if(ui.view==="world" && ui.region && e.region!==ui.region) return false;
+    if(ui.view==="world" && ui.country && e.country!==ui.country) return false;
+    if(ui.types.size && !ui.types.has(e.type)) return false;
+    if(ui.q){
+      const hay=(e.title+" "+(e.title_original||"")+" "+e.city+" "+(e.state||"")+" "+e.country+" "+(e.organizer||"")+" "+(e.venue||"")).toLowerCase();
+      if(!hay.includes(ui.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+}
+function render(){
+  const list = currentList();
+  const root = document.getElementById("results");
+  document.getElementById("countLabel").innerHTML = "<b>"+list.length+"</b> upcoming";
+  if(!list.length){
+    root.innerHTML = `<div class="empty"><div class="om">ૐ</div><h3>No upcoming gatherings here yet</h3><p>Try another state / region, clear the filters, or add one with “Inform a Camp”.</p></div>`;
+    return;
+  }
+  if(ui.view==="world" && !ui.region){
+    let html="";
+    REGION_ORDER.forEach(reg=>{
+      const items=list.filter(e=>e.region===reg);
+      if(!items.length) return;
+      html += `<div class="region-head"><h2>${reg}</h2><span class="ct">${items.length}</span><span class="ln"></span></div>`;
+      html += `<div class="grid">${items.map(card).join("")}</div>`;
+    });
+    root.innerHTML = html;
+  } else {
+    root.innerHTML = `<div class="grid">${list.map(card).join("")}</div>`;
+  }
+}
+function card(e){
+  // FOOLPROOF IMAGE: use the real image if present; if it's missing OR fails to load,
+  // fall back to a themed meditation image so NO card is ever blank.
+  const t = ((e.title||"") + " " + (e.type||"")).toLowerCase();
+  let fb;
+  if (/festival|celebrat|holi|sufi|dance|music/.test(t))
+    fb = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=70&auto=format&fit=crop";
+  else if (/tantra|love|heart|relation/.test(t))
+    fb = "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&q=70&auto=format&fit=crop";
+  else if (/silence|vipassana|zen|mindful|silent/.test(t))
+    fb = "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=70&auto=format&fit=crop";
+  else if (/nature|himalaya|forest|mountain|river/.test(t))
+    fb = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=70&auto=format&fit=crop";
+  else
+    fb = "https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=70&auto=format&fit=crop";
+  const real = e.flyer_url ? esc(e.flyer_url) : "";
+  // Repo-hosted default image (always loads — served from your own site, never fails).
+  const repoImg = "/card-default.jpg";
+  // 3-TIER IMAGE FALLBACK, in order:
+  //   1. Real image (scraped from source / IG / FB) — loads with no-referrer to beat hotlink protection
+  //   2. Unsplash themed image (referrer cleared, since Unsplash dislikes no-referrer)
+  //   3. Repo-hosted default image (your own /card-default.jpg — guaranteed to load)
+  // step encodes which tier we're on: 0=real, 1=unsplash, 2=repo (final).
+  const onErr =
+    `if(this.dataset.step==='0'){this.dataset.step='1';this.referrerPolicy='';this.src='${fb}';}` +
+    `else if(this.dataset.step==='1'){this.dataset.step='2';this.src='${repoImg}';}`;
+  const flyer = real
+    ? `<div class="flyer"><img loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"/></div>`
+    : `<div class="flyer"><img loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/></div>`;
+  const loc = [e.city, e.country==="India"? e.state : e.country].filter(Boolean).join(", ");
+  const phone = e.phone ? `<a class="btn call" href="tel:${esc(String(e.phone).replace(/\s/g,''))}">📞 Call</a>` : "";
+  const flyerBtn = e.flyer_url ? `<a class="btn flyer-btn" href="${esc(e.flyer_url)}" target="_blank" rel="noopener">🖼 Flyer</a>` : "";
+  // Directions: open Google Maps to the most specific location we have. No API key needed.
+  const placeParts = [e.venue, e.city, e.country==="India"? e.state : e.country].filter(Boolean);
+  const mapBtn = placeParts.length
+    ? `<a class="btn map" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(placeParts.join(", "))}" target="_blank" rel="noopener">🧭 Directions</a>`
+    : "";
+  const isFlyerUpload = e.source_platform === "Flyer upload" || (!e.source_url && e.flyer_url);
+  const isRealPost = !isFlyerUpload && e.source_url && e.source_url!=="#" && /\/[^/]+\/[^/]/.test(e.source_url.replace(/^https?:\/\//,""));
+  const srcBtn = isRealPost ? `<a class="btn src" href="${esc(e.source_url)}" target="_blank" rel="noopener">View ↗</a>` : "";
+  // Contact: show the phone Call button when we have a number; otherwise nothing.
+  const contactBtn = phone;
+  const mine = e._mine ? `<span class="mine-tag">Added by you · saved on this device</span>` : "";
+  // Origin stamp so you can tell at a glance whether the scraper is live yet
+  let stamp;
+  if(e._mine) stamp = `<span class="stamp submitted">⊕ Submitted by you</span>`;
+  else if(e._sample) stamp = `<span class="stamp sample">● SAMPLE DATA — not a real camp</span>`;
+  else stamp = `<span class="stamp live">✓ Live · fetched ${fmtStamp(e._built)}</span>`;
+  return `<article class="card">
+    ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
+    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}
+    <div class="body">
+      ${stamp}
+      <span class="dateline">${dateRange(e)} ${countdownTag(e)}</span>
+      <h3>${esc(e.title)}</h3>
+      ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
+      <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
+      ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}</div>
+    </div></article>`;
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function dateRange(e){
+  const o={day:"numeric",month:"short"};
+  if(!e._start) return "Date TBA";
+  const s=e._start.toLocaleDateString([],o);
+  if(!e._end || e._end.getTime()===e._start.getTime()) return s;
+  const sameYear=e._start.getFullYear()===e._end.getFullYear();
+  return `${s} – ${e._end.toLocaleDateString([], sameYear?o:{...o,year:"numeric"})}`;
+}
+function countdownTag(e){
+  if(!e._start) return "";
+  const today=new Date(); today.setHours(0,0,0,0);
+  const days=Math.round((e._start-today)/86400000);
+  if(days<=0) return `<span class="countdown soon">happening now</span>`;
+  if(days<=7) return `<span class="countdown soon">in ${days}d</span>`;
+  if(days<=30) return `<span class="countdown">in ${days}d</span>`;
+  return "";
+}
+function fmtBuild(iso){ if(!iso) return "—"; const d=new Date(iso); return isNaN(d)?"—":d.toLocaleString([], {dateStyle:"medium",timeStyle:"short"}); }
+function fmtStamp(iso){ if(!iso) return "recently"; const d=new Date(iso); return isNaN(d)?"recently":d.toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}); }
+function esc(s){ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function populateStates(){
+  const sel=document.getElementById("stateSelect"); const prev=sel.value;
+  const counts={};
+  ALL_EVENTS.filter(e=>e.country==="India"&&e.state).forEach(e=>{counts[e.state]=(counts[e.state]||0)+1;});
+  const label=s=>counts[s]?`${s} (${counts[s]})`:s;
+  const opt=s=>`<option value="${esc(s)}">${esc(label(s))}</option>`;
+  const known=new Set([...INDIA_STATES,...INDIA_UTS]);
+  const extra=Object.keys(counts).filter(s=>!known.has(s)).sort();
+  let html=`<option value="">All states</option>`;
+  html+=`<optgroup label="States">${INDIA_STATES.map(opt).join("")}</optgroup>`;
+  html+=`<optgroup label="Union Territories">${INDIA_UTS.map(opt).join("")}</optgroup>`;
+  if(extra.length) html+=`<optgroup label="Other">${extra.map(opt).join("")}</optgroup>`;
+  sel.innerHTML=html;
+  if([...sel.options].some(o=>o.value===prev)) sel.value=prev;
+}
+function populateCountries(){
+  const sel=document.getElementById("countrySelect"); if(!sel) return;
+  const prev=sel.value;
+  const counts={};
+  // Count upcoming non-India camps by country (India has its own by-state view)
+  ALL_EVENTS.forEach(e=>{ const c=e.country||"India"; if(c!=="India") counts[c]=(counts[c]||0)+1; });
+  const names=Object.keys(counts).sort((a,b)=>a.localeCompare(b));
+  let html=`<option value="">All countries</option>`;
+  html+=names.map(c=>`<option value="${esc(c)}">${esc(c)} (${counts[c]})</option>`).join("");
+  sel.innerHTML=html;
+  if([...sel.options].some(o=>o.value===prev)) sel.value=prev;
+}
+function setLoading(){
+  document.getElementById("results").innerHTML = `
+    <div class="loadwrap">
+      <div class="loadlogo" aria-label="Loading">
+        <svg viewBox="0 0 100 100" width="74" height="74">
+          <circle cx="50" cy="50" r="48" fill="var(--maroon)"/>
+          <path d="M50 2a48 48 0 000 96 24 24 0 010-48 24 24 0 000-48z" fill="var(--paper)"/>
+          <circle cx="50" cy="26" r="7" fill="var(--maroon)"/>
+          <circle cx="50" cy="74" r="7" fill="var(--paper)"/>
+        </svg>
+      </div>
+      <div class="loadtext">Gathering upcoming camps…</div>
+    </div>`;
+}
+
+/* ============================================================
+   DEVICE STORAGE for submitted camps
+   ============================================================ */
+function loadMine(){
+  try{ const v=localStorage.getItem(LS_KEY); const a=v?JSON.parse(v):[]; return Array.isArray(a)?a.map(e=>({...e,_mine:true})):[]; }
+  catch(_){ return []; }
+}
+function saveMine(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(MY_EVENTS.map(({_mine,_start,_end,...rest})=>rest))); }
+  catch(_){ /* private mode / storage off — card still shows this session */ }
+}
+
+/* ============================================================
+   FILTER/TAB WIRING
+   ============================================================ */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active"); ui.view=t.dataset.view;
+  document.getElementById("indiaFilter").style.display = ui.view==="india"?"":"none";
+  document.getElementById("worldFilter").style.display = ui.view==="world"?"":"none";
+  document.getElementById("countryFilter").style.display = ui.view==="world"?"":"none";
+  render();
+}));
+document.getElementById("stateSelect").addEventListener("change",e=>{ui.state=e.target.value;render();});
+document.getElementById("regionSelect").addEventListener("change",e=>{ui.region=e.target.value; if(ui.region){ui.country="";document.getElementById("countrySelect").value="";} render();});
+document.getElementById("countrySelect").addEventListener("change",e=>{ui.country=e.target.value; if(ui.country){ui.region="";document.getElementById("regionSelect").value="";} render();});
+document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
+  const t=c.dataset.type; const on=c.getAttribute("aria-pressed")==="true";
+  c.setAttribute("aria-pressed",String(!on)); on?ui.types.delete(t):ui.types.add(t); render();
+}));
+let qTimer; document.getElementById("searchInput").addEventListener("input",e=>{
+  clearTimeout(qTimer); qTimer=setTimeout(()=>{ui.q=e.target.value.trim();render();},180);
+});
+document.getElementById("refreshBtn").addEventListener("click",loadData);
+
+/* ============================================================
+   MODAL FORM
+   ============================================================ */
+const overlay=document.getElementById("overlay");
+function buildFormSelectors(){
+  const cs=document.getElementById("f_country");
+  cs.innerHTML = COUNTRY_LIST.map(c=>`<option ${c==="India"?"selected":""}>${esc(c)}</option>`).join("");
+  const ss=document.getElementById("f_state");
+  ss.innerHTML = `<option value="">Choose state…</option>`
+    + `<optgroup label="States">${INDIA_STATES.map(s=>`<option>${esc(s)}</option>`).join("")}</optgroup>`
+    + `<optgroup label="Union Territories">${INDIA_UTS.map(s=>`<option>${esc(s)}</option>`).join("")}</optgroup>`;
+  toggleStateField();
+}
+function toggleStateField(){
+  const isIndia=document.getElementById("f_country").value==="India";
+  document.getElementById("stateWrap").style.display=isIndia?"":"none";
+}
+function openModal(){ overlay.classList.add("open"); document.body.style.overflow="hidden"; }
+function closeModal(){ overlay.classList.remove("open"); document.body.style.overflow=""; clearErrors(); }
+function clearErrors(){ document.querySelectorAll(".fg.invalid").forEach(f=>f.classList.remove("invalid")); document.getElementById("formErr").style.display="none"; }
+
+document.getElementById("informBtn").addEventListener("click",openModal);
+document.getElementById("closeModal").addEventListener("click",closeModal);
+document.getElementById("cancelBtn").addEventListener("click",closeModal);
+
+/* ---- Upload Flyer: pick from phone gallery → upload to ImgBB → add as a card ---- */
+const flyerInput = document.getElementById("flyerFileInput");
+document.getElementById("uploadFlyerBtn").addEventListener("click",()=>{
+  if(!IMGBB_API_KEY){
+    alert("Flyer upload isn't switched on yet.\n\nThe site owner needs to add a free ImgBB key to enable it. In the meantime, use “Inform a Camp” to add a camp with a flyer link.");
+    return;
+  }
+  flyerInput.value = "";      // reset so the same file can be re-picked
+  flyerInput.click();         // opens the phone gallery / file picker
+});
+
+flyerInput.addEventListener("change", async (e)=>{
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith("image/")){ alert("Please choose an image file (a photo of the flyer)."); return; }
+  if(file.size > 8*1024*1024){ alert("That image is large (over 8 MB). Please choose a smaller photo."); return; }
+
+  const btn = document.getElementById("uploadFlyerBtn");
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.textContent = "Checking…";
+  try{
+    const b64 = await new Promise((res,rej)=>{
+      const r = new FileReader();
+      r.onload = ()=>res(String(r.result).split(",")[1]);
+      r.onerror = ()=>rej(new Error("read failed"));
+      r.readAsDataURL(file);
+    });
+
+    // ---- 1. Image moderation: block explicit/offensive photos ----
+    const verdict = await moderateImage(b64);
+    if(verdict === "blocked"){
+      alert("This image can't be uploaded — it looks like it may contain explicit or offensive content. Please choose a flyer image.");
+      return;
+    }
+
+    // ---- 2. Upload the flyer image to ImgBB so it has a public URL for the card ----
+    btn.textContent = "Uploading…";
+    const upForm = new FormData();
+    upForm.append("image", b64);
+    const upResp = await fetch("https://api.imgbb.com/1/upload?key="+encodeURIComponent(IMGBB_API_KEY), {method:"POST", body:upForm});
+    const upData = await upResp.json();
+    if(!upData || !upData.success || !upData.data || !upData.data.url){ throw new Error("upload failed"); }
+    const imgUrl = upData.data.url;
+
+    // ---- 3. Ask Claude (via the secure Netlify function) to read the flyer ----
+    btn.textContent = "Reading flyer…";
+    let ev = null;
+    try{
+      const exResp = await fetch("/.netlify/functions/extract-flyer", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ image_base64: b64, media_type: file.type || "image/jpeg" })
+      });
+      ev = await exResp.json();
+    }catch(_){ ev = null; }
+
+    // ---- 4. Decide what to do with the result ----
+    if(ev && ev.is_event && ev.start_date){
+      // word-filter the extracted text too
+      const bad = moderateText(ev.title, ev.description, ev.venue, ev.organizer, ev.city);
+      if(bad){ alert("This flyer's text contains language that isn't allowed, so it wasn't added."); return; }
+
+      // is it upcoming? (end date, or start date, must be today or later)
+      const end = ev.end_date || ev.start_date;
+      if(end < (new Date().toISOString().slice(0,10))){
+        alert("This camp looks like it has already passed (" + ev.start_date + "), so it wasn't added. Only upcoming camps are shown.");
+        return;
+      }
+
+      // Build the card automatically — no form needed.
+      const card = {
+        id:"fly_"+Date.now(),
+        title: ev.title || "Meditation Camp",
+        type: ev.type || "Camp",
+        start_date: ev.start_date,
+        end_date: ev.end_date || ev.start_date,
+        venue: ev.venue || "",
+        city: ev.city || "",
+        state: ev.state || "",
+        country: ev.country || "India",
+        phone: ev.phone || "",
+        flyer_url: imgUrl,
+        source_url: "",
+        source_platform: "Flyer upload",
+        organizer: ev.organizer || "",
+        description: ev.description || "",
+        _mine:true
+      };
+      MY_EVENTS.unshift(card);
+      saveMine();
+      rebuild(new Date().toISOString());
+      closeModal(); showToast();
+      // jump to where the card is
+      if(card.country==="India"){ const t=document.querySelector('.tab[data-view="india"]'); if(t)t.click(); }
+      else { const t=document.querySelector('.tab[data-view="world"]'); if(t)t.click(); }
+      render();
+    } else {
+      // Couldn't read a clear dated event — fall back to the form, pre-filled with the image
+      // and whatever fields Claude did manage to read, so the person can complete it.
+      openModal();
+      const setv=(id,val)=>{ const el=document.getElementById(id); if(el&&val) el.value=val; };
+      setv("f_flyer", imgUrl);
+      if(ev){ setv("f_title",ev.title); setv("f_start",ev.start_date); setv("f_end",ev.end_date);
+              setv("f_venue",ev.venue); setv("f_city",ev.city); setv("f_phone",ev.phone);
+              setv("f_organizer",ev.organizer); setv("f_desc",ev.description); }
+      const note = document.getElementById("formErr");
+      if(note){ note.textContent = "Flyer uploaded — please check/complete the details below."; note.style.color="#8a6410"; note.style.display="inline"; note.style.visibility="visible"; }
+    }
+  }catch(err){
+    alert("Sorry, the flyer couldn't be processed just now. Please check your connection and try again, or use “Inform a Camp”.");
+  }finally{
+    btn.disabled = false; btn.innerHTML = orig;
+  }
+});
+
+/* Image moderation via Sightengine (free tier, no card: ~2,000 checks/month).
+   Get free keys at https://dashboard.sightengine.com/signup — you get an api_user + api_secret.
+   Paste them below. If left blank, moderation is skipped (word filter still applies).
+   Returns "blocked", "ok", or "unknown". */
+const SIGHTENGINE_USER   = "797061521";
+const SIGHTENGINE_SECRET = "9kkk62TwbQH3NzNVompSHNMojqyyiKLt";
+async function moderateImage(b64){
+  if(!SIGHTENGINE_USER || !SIGHTENGINE_SECRET) return "unknown";
+  try{
+    // Sightengine's check.json accepts a file via multipart POST (media field).
+    // Convert our base64 back to a Blob so we can send the bytes directly.
+    const byteStr = atob(b64);
+    const bytes = new Uint8Array(byteStr.length);
+    for(let i=0;i<byteStr.length;i++) bytes[i]=byteStr.charCodeAt(i);
+    const blob = new Blob([bytes]);
+    const form = new FormData();
+    form.append("media", blob, "flyer.jpg");
+    form.append("models", "nudity-2.1,offensive,gore-2.0");
+    form.append("api_user", SIGHTENGINE_USER);
+    form.append("api_secret", SIGHTENGINE_SECRET);
+    const resp = await fetch("https://api.sightengine.com/1.0/check.json", {method:"POST", body:form});
+    const d = await resp.json();
+    if(!d || d.status !== "success") return "unknown";
+    // Block if explicit nudity, offensive symbols, or gore are likely.
+    const nud = d.nudity || {};
+    const sexual = Math.max(nud.sexual_activity||0, nud.sexual_display||0, nud.erotica||0, nud.very_suggestive||0);
+    const off = (d.offensive && d.offensive.prob) || 0;
+    const gore = (d.gore && d.gore.prob) || 0;
+    if(sexual >= 0.5 || off >= 0.5 || gore >= 0.6) return "blocked";
+    return "ok";
+  }catch(e){
+    return "unknown";   // if the check fails, allow (word filter still applies)
+  }
+}
+
+overlay.addEventListener("click",e=>{ if(e.target===overlay) closeModal(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&overlay.classList.contains("open")) closeModal(); });
+document.getElementById("f_country").addEventListener("change",toggleStateField);
+
+document.getElementById("submitBtn").addEventListener("click",()=>{
+  clearErrors();
+  const v=id=>document.getElementById(id).value.trim();
+  const isIndia=v("f_country")==="India";
+  const fields={
+    f_title:v("f_title"), f_type:v("f_type"), f_organizer:v("f_organizer"),
+    f_start:v("f_start"), f_city:v("f_city"), f_phone:v("f_phone")
+  };
+  if(isIndia) fields.f_state=v("f_state");
+  let ok=true;
+  Object.entries(fields).forEach(([id,val])=>{
+    if(!val){ const fg=document.getElementById(id).closest(".fg"); if(fg){fg.classList.add("invalid");} ok=false; }
+  });
+  // end date not before start date
+  const start=v("f_start"), end=v("f_end");
+  if(end && start && end<start){ document.getElementById("f_end").closest(".fg").classList.add("invalid"); ok=false; }
+  if(!ok){ document.getElementById("formErr").style.display="inline"; return; }
+
+  // Content moderation: reject offensive language in any text field.
+  const badWord = moderateText(v("f_title"), v("f_desc"), v("f_venue"), v("f_organizer"), v("f_city"));
+  if(badWord){
+    const note=document.getElementById("formErr");
+    note.textContent = "This submission contains language that isn't allowed. Please edit and try again.";
+    note.style.color = "#b3261e"; note.style.display="inline"; note.style.visibility="visible";
+    return;
+  }
+
+  const ev={
+    id:"mine_"+Date.now(),
+    title:v("f_title"), type:v("f_type"), start_date:start, end_date:end||start,
+    venue:v("f_venue"), city:v("f_city"),
+    state:isIndia?v("f_state"):"", country:v("f_country"),
+    phone:v("f_phone"), flyer_url:v("f_flyer"), source_url:v("f_source"),
+    source_platform:"Submitted", organizer:v("f_organizer"), description:v("f_desc"),
+    _mine:true
+  };
+  MY_EVENTS.unshift(ev);
+  saveMine();
+  rebuild(SAMPLE_DATA.generated_at && !usingSample ? undefined : new Date().toISOString());
+  resetForm(); closeModal(); showToast();
+
+  // jump the view to where the new card lives so the user sees it
+  if(ev.country==="India"){ document.querySelector('.tab[data-view="india"]').click(); ui.state=""; document.getElementById("stateSelect").value=""; }
+  else { document.querySelector('.tab[data-view="world"]').click(); ui.region=""; document.getElementById("regionSelect").value=""; ui.country=""; const cs=document.getElementById("countrySelect"); if(cs) cs.value=""; }
+  render();
+});
+function resetForm(){ ["f_title","f_type","f_organizer","f_start","f_end","f_city","f_state","f_venue","f_phone","f_flyer","f_source","f_desc"].forEach(id=>{document.getElementById(id).value="";}); document.getElementById("f_country").value="India"; toggleStateField(); }
+let toastTimer;
+function showToast(){ const t=document.getElementById("toast"); t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),2600); }
+
+/* ============================================================
+   INIT
+   ============================================================ */
+/* Support link: show only if a URL is configured */
+(function(){
+  const el=document.getElementById("supportLink");
+  const line=el?el.closest(".support"):null;
+  if(SUPPORT_URL && el){ el.href=SUPPORT_URL; }
+  else if(line){ line.style.display="none"; }
+})();
+
+buildFormSelectors();
+loadData();
+setInterval(loadData, REFRESH_MS);
+
+// Register the service worker (needed for PWABuilder / installable app)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
