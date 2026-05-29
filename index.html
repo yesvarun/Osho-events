@@ -810,19 +810,12 @@ flyerInput.addEventListener("change", async (e)=>{
       else { const t=document.querySelector('.tab[data-view="world"]'); if(t)t.click(); }
       render();
     } else {
-      // Couldn't read a clear dated event — fall back to the form, pre-filled with the image
-      // and whatever fields Claude did manage to read, so the person can complete it.
-      openModal();
-      const setv=(id,val)=>{ const el=document.getElementById(id); if(el&&val) el.value=val; };
-      setv("f_flyer", imgUrl);
-      if(ev){ setv("f_title",ev.title); setv("f_start",ev.start_date); setv("f_end",ev.end_date);
-              setv("f_venue",ev.venue); setv("f_city",ev.city); setv("f_phone",ev.phone);
-              setv("f_organizer",ev.organizer); setv("f_desc",ev.description); }
-      const note = document.getElementById("formErr");
-      if(note){ note.textContent = "Flyer uploaded — please check/complete the details below."; note.style.color="#8a6410"; note.style.display="inline"; note.style.visibility="visible"; }
+      // Couldn't read a clear dated camp from the flyer. Do NOT open the form —
+      // the two buttons are independent. Just tell the person kindly.
+      alert("Sorry, we couldn't read a clear camp date from this flyer, so it wasn't added.\n\nPlease try a clearer flyer image (with the dates and place visible), or use the “Inform a Camp” button to type the details in.");
     }
   }catch(err){
-    alert("Sorry, the flyer couldn't be processed just now. Please check your connection and try again, or use “Inform a Camp”.");
+    alert("Sorry, the flyer couldn't be processed just now. Please check your connection and try again.");
   }finally{
     btn.disabled = false; btn.innerHTML = orig;
   }
