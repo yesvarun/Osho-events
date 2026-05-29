@@ -678,6 +678,15 @@ def read_html_event_pages():
                 if pos > 0:
                     text = text[pos:]
                     break
+            # Also cut trailing noise (reviews/FAQs/footer) that comes AFTER the course list,
+            # so the extractor focuses on the dated courses, not testimonials.
+            for endmarker in ("About  OSHO", "About OSHO Himalayas", "Our Reviews",
+                              "Why Meditators", "Frequently Asked", "Got Questions",
+                              "About Us About"):
+                epos = text.find(endmarker)
+                if epos > 500:           # keep at least the courses before cutting
+                    text = text[:epos]
+                    break
             text = text[:24000]   # higher limit so long calendars (30-50 dated courses) fit
         except Exception as e:
             print(f"  ! {organizer}: fetch failed ({type(e).__name__})")
