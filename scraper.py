@@ -47,12 +47,13 @@ FB_SEARCH_ACTOR = "danek~facebook-search-ppr"
 FB_SEARCH_ENABLED = True          # ON: searches Facebook by keyword (like IG hashtag search)
 
 # JS-rendered websites: pages whose events only appear after JavaScript runs.
-# Plain HTTP fetch gets an empty shell, so we use Apify's web-scraper (real browser)
-# ONLY for these URLs — the other sources keep the cheap HTTP path.
-JS_RENDER_URLS = {
-    "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses?gad_source=1",
-    "https://www.humaniversity.com/courses/",
-}
+# DISABLED for now — the apify~web-scraper input config needs more work.
+# When re-enabled, uncomment the URLs below and (if needed) switch the actor.
+JS_RENDER_URLS = set()   # empty = skip JS render path, use HTTP only
+# JS_RENDER_URLS = {
+#     "https://wellness.oshohimalayas.com/all_upcoming_meditation_courses?gad_source=1",
+#     "https://www.humaniversity.com/courses/",
+# }
 JS_RENDER_ACTOR = "apify~web-scraper"
 
 # Known, active Osho Facebook PAGES — adds a reliable source beyond search.
@@ -153,7 +154,7 @@ HTML_EVENT_PAGES = [
     ("https://oshoworld.com/events", "India", "Osho Dham / Osho World",
      "011-25319026",
      "Osho Dham, 44 Jhatikra Road, Pandwala Khurd, Near Najafgarh, New Delhi 110043"),
-    ("https://wellness.oshohimalayas.com/all_upcoming_meditation_courses?gad_source=1", "India", "Osho Himalayas",
+    ("https://www.oshohimalayas.com/courses/", "India", "Osho Himalayas",
      "+91-7071042042",
      "Osho Himalayas, Dharamshala valley, Himachal Pradesh (45 min from Dharamshala airport)"),
     ("https://www.oshonisarga.com/upcoming-programs/calendar", "India", "Osho Nisarga",
@@ -174,6 +175,9 @@ HTML_EVENT_PAGES = [
     ("https://www.humaniversity.com/courses/", "Netherlands", "Osho Humaniversity",
      "+31 72 506 4114",
      "OSHO Humaniversity, Dr. Wiardi Beckmanlaan 8, Egmond aan Zee, Netherlands"),
+    ("https://www.osho.com/osho-multiversity/programs/courses", "India", "OSHO Multiversity (Pune)",
+     "+91 20 6601 9999",
+     "OSHO International Meditation Resort, 17 Koregaon Park, Pune, Maharashtra"),
 ]
 
 # Country -> region grouping (must match the app's REGION_MAP)
@@ -641,29 +645,49 @@ def read_html_event_pages():
                           f"(site is blocking automated requests — try again later)")
                     continue
                 raw_html = r.text
-            # Pull real image URLs (e.g. https://oshoworld.com/uploads/xxx.jpg) in page order.
-            # Next.js wraps them as /_next/image?url=<ENCODED>&w=...  — decode those too.
+            # Pull real image URLs in page order (so each camp matches its own picture).
+            # Next.js wraps them as /_next/image?url=<ENCODED>&w=... — decode those too.
             import urllib.parse as _up
             imgs = []
             for m in _re.finditer(r'/_next/image\?url=([^&"]+)', raw_html):
                 dec = _up.unquote(m.group(1))
-                if "/uploads/" in dec:
+                if any(k in dec for k in ("/uploads/", "/wp-content/", "/content/")):
                     imgs.append(dec)
-            for m in _re.finditer(r'(https?://[^\s"\']+/uploads/[^\s"\'?]+\.(?:jpg|jpeg|png|webp|JPG|JPEG|PNG))', raw_html):
-                if m.group(1) not in imgs:
-                    imgs.append(m.group(1))
+            # Match content/upload image URLs (covers WordPress wp-content/uploads, and
+            # Humaniversity's /content/ uploads). Skip logos/icons/sprites.
+            for m in _re.finditer(
+                r'(https?://[^\s"\']+/(?:wp-content/uploads|uploads|content/uploads|content)/[^\s"\'?)]+\.(?:jpg|jpeg|png|webp))',
+                raw_html, _re.IGNORECASE):
+                u = m.group(1)
+                low = u.lower()
+                if any(skip in low for skip in ("logo", "icon", "favicon", "sprite", "cropped-", "mstile", "header-image")):
+                    continue
+                if u not in imgs:
+                    imgs.append(u)
             # text for Claude
             text = _re.sub(r"<script[\s\S]*?</script>", " ", raw_html)
             text = _re.sub(r"<style[\s\S]*?</style>", " ", text)
             text = _re.sub(r"<[^>]+>", " ", text)
-            text = _re.sub(r"\s+", " ", text)[:12000]
+            text = _re.sub(r"\s+", " ", text).strip()
+            # Some sites (e.g. osho.com) bury the real schedule AFTER a huge nav menu.
+            # If we can find where the actual course list starts, drop everything before it
+            # so the dated events aren't pushed past the character limit.
+            for marker in ("Monthly Schedules", "SELECT MONTH", "Upcoming Courses",
+                           "Upcoming  Courses", "Our Calendar", "upcoming workshops"):
+                pos = text.find(marker)
+                if pos > 0:
+                    text = text[pos:]
+                    break
+            text = text[:24000]   # higher limit so long calendars (30-50 dated courses) fit
         except Exception as e:
             print(f"  ! {organizer}: fetch failed ({type(e).__name__})")
             continue
         prompt = (
             f"Today is {TODAY}. Below is the text of an Osho centre's events page. "
             "Extract EVERY upcoming meditation camp/retreat/workshop/celebration with a clear date, "
-            "IN THE ORDER they appear on the page. "
+            "IN THE ORDER they appear on the page. The events may run together in dense text "
+            "without line breaks between them — be careful to find every dated entry "
+            "(look for date patterns like '5 - 7 Jun 2026' or '25 Jun – 1 Jul 2026'). "
             "Reply with ONLY a JSON array, each item: "
             "{title, title_original, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description}. "
             "If the page is NOT in English, set title to a clear English translation and "
