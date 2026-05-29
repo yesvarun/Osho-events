@@ -369,6 +369,7 @@
    CONFIG — connected to your live scraped feed.
    ============================================================ */
 const DATA_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/events.json";
+const SUBMITTED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/submitted.json";
 /* OPTIONAL: paste your support/donation link here (Ko-fi, Buy Me a Coffee, UPI page, etc.).
    Leave "" and the "Help keep it free" line is hidden automatically. */
 const SUPPORT_URL = "";
@@ -458,6 +459,19 @@ async function loadData(){
     }catch(err){ console.warn("Live feed unavailable, using sample:",err); }
   }
   FEED_EVENTS = (raw.events || []).map(e=>({...e, _sample: usingSample, _built: raw.generated_at}));
+
+  // Also load community-submitted camps (submitted.json) so EVERYONE sees uploads.
+  try{
+    const surl = SUBMITTED_URL + (SUBMITTED_URL.includes("?")?"&":"?") + "t=" + Date.now();
+    const sres = await fetch(surl,{cache:"no-store"});
+    if(sres.ok){
+      const slist = await sres.json();
+      if(Array.isArray(slist)){
+        FEED_EVENTS = FEED_EVENTS.concat(slist.map(e=>({...e, _built: e.submitted_at, _community:true})));
+      }
+    }
+  }catch(_){ /* submitted.json may not exist yet — fine */ }
+
   MY_EVENTS = loadMine();
   rebuild(raw.generated_at);
 }
@@ -856,6 +870,13 @@ flyerInput.addEventListener("change", async (e)=>{
       render();
       // After 2 minutes, re-render so the pinned card settles into its date position.
       setTimeout(()=>{ rebuild(new Date().toISOString()); render(); }, 121000);
+      // Save to the shared store so EVERYONE sees this camp (not just this device).
+      try{
+        fetch("/.netlify/functions/save-camp", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ camp })
+        });
+      }catch(_){ /* if it fails, the card still shows on this device */ }
     } else {
       // Couldn't read a clear dated camp from the flyer. Do NOT open the form —
       // the two buttons are independent. Just tell the person kindly.
