@@ -966,11 +966,11 @@ def keep_upcoming(ev):
     if end_d < dt.date.today():
         return False
     # Drop long / open-ended entries (e.g. daily meditations marked "all year/all month").
-    # We only want actual dated camps of 30 days or less.
+    # We only want actual dated camps of 28 days or less.
     if start:
         try:
             start_d = dt.date.fromisoformat(start)
-            if (end_d - start_d).days > 30:
+            if (end_d - start_d).days > 28:
                 return False
         except ValueError:
             pass
