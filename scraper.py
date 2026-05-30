@@ -1015,9 +1015,37 @@ def read_wp_event_sites():
         print(f"  → {got} events from {site}")
     return out
 
+FLYER_VISION_CACHE_FILE = os.path.join("feed_cache", "flyer_vision.json")
+
+def _load_flyer_vision_cache():
+    try:
+        with open(FLYER_VISION_CACHE_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def _save_flyer_vision_cache(cache):
+    try:
+        os.makedirs("feed_cache", exist_ok=True)
+        with open(FLYER_VISION_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=1)
+    except Exception:
+        pass
+
+def _flyer_cache_key(path):
+    """Stable cache key: filename + file size + last-modified time.
+    If the file is replaced with a new image, the key changes and it re-processes."""
+    try:
+        stat = os.stat(path)
+        raw = f"{os.path.basename(path)}|{stat.st_size}|{int(stat.st_mtime)}"
+        return hashlib.md5(raw.encode()).hexdigest()[:20]
+    except Exception:
+        return hashlib.md5(os.path.basename(path).encode()).hexdigest()[:20]
+
 def read_local_flyers():
     """Read every image in FLYERS_DIR with Claude vision.
     Handles BOTH single-event flyers and multi-event calendar posters.
+    Results are cached by file content — vision is only called for NEW or CHANGED images.
     Returns list of event dicts."""
     import glob
     if not os.path.isdir(FLYERS_DIR):
@@ -1029,25 +1057,42 @@ def read_local_flyers():
     if not files:
         print(f"  (no flyer images in '{FLYERS_DIR}/')")
         return []
+
+    # Load vision cache — avoids re-sending unchanged images to Claude every run
+    vision_cache = _load_flyer_vision_cache()
+    n_cached = n_fresh = 0
+
     print(f"Reading {len(files)} local flyer image(s) with Claude vision…")
     events = []
+    cache_dirty = False
     for path in files:
         try:
             import urllib.parse
             fname = urllib.parse.quote(os.path.basename(path))
             flyer_public_url = FLYERS_BASE_URL + fname
+            cache_key = _flyer_cache_key(path)
 
-            # Use multi-event extractor — works for both single and calendar images
-            extracted = extract_events_from_file(path)
-
-            if not extracted:
-                print(f"  – {os.path.basename(path)} → not a datable event")
-                continue
-
-            if len(extracted) > 1:
-                print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer)")
+            # --- CACHE HIT: skip vision call entirely ---
+            if cache_key in vision_cache:
+                extracted = vision_cache[cache_key]
+                n_cached += 1
+                if not extracted:
+                    print(f"  ♻ {os.path.basename(path)} → not a datable event (cached)")
+                    continue
+                print(f"  ♻ {os.path.basename(path)} → {len(extracted)} event(s) (cached)")
             else:
-                print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')}")
+                # --- CACHE MISS: call Claude vision ---
+                extracted = extract_events_from_file(path)
+                vision_cache[cache_key] = extracted   # cache result (even empty = not an event)
+                cache_dirty = True
+                n_fresh += 1
+                if not extracted:
+                    print(f"  – {os.path.basename(path)} → not a datable event")
+                    continue
+                if len(extracted) > 1:
+                    print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer)")
+                else:
+                    print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')}")
 
             for idx, ev in enumerate(extracted):
                 ev["source_platform"] = "Flyer upload"
@@ -1063,6 +1108,10 @@ def read_local_flyers():
         except Exception as e:
             print(f"  ! {os.path.basename(path)} → skipped ({type(e).__name__})")
             continue
+
+    if cache_dirty:
+        _save_flyer_vision_cache(vision_cache)
+    print(f"  📦 Flyer vision: {n_fresh} new analysed, {n_cached} from cache (0 API cost)")
     return events
 
 
