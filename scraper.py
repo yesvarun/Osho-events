@@ -1106,6 +1106,101 @@ def keep_upcoming(ev):
             pass
     return True
 
+def smart_crop_hint(img_path_or_bytes):
+    """Ask Claude to analyse an image and return a crop hint dict so the card renderer
+    can display faces/subjects correctly without cutting off heads.
+
+    Returns a dict:
+      {
+        "has_person": bool,
+        "face_y_pct": float,   # 0-100: how far down the image the face centre is (%)
+        "focus_y_pct": float,  # 0-100: best vertical centre for a portrait crop (%)
+        "object_fit": "top"|"center"|"bottom",  # CSS object-position equivalent
+        "note": str            # short human-readable reason
+      }
+    Returns None on any failure (caller falls back to default "center" crop).
+    """
+    import base64, mimetypes
+    try:
+        if isinstance(img_path_or_bytes, (str, bytes.__class__)) and not isinstance(img_path_or_bytes, bytes):
+            # it's a file path
+            with open(img_path_or_bytes, "rb") as f:
+                raw = f.read()
+        else:
+            raw = img_path_or_bytes
+
+        if not raw or len(raw) > MAX_IMAGE_BYTES:
+            return None
+
+        mtype = "image/jpeg"
+        if raw[:4] == b'\x89PNG':
+            mtype = "image/png"
+        elif raw[:4] == b'RIFF' or raw[8:12] == b'WEBP':
+            mtype = "image/webp"
+
+        b64 = base64.standard_b64encode(raw).decode()
+
+        body = {
+            "model": EXTRACT_MODEL,
+            "max_tokens": 200,
+            "messages": [{"role": "user", "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": mtype, "data": b64}},
+                {"type": "text", "text": (
+                    "Analyse this image for smart cropping on an event card. "
+                    "Reply with ONLY a JSON object, no prose:\n"
+                    "{\n"
+                    '  "has_person": true/false,\n'
+                    '  "face_y_pct": <0-100, vertical % where face centre sits, null if no face>,\n'
+                    '  "focus_y_pct": <0-100, best vertical centre for a 3:4 portrait crop>,\n'
+                    '  "object_fit": "top" or "center" or "bottom",\n'
+                    '  "note": "<10 words why>"\n'
+                    "}\n"
+                    "Examples: headshot at top → face_y_pct≈20, focus_y_pct≈25, object_fit=top. "
+                    "Full-body standing → face_y_pct≈15, focus_y_pct≈20, object_fit=top. "
+                    "Group photo → focus_y_pct≈40, object_fit=center."
+                )}
+            ]}]
+        }
+        r = requests.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
+                     "content-type": "application/json"},
+            json=body, timeout=30)
+        if r.status_code != 200:
+            return None
+        text = "".join(b.get("text", "") for b in r.json().get("content", []))
+        text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+        hint = json.loads(text)
+        if not isinstance(hint, dict):
+            return None
+        # Normalise
+        hint.setdefault("has_person", False)
+        hint.setdefault("focus_y_pct", 40)
+        hint.setdefault("object_fit", "center")
+        hint["focus_y_pct"] = max(0, min(100, float(hint.get("focus_y_pct") or 40)))
+        return hint
+    except Exception:
+        return None
+
+
+# Crop-hint cache file — so we don't re-analyse the same image every run.
+CROP_HINT_CACHE_FILE = os.path.join("feed_cache", "crop_hints.json")
+
+def _load_crop_cache():
+    try:
+        with open(CROP_HINT_CACHE_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def _save_crop_cache(cache):
+    try:
+        os.makedirs("feed_cache", exist_ok=True)
+        with open(CROP_HINT_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=1)
+    except Exception:
+        pass
+
 def rehost_image(img_url, key):
     """Download an external image into CARD_IMG_DIR and return our own permanent URL.
     'key' makes a stable filename so the same source reuses the same file.
@@ -1252,6 +1347,8 @@ def build():
     print(f"\nExtracting {len(posts)} posts with Claude…")
     events, seen = [], set()
     n_is_event = n_upcoming = 0
+    crop_cache = _load_crop_cache()
+    n_crop_analysed = 0
     for i, p in enumerate(posts, 1):
         ev = extract_event(p["caption"], p.get("image"))
         if not ev.get("is_event"):
@@ -1261,6 +1358,19 @@ def build():
         ev["source_platform"] = p["platform"]
         # Re-host the post image on our repo so it actually shows on the card (IG/FB block embeds).
         ev["flyer_url"] = rehost_image(p.get("image"), p.get("url") or p.get("image"))
+        # AI crop hint — analyse person photo once, cache forever by image URL
+        if ev.get("flyer_url") and p.get("image"):
+            cache_key = hashlib.md5((p.get("image") or "").encode()).hexdigest()[:16]
+            if cache_key not in crop_cache:
+                # Download the re-hosted local file to analyse (avoids re-fetching from IG/FB)
+                local_name = ev["flyer_url"].split("/")[-1]
+                local_path = os.path.join(CARD_IMG_DIR, local_name)
+                if os.path.exists(local_path):
+                    hint = smart_crop_hint(local_path)
+                    crop_cache[cache_key] = hint or {}
+                    if hint:
+                        n_crop_analysed += 1
+            ev["crop_hint"] = crop_cache.get(cache_key) or {}
         ev["country"] = ev.get("country") or "India"
         ev["region"] = REGION_MAP.get(ev["country"], "Asia")
         if not keep_upcoming(ev):
@@ -1271,6 +1381,9 @@ def build():
             continue
         seen.add(ev["id"])
         events.append(ev)
+    if n_crop_analysed:
+        _save_crop_cache(crop_cache)
+        print(f"  🖼  AI crop analysis: {n_crop_analysed} new images analysed ({len(crop_cache)} cached)")
 
     # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
@@ -1296,15 +1409,24 @@ def build():
             if not keep_upcoming(ev):
                 print(f"  – flyer event '{ev.get('title','')}' skipped as past "
                       f"(start={ev.get('start_date')}, end={ev.get('end_date')})")
-                # Only mark for deletion if we have a REAL, parseable past date (not missing/unclear).
                 end = ev.get("end_date") or ev.get("start_date")
                 if end and ev.get("_flyer_path"):
                     try:
                         if dt.date.fromisoformat(end) < dt.date.today():
                             flyers_to_delete.append(ev["_flyer_path"])
                     except ValueError:
-                        pass   # unclear date → keep the file, never delete
+                        pass
                 continue
+            # AI crop hint for the flyer image (cached by filename)
+            flyer_path = ev.get("_flyer_path")
+            if flyer_path:
+                cache_key = "flyer_" + hashlib.md5(os.path.basename(flyer_path).encode()).hexdigest()[:16]
+                if cache_key not in crop_cache:
+                    hint = smart_crop_hint(flyer_path)
+                    crop_cache[cache_key] = hint or {}
+                    if hint:
+                        n_crop_analysed += 1
+                ev["crop_hint"] = crop_cache.get(cache_key) or {}
             ev["id"] = make_id(ev)
             if ev["id"] in seen:
                 continue
@@ -1324,6 +1446,10 @@ def build():
             except Exception:
                 pass
         print(f"  🗑  removed {deleted} past flyer image(s) from '{FLYERS_DIR}/'")
+
+    # Persist crop hint cache so new analyses aren't lost between runs
+    if n_crop_analysed:
+        _save_crop_cache(crop_cache)
 
     events.sort(key=lambda e: e.get("start_date") or "9999")
 
