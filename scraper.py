@@ -1464,41 +1464,62 @@ def build():
         existing = []
 
     merged, seen_ids = [], set()
+
+    # --- BLOCKLIST: load ONCE here so it blocks both new events AND carried-forward ones ---
+    blockset = set()
+    try:
+        if os.path.exists("deleted.json"):
+            with open("deleted.json", encoding="utf-8") as f:
+                for x in json.load(f):
+                    blockset.add(str(x).lower().strip())
+    except Exception as ex:
+        print(f"  ! blocklist load skipped: {ex}")
+
+    def _norm(s):
+        """Normalise a string for fuzzy blocklist matching — lowercase, strip punctuation/spaces."""
+        import unicodedata
+        s = (s or "").lower().strip()
+        s = _re.sub(r"[^\w\s]", "", s)   # strip punctuation
+        s = _re.sub(r"\s+", " ", s).strip()
+        return s
+
+    def _blocked(ev):
+        """Return True if this event matches any entry in the blocklist.
+        Matches on: exact ID, exact title|start|city key, OR normalised title+date alone
+        (catches cases where city differs slightly or Claude reads title differently)."""
+        eid = str(ev.get("id","")).lower().strip()
+        title = _norm(ev.get("title",""))
+        start = (ev.get("start_date","") or "").strip()
+        city  = _norm(ev.get("city","") or ev.get("venue",""))
+        full_key  = f"{title}|{start}|{city}"
+        short_key = f"{title}|{start}"          # city-agnostic fallback
+        return (eid in blockset or full_key in blockset or short_key in blockset)
+
+    n_blocked_new = 0
     for ev in events:                       # new finds first (freshest data wins on dupes)
         ev["id"] = make_id(ev)              # recompute with aggressive dedup
+        if _blocked(ev):
+            n_blocked_new += 1
+            continue
         if ev["id"] not in seen_ids:
             seen_ids.add(ev["id"]); merged.append(ev)
     carried = 0
+    n_blocked_carried = 0
     for ev in existing:
         eid = make_id(ev)                    # recompute (ignore old weak IDs) so dupes collapse
         if eid in seen_ids:
+            continue
+        if _blocked(ev):                     # block carried-forward events too
+            n_blocked_carried += 1
             continue
         if keep_upcoming(ev):               # only carry forward events that haven't passed
             ev["id"] = eid
             seen_ids.add(eid); merged.append(ev); carried += 1
 
-    merged.sort(key=lambda e: e.get("start_date") or "9999")
+    if n_blocked_new or n_blocked_carried:
+        print(f"  🚫 Blocklist: removed {n_blocked_new} new + {n_blocked_carried} carried-forward event(s)")
 
-    # --- BLOCKLIST: drop any camp the owner deleted via the site's red dot.
-    # deleted.json holds ids and "title|start|city" keys; we skip anything matching. ---
-    try:
-        blockset = set()
-        if os.path.exists("deleted.json"):
-            with open("deleted.json", encoding="utf-8") as f:
-                for x in json.load(f):
-                    blockset.add(str(x).lower())
-        if blockset:
-            def _blocked(ev):
-                key = ((ev.get("title","") or "") + "|" + (ev.get("start_date","") or "")
-                       + "|" + (ev.get("city","") or "")).lower()
-                return str(ev.get("id","")).lower() in blockset or key in blockset
-            kept = [e for e in merged if not _blocked(e)]
-            removed = len(merged) - len(kept)
-            merged = kept
-            if removed:
-                print(f"  🚫 Blocklist: removed {removed} owner-deleted camp(s)")
-    except Exception as ex:
-        print(f"  ! blocklist check skipped: {ex}")
+    merged.sort(key=lambda e: e.get("start_date") or "9999")
 
 
     # searched once per title and cached forever (so visitors see varied images, and we
