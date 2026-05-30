@@ -91,7 +91,7 @@
   .card.fresh{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber),0 10px 30px rgba(216,165,52,.28);animation:freshpulse 1.6s ease-in-out infinite}
   @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
   .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-  .del-dot{position:absolute;top:10px;left:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
+  .del-dot{position:absolute;bottom:10px;right:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
   .del-dot:hover{opacity:1;transform:scale(1.15)}
   .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#6b5040;padding:0 4px;align-self:center}
   .pinned-grid{margin-bottom:22px}
@@ -711,7 +711,7 @@ function card(e){
   if(e._mine) stamp = `<span class="stamp submitted">⊕ Added by you · published</span>`;
   else if(e._community) stamp = `<span class="stamp submitted">⊕ Community submitted</span>`;
   else if(e._sample) stamp = `<span class="stamp sample">● SAMPLE DATA — not a real camp</span>`;
-  else stamp = `<span class="stamp live">✓ Live · fetched ${fmtStamp(e._built)}</span>`;
+  else stamp = ``;
   const isFresh = e._added && (Date.now() - e._added) < 120000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
   return `<article class="card${isFresh?' fresh':''}">
