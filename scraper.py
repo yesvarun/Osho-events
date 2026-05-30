@@ -24,7 +24,7 @@ BROWSER_HEADERS = {
                   "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Encoding": "gzip, deflate",
     "Connection": "keep-alive",
     "Upgrade-Insecure-Requests": "1",
 }
@@ -34,6 +34,7 @@ BROWSER_HEADERS = {
 # ----------------------------------------------------------------------
 APIFY_TOKEN     = os.environ["APIFY_TOKEN"]
 ANTHROPIC_KEY   = os.environ["ANTHROPIC_API_KEY"]
+UNSPLASH_KEY    = os.environ.get("UNSPLASH_ACCESS_KEY", "")   # optional: themed images for camps with no real photo
 EXTRACT_MODEL   = "claude-haiku-4-5-20251001"   # cheap + fast for per-post extraction
 OUTPUT_FILE     = "events.json"
 
@@ -995,6 +996,58 @@ def rehost_image(img_url, key):
     except Exception:
         return ""
 
+UNSPLASH_CACHE_FILE = os.path.join("feed_cache", "unsplash_cache.json")
+
+def _load_unsplash_cache():
+    try:
+        with open(UNSPLASH_CACHE_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def _save_unsplash_cache(cache):
+    try:
+        os.makedirs("feed_cache", exist_ok=True)
+        with open(UNSPLASH_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=1)
+    except Exception:
+        pass
+
+def unsplash_image_for(title, cache):
+    """Return a themed Unsplash image URL for a camp title, searched ONCE and cached
+    forever (keyed by title). Searches api.unsplash.com only for titles never seen
+    before, so we stay well under the 50/hour demo limit. Returns '' if no key / no result.
+    Note: displaying images.unsplash.com URLs does NOT count against the rate limit —
+    only the search call here does, and that's one-per-new-title, cached permanently."""
+    if not UNSPLASH_KEY or not title:
+        return ""
+    key = title.strip().lower()
+    if key in cache:                       # already searched once → reuse forever
+        return cache[key]
+    # Build a focused query from the title (drop generic filler words).
+    q = _re.sub(r"\b(osho|meditation|camp|retreat|shivir|the|of|a|an|with|days?|by)\b", " ",
+                title, flags=_re.I)
+    q = _re.sub(r"[^a-zA-Z ]", " ", q).strip()
+    query = (q + " meditation spiritual").strip() or "meditation"
+    try:
+        r = requests.get(
+            "https://api.unsplash.com/search/photos",
+            params={"query": query, "per_page": 1, "orientation": "landscape",
+                    "content_filter": "high"},
+            headers={"Authorization": "Client-ID " + UNSPLASH_KEY},
+            timeout=20,
+        )
+        if r.status_code == 200:
+            results = r.json().get("results", [])
+            if results:
+                url = results[0].get("urls", {}).get("regular", "")
+                cache[key] = url           # cache the result (even searched-this-run)
+                return url
+        cache[key] = ""                    # cache the miss too, so we don't re-search a dud
+        return ""
+    except Exception:
+        return ""
+
 def build():
     print("="*60)
     print(f"Token present: {'yes' if APIFY_TOKEN else 'NO — MISSING!'} "
@@ -1155,6 +1208,26 @@ def build():
             seen_ids.add(eid); merged.append(ev); carried += 1
 
     merged.sort(key=lambda e: e.get("start_date") or "9999")
+
+    # --- THEMED IMAGES: for camps with no real photo, attach a unique Unsplash image,
+    # searched once per title and cached forever (so visitors see varied images, and we
+    # never hit the API rate limit). Only runs if UNSPLASH_ACCESS_KEY is set. ---
+    if UNSPLASH_KEY:
+        ucache = _load_unsplash_cache()
+        searched = 0
+        for ev in merged:
+            if ev.get("flyer_url"):              # already has a real image → leave it
+                continue
+            before = len(ucache)
+            url = unsplash_image_for(ev.get("title", ""), ucache)
+            if len(ucache) > before:
+                searched += 1
+            if url:
+                ev["flyer_url"] = url
+                ev["_img_source"] = "unsplash"
+        _save_unsplash_cache(ucache)
+        print(f"  🖼  Unsplash themed images: {searched} new searches this run "
+              f"({len(ucache)} cached total)")
 
     # SAFETY: warn loudly if this run drastically shrinks the directory — a sign something
     # went wrong (bad scrape, over-merge). The data is still written, but you'll see the alert.
