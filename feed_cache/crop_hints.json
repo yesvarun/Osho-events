@@ -369,5 +369,306 @@
   "focus_y_pct": 45.0,
   "object_fit": "center",
   "note": "Group event photo, center composition captures multiple participants"
+ },
+ "83d5299f3dce8bc7": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Person kneeling with decorative arrangement below, balanced composition"
+ },
+ "a3cdc26ca2f17f95": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Rose petals on floor, centered composition for event card"
+ },
+ "304a36fb99a15a90": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two subjects at different heights, text-heavy design needs balanced framing"
+ },
+ "5b723dc76dc838fa": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Multiple subjects at different heights, centered composition balances all activity"
+ },
+ "8a1661d976c625e0": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Multiple faces in circular frames, balanced composition needs center focus"
+ },
+ "flyer_71aab8a0cd7264b4": {
+  "has_person": true,
+  "face_y_pct": 30,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Headshot portrait, face positioned upper third of frame"
+ },
+ "flyer_fe806067229cedcc": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Portrait headshot with gesture; center crop preserves face and hand detail"
+ },
+ "flyer_bfb05734fce23409": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two portrait circles centered, boat/lake below, balanced composition"
+ },
+ "flyer_6605154c75dcf051": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group meditation retreat, bodies visible, centered composition"
+ },
+ "flyer_8b391c031142e86d": {
+  "has_person": true,
+  "face_y_pct": 65,
+  "focus_y_pct": 60.0,
+  "object_fit": "center",
+  "note": "Headshot portrait positioned lower, needs centered crop for balance"
+ },
+ "flyer_76c929468c67335a": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Upper body portrait in landscape; center crop captures face and torso"
+ },
+ "flyer_99ddcfa0dcf1709b": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Bearded sage with crowd; face in upper portion"
+ },
+ "flyer_50ec34e68465ab89": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Two circular portraits top, flower center, text below. Balanced composition."
+ },
+ "flyer_cd7ac18585777136": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Two faces positioned upper third, landscape dominates lower half"
+ },
+ "flyer_de6411858e557bf8": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Multiple headshots at varying heights, upper positioning optimal"
+ },
+ "flyer_67543085e4f44473": {
+  "has_person": true,
+  "face_y_pct": 15,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Multiple faces distributed vertically, center crop balances all elements"
+ },
+ "flyer_5c8d885ef0ff3fb0": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Large portrait with text overlay; center crop balances face and facilitators"
+ },
+ "flyer_3e2c9766487032d3": {
+  "has_person": true,
+  "face_y_pct": 32,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Portrait + text layout requires balanced vertical crop"
+ },
+ "flyer_30b8e5ddceb736f0": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Two people with flower focal point, prioritize upper composition"
+ },
+ "flyer_0ebcf1c79c1264c2": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Multiple people across grid, varied vertical positions, center crop balanced"
+ },
+ "flyer_f8edf29de607360a": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two facilitators with text overlay, balanced composition needed"
+ },
+ "flyer_b09de4c9d8ed98b0": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Woman in nature setting, centered composition with landscape context"
+ },
+ "flyer_a14f806694f1f96a": {
+  "has_person": true,
+  "face_y_pct": 65,
+  "focus_y_pct": 55.0,
+  "object_fit": "center",
+  "note": "Headshot portrait in lower section, needs centering for balance"
+ },
+ "flyer_594e30d0cc089d90": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Profile portrait, centered composition, balanced framing needed"
+ },
+ "flyer_02dc51665b6f0a34": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Full-body portrait with face mid-frame, centered composition"
+ },
+ "flyer_55503008949eb22e": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two portrait headshots centered vertically in composition"
+ },
+ "flyer_cfaf76fbac463d7d": {
+  "has_person": true,
+  "face_y_pct": 15,
+  "focus_y_pct": 20.0,
+  "object_fit": "top",
+  "note": "Two portraits at top; crop focuses on facilitator headshot area"
+ },
+ "flyer_dfb623cd51d0d8cb": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Main portrait top, meditation group below, balanced composition"
+ },
+ "flyer_bd74cf7c3f9fe318": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Text-heavy event listing, no prominent visual focal point"
+ },
+ "flyer_831290279b06505c": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Main portrait top-right, facilitators below. Crop around primary speaker."
+ },
+ "flyer_f5c9b2854cfba5c6": {
+  "has_person": true,
+  "face_y_pct": 65,
+  "focus_y_pct": 55.0,
+  "object_fit": "center",
+  "note": "Speaker portrait lower; event text upper dominates layout"
+ },
+ "flyer_f0c06d84fe6eb948": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two faces at different heights, center crop balances both"
+ },
+ "flyer_b86914e455a9e893": {
+  "has_person": true,
+  "face_y_pct": 65,
+  "focus_y_pct": 55.0,
+  "object_fit": "center",
+  "note": "Person right-aligned mid-image, centered crop balances text and portrait"
+ },
+ "flyer_7414395e5078d19e": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Meditation/wellness imagery, balanced composition centered on visual elements"
+ },
+ "flyer_42e0264944c915e6": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 30.0,
+  "object_fit": "top",
+  "note": "Central portrait headshot with mountain backdrop, crop top-weighted"
+ },
+ "flyer_bbd46ec0ba095fbd": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two facilitators positioned mid-card, centered composition preferred"
+ },
+ "flyer_971e113247eeff19": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Large portrait at top, facilitators below, text at bottom"
+ },
+ "flyer_8e4a77814d097252": {
+  "has_person": true,
+  "face_y_pct": 15,
+  "focus_y_pct": 20.0,
+  "object_fit": "top",
+  "note": "Multiple headshots distributed vertically, crop top-focused for primary subject"
+ },
+ "flyer_8e01931313c30140": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Multiple faces at different heights, centered composition needed"
+ },
+ "flyer_59d29e18000896aa": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Text-only event schedule, no people or faces present"
+ },
+ "flyer_1a430760b5961ab3": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Osho portrait at top, event details below require vertical space"
+ },
+ "flyer_32eb1d00256ab433": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Sage headshot with event details below, centered composition"
+ },
+ "flyer_d80ae09b934979fa": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Person centered in landscape with text overlay below"
  }
 }
