@@ -954,13 +954,27 @@ def make_id(ev):
     return hashlib.md5(f"{title}|{sd}|{city}".encode()).hexdigest()[:12]
 
 def keep_upcoming(ev):
-    end = ev.get("end_date") or ev.get("start_date")
+    start = ev.get("start_date")
+    end = ev.get("end_date") or start
     if not end:
         return False
     try:
-        return dt.date.fromisoformat(end) >= dt.date.today()
+        end_d = dt.date.fromisoformat(end)
     except ValueError:
         return False
+    # must not have already passed
+    if end_d < dt.date.today():
+        return False
+    # Drop long / open-ended entries (e.g. daily meditations marked "all year/all month").
+    # We only want actual dated camps of 30 days or less.
+    if start:
+        try:
+            start_d = dt.date.fromisoformat(start)
+            if (end_d - start_d).days > 30:
+                return False
+        except ValueError:
+            pass
+    return True
 
 def rehost_image(img_url, key):
     """Download an external image into CARD_IMG_DIR and return our own permanent URL.
