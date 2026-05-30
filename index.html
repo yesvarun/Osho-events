@@ -232,6 +232,11 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3M12 3v13M7 8l5-5 5 5"/></svg>
         Upload Flyer
       </button>
+      <span class="cta-or">or</span>
+      <button class="inform-btn" id="pasteTextBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Paste Text
+      </button>
       <input type="file" id="flyerFileInput" accept="image/*" style="display:none" />
     </div>
   </header>
@@ -284,6 +289,26 @@
 </div>
 
 <!-- ===== Inform-a-Camp modal ===== -->
+<div class="overlay" id="pasteOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+    <div class="modal-head">
+      <h2 id="pTitle">Paste Camp Text</h2>
+      <button class="x" id="closePaste" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0 0 12px;color:#6b5040;font-size:14px;line-height:1.5">
+        Paste any camp message or WhatsApp forward below — we'll read it and turn it into a card automatically.
+      </p>
+      <textarea id="pasteBox" rows="8" placeholder="Paste the camp announcement here…&#10;&#10;e.g. Osho Dhyan Shivir, 13–16 Aug 2026, Osho Pyramid Surat, contribution ₹3000, call 98765..." style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical"></textarea>
+      <p id="pasteErr" style="display:none;margin:10px 0 0;font-size:13px"></p>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="inform-btn" id="pasteSubmit" style="flex:1;justify-content:center">Read &amp; Add Camp</button>
+        <button class="btn" id="pasteCancel" style="background:#e8ddcf;color:#6b5040">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <div class="modal-head">
@@ -380,6 +405,12 @@ const LS_KEY     = "sannyas_submitted_camps_v1";
 /* ---- Flyer upload: free ImgBB image host. Get a free key at https://api.imgbb.com/ ---- */
 /* Paste your ImgBB API key between the quotes below. Until then, upload shows a friendly notice. */
 const IMGBB_API_KEY = "8a328a42131bc60c633939564741f7d5";
+
+/* ---- Owner-only password for the Paste Text tool ----
+   Change this to any password you like. Only someone who enters it can use Paste Text.
+   (Front-end gate: fine for keeping a feature owner-only on a community site.) */
+const PASTE_PASSWORD = "osho2026";
+
 
 /* ---- Content moderation ----
    Blocks submissions / uploads containing offensive language. Words below are matched
@@ -651,9 +682,13 @@ function card(e){
     } else if(digits.length >= 7 && digits.length <= 11 && (e.country==="India" || !e.country)){
       digits = "91" + digits.replace(/^0+/, "");                // other Indian formats (landline etc.)
     }
+    const dateStr = e._start ? dateRange(e) : "";
     const msg = encodeURIComponent(
-      `Hello, I found "${e.title}" on the Sannyas Gatherings directory. `
-      + `I'm interested — could you please share the details, dates, the fee / contribution amount, and how to register?`);
+      dateStr
+        ? `Hello, I found "${e.title}" (${dateStr}) on oshocamps.com. `
+          + `Could you please confirm the dates, and share the details, the fee / contribution amount, and how to register?`
+        : `Hello, I found "${e.title}" on oshocamps.com. `
+          + `Could you please share the dates, the details, the fee / contribution amount, and how to register?`);
     if(digits.length >= 10)
       waBtn = `<a class="btn wa" href="https://wa.me/${digits}?text=${msg}" target="_blank" rel="noopener">💬 WhatsApp</a>`;
   }
@@ -931,6 +966,105 @@ flyerInput.addEventListener("change", async (e)=>{
     alert("Sorry, the flyer couldn't be processed just now. Please check your connection and try again.");
   }finally{
     btn.disabled = false; btn.innerHTML = orig;
+  }
+});
+
+/* Shared: turn an extracted event object into a live card (and save it for everyone).
+   Returns true if added, or a reason string if not. */
+function addCampFromExtraction(ev, opts){
+  opts = opts || {};
+  if(!(ev && ev.is_event && ev.start_date)) return "no-date";
+  const bad = moderateText(ev.title, ev.description, ev.venue, ev.organizer, ev.city);
+  if(bad) return "blocked-word";
+  const end = ev.end_date || ev.start_date;
+  if(end < (new Date().toISOString().slice(0,10))) return "past";
+  const card = {
+    id: (opts.idPrefix||"sub_") + Date.now(),
+    title: ev.title || "Meditation Camp",
+    type: ev.type || "Camp",
+    start_date: ev.start_date,
+    end_date: ev.end_date || ev.start_date,
+    venue: ev.venue || "",
+    city: ev.city || "",
+    state: ev.state || "",
+    country: ev.country || "India",
+    phone: ev.phone || "",
+    flyer_url: opts.imgUrl || "",
+    source_url: "",
+    source_platform: opts.platform || "Community upload",
+    organizer: ev.organizer || "",
+    description: ev.description || "",
+    _mine:true,
+    _added: Date.now()
+  };
+  MY_EVENTS.unshift(card);
+  saveMine();
+  rebuild(new Date().toISOString());
+  showToast();
+  if(card.country==="India"){ const t=document.querySelector('.tab[data-view="india"]'); if(t)t.click(); }
+  else { const t=document.querySelector('.tab[data-view="world"]'); if(t)t.click(); }
+  render();
+  setTimeout(()=>{ rebuild(new Date().toISOString()); render(); }, 121000);
+  try{
+    fetch("/.netlify/functions/save-camp", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ camp: card })
+    });
+  }catch(_){}
+  return true;
+}
+
+/* ---- Paste Text: paste a message → Claude reads it → card created ---- */
+const pasteOverlay = document.getElementById("pasteOverlay");
+let pasteUnlocked = false;
+function openPaste(){
+  // Owner-only: ask for the password (once per session).
+  if(!pasteUnlocked){
+    const tries = prompt("This tool is for the site owner.\nEnter the password to continue:");
+    if(tries === null) return;                 // cancelled
+    if(tries !== PASTE_PASSWORD){ alert("Incorrect password."); return; }
+    pasteUnlocked = true;                       // remember for this session
+  }
+  document.getElementById("pasteBox").value=""; document.getElementById("pasteErr").style.display="none"; pasteOverlay.classList.add("open");
+}
+function closePaste(){ pasteOverlay.classList.remove("open"); }
+document.getElementById("pasteTextBtn").addEventListener("click", openPaste);
+document.getElementById("closePaste").addEventListener("click", closePaste);
+document.getElementById("pasteCancel").addEventListener("click", closePaste);
+pasteOverlay.addEventListener("click", e=>{ if(e.target===pasteOverlay) closePaste(); });
+
+document.getElementById("pasteSubmit").addEventListener("click", async ()=>{
+  const text = document.getElementById("pasteBox").value.trim();
+  const errEl = document.getElementById("pasteErr");
+  const btn = document.getElementById("pasteSubmit");
+  if(text.length < 12){
+    errEl.textContent = "Please paste a bit more text about the camp."; errEl.style.color="#b3261e"; errEl.style.display="block"; return;
+  }
+  // quick word-filter on the raw text before sending
+  const bad = moderateText(text);
+  if(bad){ errEl.textContent = "This text contains language that isn't allowed."; errEl.style.color="#b3261e"; errEl.style.display="block"; return; }
+
+  const orig = btn.textContent; btn.disabled = true; btn.textContent = "Reading…";
+  errEl.style.display="none";
+  try{
+    let ev = null;
+    try{
+      const r = await fetch("/.netlify/functions/extract-text", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ text })
+      });
+      ev = await r.json();
+    }catch(_){ ev = null; }
+
+    const result = addCampFromExtraction(ev, { idPrefix:"txt_", platform:"Text upload" });
+    if(result === true){ closePaste(); }
+    else if(result === "no-date"){ errEl.textContent="Couldn't find a clear camp date in that text. Please include the dates and place."; errEl.style.color="#b3261e"; errEl.style.display="block"; }
+    else if(result === "past"){ errEl.textContent="That camp looks like it has already passed, so it wasn't added."; errEl.style.color="#b3261e"; errEl.style.display="block"; }
+    else if(result === "blocked-word"){ errEl.textContent="That text contains language that isn't allowed."; errEl.style.color="#b3261e"; errEl.style.display="block"; }
+  }catch(err){
+    errEl.textContent="Sorry, couldn't process that just now. Please try again."; errEl.style.color="#b3261e"; errEl.style.display="block";
+  }finally{
+    btn.disabled=false; btn.textContent=orig;
   }
 });
 
