@@ -460,14 +460,25 @@ def check_anthropic_key():
         print(f"  !! Anthropic check error: {e}")
         return False
 
+MAX_IMAGE_BYTES = 4 * 1024 * 1024   # 4 MB — Claude vision rejects larger images (HTTP 400)
+VALID_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+
 def _download_image_b64(url):
-    """Fetch an image URL and return (base64, media_type) or (None, None)."""
+    """Fetch an image URL and return (base64, media_type) or (None, None).
+    Rejects images that are too large or in an unsupported format to prevent Claude HTTP 400."""
     try:
         r = requests.get(url, timeout=30)
         if r.status_code != 200 or not r.content:
             return None, None
-        ctype = r.headers.get("content-type", "").split(";")[0].strip()
-        if ctype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
+        # Reject oversized images — Claude vision returns HTTP 400 for images > ~5 MB
+        if len(r.content) > MAX_IMAGE_BYTES:
+            print(f"  ! image too large ({len(r.content)//1024}KB) — skipping vision for this post")
+            return None, None
+        ctype = r.headers.get("content-type", "").split(";")[0].strip().lower()
+        # Normalise common aliases
+        if ctype in ("image/jpg",):
+            ctype = "image/jpeg"
+        if ctype not in VALID_IMAGE_TYPES:
             ctype = "image/jpeg"   # most IG/FB flyers are jpeg
         import base64
         return base64.standard_b64encode(r.content).decode(), ctype
@@ -495,7 +506,7 @@ def extract_event(caption, image_url=None):
 
     body = {
         "model": EXTRACT_MODEL,
-        "max_tokens": 600,
+        "max_tokens": 800,          # raised: prevents unterminated JSON on long captions
         "system": EXTRACT_SYSTEM,
         "messages": [{"role": "user", "content": content}],
     }
@@ -515,9 +526,19 @@ def extract_event(caption, image_url=None):
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
             text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            data = json.loads(text)
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError:
+                # Truncated / malformed JSON — salvage the first complete {...} object
+                m = _re.search(r"\{[^{}]*\}", text)
+                if m:
+                    try:
+                        data = json.loads(m.group(0))
+                    except Exception:
+                        data = {"is_event": False}
+                else:
+                    data = {"is_event": False}
             # Defensive: Claude sometimes returns a list wrapping a single event.
-            # Unwrap to a dict so the caller's .get(...) calls don't crash.
             if isinstance(data, list):
                 data = data[0] if data and isinstance(data[0], dict) else {"is_event": False}
             if not isinstance(data, dict):
@@ -534,13 +555,19 @@ def extract_event(caption, image_url=None):
 
 
 def extract_event_from_file(path):
-    """Read a local flyer image file with Claude vision → event dict."""
+    """Read a local flyer image file with Claude vision → event dict.
+    Handles single-event AND multi-event calendar images (returns first event for
+    single-event callers; multi-event path uses extract_events_from_file instead)."""
     import base64, mimetypes
     try:
         with open(path, "rb") as f:
             raw = f.read()
+        # Guard: skip files Claude vision can't process (too large or wrong format)
+        if len(raw) > MAX_IMAGE_BYTES:
+            print(f"  ! {os.path.basename(path)}: image too large ({len(raw)//1024}KB) — skipping")
+            return {"is_event": False}
         mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
-        if mtype not in ("image/jpeg", "image/png", "image/webp", "image/gif"):
+        if mtype not in VALID_IMAGE_TYPES:
             mtype = "image/jpeg"
         b64 = base64.standard_b64encode(raw).decode()
     except Exception as e:
@@ -548,10 +575,12 @@ def extract_event_from_file(path):
         return {"is_event": False}
 
     body = {
-        "model": EXTRACT_MODEL, "max_tokens": 600, "system": EXTRACT_SYSTEM,
+        "model": EXTRACT_MODEL, "max_tokens": 900, "system": EXTRACT_SYSTEM,
         "messages": [{"role": "user", "content": [
             {"type": "image", "source": {"type": "base64", "media_type": mtype, "data": b64}},
-            {"type": "text", "text": "This is a camp/event FLYER image. Read it and extract the event details."},
+            {"type": "text", "text": "This is a camp/event FLYER image. Read it and extract the event details. "
+                                     "Return ONLY a single JSON object. If this image contains MULTIPLE events "
+                                     "(e.g. a calendar), extract only the FIRST upcoming event."},
         ]}],
     }
     for attempt in range(2):
@@ -566,9 +595,18 @@ def extract_event_from_file(path):
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
             text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
-            data = json.loads(text)
-            # Defensive: Claude sometimes returns a list wrapping a single event.
-            # Unwrap to a dict so the caller's .get(...) calls don't crash.
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError:
+                # Salvage first complete JSON object
+                m = _re.search(r"\{[^{}]*\}", text)
+                if m:
+                    try:
+                        data = json.loads(m.group(0))
+                    except Exception:
+                        data = {"is_event": False}
+                else:
+                    data = {"is_event": False}
             if isinstance(data, list):
                 data = data[0] if data and isinstance(data[0], dict) else {"is_event": False}
             if not isinstance(data, dict):
@@ -580,7 +618,80 @@ def extract_event_from_file(path):
             print(f"  ! flyer vision failed: {e}")
     return {"is_event": False}
 
-def _ical_unescape(s):
+def extract_events_from_file(path):
+    """Read a local flyer that may contain MULTIPLE events (e.g. a yearly calendar poster).
+    Returns a LIST of event dicts. Falls back to single-event extraction if needed."""
+    import base64, mimetypes
+    try:
+        with open(path, "rb") as f:
+            raw = f.read()
+        if len(raw) > MAX_IMAGE_BYTES:
+            print(f"  ! {os.path.basename(path)}: image too large ({len(raw)//1024}KB) — skipping")
+            return []
+        mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
+        if mtype not in VALID_IMAGE_TYPES:
+            mtype = "image/jpeg"
+        b64 = base64.standard_b64encode(raw).decode()
+    except Exception as e:
+        print(f"  ! couldn't read flyer {path}: {e}")
+        return []
+
+    MULTI_SYSTEM = (
+        "You read event flyer images. Today is " + TODAY + ". "
+        "Reply with ONLY a JSON array of event objects, no prose, no markdown. "
+        "Each object: {is_event:true, type:'Camp'|'Retreat'|'Workshop'|'Gathering', "
+        "title:str, start_date:'YYYY-MM-DD'|null, end_date:'YYYY-MM-DD'|null, "
+        "venue:str|null, city:str|null, state:str|null, country:str|null, "
+        "phone:str|null, organizer:str|null, description:str|null}. "
+        "Extract ALL events visible in the image, including from calendars/posters with multiple camps. "
+        "Infer year from context (2026 if not stated). Keep description under 25 words. "
+        "Translate non-English text to English. If only one event, return a single-item array."
+    )
+    body = {
+        "model": EXTRACT_MODEL, "max_tokens": 2000,
+        "system": MULTI_SYSTEM,
+        "messages": [{"role": "user", "content": [
+            {"type": "image", "source": {"type": "base64", "media_type": mtype, "data": b64}},
+            {"type": "text", "text": "Extract ALL events from this flyer/calendar image. Return a JSON array."},
+        ]}],
+    }
+    for attempt in range(2):
+        try:
+            r = requests.post("https://api.anthropic.com/v1/messages",
+                headers={"x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01",
+                         "content-type": "application/json"}, json=body, timeout=120)
+            if r.status_code != 200:
+                if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
+                    time.sleep(3); continue
+                print(f"  ! multi-flyer vision HTTP {r.status_code}: {r.text[:150]}")
+                return []
+            text = "".join(b.get("text", "") for b in r.json().get("content", []))
+            text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError:
+                # Salvage individual complete {...} objects from partial response
+                data = []
+                for m in _re.finditer(r"\{[^{}]+\}", text):
+                    try:
+                        data.append(json.loads(m.group(0)))
+                    except Exception:
+                        pass
+                if data:
+                    print(f"  (recovered {len(data)} events from partial JSON)")
+            if isinstance(data, dict):
+                data = [data]   # single event returned as object — wrap it
+            if not isinstance(data, list):
+                return []
+            return [d for d in data if isinstance(d, dict) and d.get("is_event")]
+        except Exception as e:
+            if attempt == 0:
+                time.sleep(3); continue
+            print(f"  ! multi-flyer vision failed: {e}")
+    return []
+
+
+
     return (s or "").replace("\\,", ",").replace("\\;", ";").replace("\\n", " ").replace("\\N", " ").strip()
 
 def _ical_date(val):
@@ -799,8 +910,17 @@ def read_ical_feeds():
     for url, country, organizer in ICAL_FEEDS:
         try:
             r = requests.get(url, timeout=45, headers=BROWSER_HEADERS)
-            if r.status_code != 200 or "BEGIN:VCALENDAR" not in r.text:
-                print(f"  ! {organizer}: no iCal feed (HTTP {r.status_code})")
+            ctype = r.headers.get("content-type", "").lower()
+            # Accept if status 200 AND (content-type is calendar OR body starts with VCALENDAR)
+            is_ical = (r.status_code == 200 and
+                       ("calendar" in ctype or "BEGIN:VCALENDAR" in r.text[:500]))
+            if not is_ical:
+                hint = ""
+                if r.status_code == 403:
+                    hint = " (site is blocking bots — try fetching manually to confirm URL)"
+                elif r.status_code == 200:
+                    hint = f" (got HTML, not iCal — content-type: {ctype[:60]})"
+                print(f"  ! {organizer}: no iCal feed (HTTP {r.status_code}){hint}")
                 continue
             text = r.text.replace("\r\n ", "").replace("\r\n\t", "")  # unfold long lines
         except Exception as e:
@@ -896,7 +1016,9 @@ def read_wp_event_sites():
     return out
 
 def read_local_flyers():
-    """Read every image in FLYERS_DIR with Claude vision. Returns list of event dicts."""
+    """Read every image in FLYERS_DIR with Claude vision.
+    Handles BOTH single-event flyers and multi-event calendar posters.
+    Returns list of event dicts."""
     import glob
     if not os.path.isdir(FLYERS_DIR):
         print(f"  (no '{FLYERS_DIR}/' folder — add flyer images there to include them)")
@@ -911,25 +1033,33 @@ def read_local_flyers():
     events = []
     for path in files:
         try:
-            ev = extract_event_from_file(path)
-            if ev.get("is_event"):
+            import urllib.parse
+            fname = urllib.parse.quote(os.path.basename(path))
+            flyer_public_url = FLYERS_BASE_URL + fname
+
+            # Use multi-event extractor — works for both single and calendar images
+            extracted = extract_events_from_file(path)
+
+            if not extracted:
+                print(f"  – {os.path.basename(path)} → not a datable event")
+                continue
+
+            if len(extracted) > 1:
+                print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer)")
+            else:
+                print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')}")
+
+            for idx, ev in enumerate(extracted):
                 ev["source_platform"] = "Flyer upload"
                 ev["source_url"] = ""
-                # Build the public URL so the actual flyer image shows on the card.
-                # urllib.parse.quote handles spaces/parentheses in filenames safely.
-                import urllib.parse
-                fname = urllib.parse.quote(os.path.basename(path))
-                ev["flyer_url"] = FLYERS_BASE_URL + fname
+                ev["flyer_url"] = flyer_public_url
                 ev["country"] = ev.get("country") or "India"
                 ev["region"] = REGION_MAP.get(ev["country"], "Asia")
-                ev["_flyer_path"] = path        # remember the file so past ones can be cleaned up
-                # STABLE id from the filename — same flyer = same id every run, so no repeats
-                # even if Claude reads the title slightly differently next time.
-                ev["_fixed_id"] = "fly" + hashlib.md5(os.path.basename(path).encode()).hexdigest()[:9]
+                ev["_flyer_path"] = path
+                # Stable id: filename + index so each event from a multi-event flyer is unique
+                id_key = os.path.basename(path) + f"_{idx}"
+                ev["_fixed_id"] = "fly" + hashlib.md5(id_key.encode()).hexdigest()[:9]
                 events.append(ev)
-                print(f"  ✓ {os.path.basename(path)} → {ev.get('title','(event)')}")
-            else:
-                print(f"  – {os.path.basename(path)} → not a datable event")
         except Exception as e:
             print(f"  ! {os.path.basename(path)} → skipped ({type(e).__name__})")
             continue
