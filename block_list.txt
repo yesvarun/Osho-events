@@ -26,4 +26,6 @@
 # Short generic words like "camp" or "osho" would remove almost everything.
 #
 # Add your block patterns below this line:
+# Bardoli 
+# bardoli
 
