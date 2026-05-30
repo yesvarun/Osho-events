@@ -113,6 +113,7 @@
   .org{font-size:12px;color:#8a6c57;flex:1;min-width:90px}
   .btn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;display:inline-flex;align-items:center;gap:6px;transition:.16s}
   .btn.call{background:var(--moss);color:#f4f1e6}.btn.call:hover{filter:brightness(1.08)}
+  .btn.wa{background:#25D366;color:#0b3d1e}.btn.wa:hover{filter:brightness(1.06)}
   .btn.map{background:#3a6ea5;color:#f4f1e6}.btn.map:hover{filter:brightness(1.1)}
   .btn.flyer-btn{background:var(--paper-2);color:var(--maroon);border:1px solid var(--line)}
   .btn.src{background:var(--maroon);color:#fbeede}.btn.src:hover{filter:brightness(1.1)}
@@ -582,20 +583,43 @@ function cardsWithCTA(items){
   return items.map(card).join("");
 }
 function card(e){
-  // FOOLPROOF IMAGE: use the real image if present; if it's missing OR fails to load,
-  // fall back to a themed meditation image so NO card is ever blank.
-  const t = ((e.title||"") + " " + (e.type||"")).toLowerCase();
+  // FOOLPROOF IMAGE: real image if present; else a themed image chosen by the camp's
+  // title + place keywords; if nothing matches, pick from a pool by a hash of the title
+  // so different camps get different images (not all the same).
+  const t = ((e.title||"") + " " + (e.type||"") + " " + (e.city||"") + " " + (e.state||"") + " " + (e.organizer||"")).toLowerCase();
+  // A pool of distinct, freely-usable Unsplash meditation/spiritual/nature images.
+  const POOL = [
+    "photo-1545389336-cf090694435e", // meditation silhouette
+    "photo-1506126613408-eca07ce68773", // lotus / calm
+    "photo-1464822759023-fed622ff2c3b", // mountains
+    "photo-1518609878373-06d740f60d8b", // candle / warm
+    "photo-1514525253161-7a46d19cd819", // crowd / festival
+    "photo-1519681393784-d120267933ba", // starry mountains
+    "photo-1499209974431-9daddcb0d909", // sunrise calm
+    "photo-1447752875215-b2761acb3c5d", // forest path
+    "photo-1490730141103-6cac27aaab94", // nature light
+    "photo-1532798442725-41036acc7489", // books / study
+    "photo-1528319725582-ddc096101511", // yoga pose
+    "photo-1474418397713-7ede21d49118", // hands / heart
+    "photo-1500964757637-c85e8a162699", // mountain valley
+    "photo-1540206395-68808572332f", // temple / spiritual
+  ];
+  const U = id => `https://images.unsplash.com/${id}?w=800&q=70&auto=format&fit=crop`;
   let fb;
-  if (/festival|celebrat|holi|sufi|dance|music/.test(t))
-    fb = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=70&auto=format&fit=crop";
-  else if (/tantra|love|heart|relation/.test(t))
-    fb = "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=800&q=70&auto=format&fit=crop";
-  else if (/silence|vipassana|zen|mindful|silent/.test(t))
-    fb = "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=70&auto=format&fit=crop";
-  else if (/nature|himalaya|forest|mountain|river/.test(t))
-    fb = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=70&auto=format&fit=crop";
-  else
-    fb = "https://images.unsplash.com/photo-1545389336-cf090694435e?w=800&q=70&auto=format&fit=crop";
+  if      (/festival|celebrat|holi|sufi|dance|music|navratri/.test(t)) fb = U("photo-1514525253161-7a46d19cd819");
+  else if (/tantra|love|heart|relation|couple|intimacy/.test(t))      fb = U("photo-1474418397713-7ede21d49118");
+  else if (/silence|vipassana|zen|mindful|silent|no-mind|nomind/.test(t)) fb = U("photo-1506126613408-eca07ce68773");
+  else if (/himalaya|mountain|dharamshala|manali|nargol|nature|forest|river/.test(t)) fb = U("photo-1464822759023-fed622ff2c3b");
+  else if (/tarot|mystic|rose|born again|rebirth|hypnosis/.test(t))    fb = U("photo-1540206395-68808572332f");
+  else if (/breath|prana|chakra|kundalini|energy/.test(t))            fb = U("photo-1528319725582-ddc096101511");
+  else if (/book|read|study|wisdom|constellation/.test(t))            fb = U("photo-1532798442725-41036acc7489");
+  else {
+    // No keyword match: pick from the pool by a stable hash of the title, so each
+    // distinct camp gets its own (consistent) image instead of all sharing one.
+    let h = 0; const s = (e.title||"") + (e.city||"");
+    for (let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; }
+    fb = U(POOL[h % POOL.length]);
+  }
   const real = e.flyer_url ? esc(e.flyer_url) : "";
   // Repo-hosted default image (always loads — served from your own site, never fails).
   const repoImg = "/card-default.jpg";
@@ -612,6 +636,27 @@ function card(e){
     : `<div class="flyer"><img loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/></div>`;
   const loc = [e.city, e.country==="India"? e.state : e.country].filter(Boolean).join(", ");
   const phone = e.phone ? `<a class="btn call" href="tel:${esc(String(e.phone).replace(/\s/g,''))}">📞 Call</a>` : "";
+  // WhatsApp: message THIS camp's own number with a friendly pre-filled enquiry.
+  // Normalises the number to digits; assumes India (+91) when no country code is given.
+  let waBtn = "";
+  if(e.phone){
+    const raw = String(e.phone).trim();
+    let digits = raw.replace(/[^\d]/g, "");
+    if(raw.startsWith("+")){
+      // Already has an international country code — trust the digits as-is.
+    } else if(digits.length === 10){
+      digits = "91" + digits;                                   // bare 10-digit Indian mobile
+    } else if(digits.length === 11 && digits.startsWith("0")){
+      digits = "91" + digits.slice(1);                          // 0-prefixed Indian number
+    } else if(digits.length >= 7 && digits.length <= 11 && (e.country==="India" || !e.country)){
+      digits = "91" + digits.replace(/^0+/, "");                // other Indian formats (landline etc.)
+    }
+    const msg = encodeURIComponent(
+      `Hello, I found "${e.title}" on the Sannyas Gatherings directory. `
+      + `I'm interested — could you please share the details, dates, the fee / contribution amount, and how to register?`);
+    if(digits.length >= 10)
+      waBtn = `<a class="btn wa" href="https://wa.me/${digits}?text=${msg}" target="_blank" rel="noopener">💬 WhatsApp</a>`;
+  }
   const flyerBtn = e.flyer_url ? `<a class="btn flyer-btn" href="${esc(e.flyer_url)}" target="_blank" rel="noopener">🖼 Flyer</a>` : "";
   // Directions: open Google Maps to the most specific location we have. No API key needed.
   const placeParts = [e.venue, e.city, e.country==="India"? e.state : e.country].filter(Boolean);
@@ -621,8 +666,8 @@ function card(e){
   const isFlyerUpload = e.source_platform === "Flyer upload" || (!e.source_url && e.flyer_url);
   const isRealPost = !isFlyerUpload && e.source_url && e.source_url!=="#" && /\/[^/]+\/[^/]/.test(e.source_url.replace(/^https?:\/\//,""));
   const srcBtn = isRealPost ? `<a class="btn src" href="${esc(e.source_url)}" target="_blank" rel="noopener">View ↗</a>` : "";
-  // Contact: show the phone Call button when we have a number; otherwise nothing.
-  const contactBtn = phone;
+  // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
+  const contactBtn = phone + waBtn;
   const mine = e._mine ? `<span class="mine-tag">Added by you · saved on this device</span>` : "";
   // Origin stamp so you can tell at a glance whether the scraper is live yet
   let stamp;
