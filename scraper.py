@@ -1223,7 +1223,28 @@ def build():
 
     merged.sort(key=lambda e: e.get("start_date") or "9999")
 
-    # --- THEMED IMAGES: for camps with no real photo, attach a unique Unsplash image,
+    # --- BLOCKLIST: drop any camp the owner deleted via the site's red dot.
+    # deleted.json holds ids and "title|start|city" keys; we skip anything matching. ---
+    try:
+        blockset = set()
+        if os.path.exists("deleted.json"):
+            with open("deleted.json", encoding="utf-8") as f:
+                for x in json.load(f):
+                    blockset.add(str(x).lower())
+        if blockset:
+            def _blocked(ev):
+                key = ((ev.get("title","") or "") + "|" + (ev.get("start_date","") or "")
+                       + "|" + (ev.get("city","") or "")).lower()
+                return str(ev.get("id","")).lower() in blockset or key in blockset
+            kept = [e for e in merged if not _blocked(e)]
+            removed = len(merged) - len(kept)
+            merged = kept
+            if removed:
+                print(f"  🚫 Blocklist: removed {removed} owner-deleted camp(s)")
+    except Exception as ex:
+        print(f"  ! blocklist check skipped: {ex}")
+
+
     # searched once per title and cached forever (so visitors see varied images, and we
     # never hit the API rate limit). Only runs if UNSPLASH_ACCESS_KEY is set. ---
     if UNSPLASH_KEY:
