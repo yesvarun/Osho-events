@@ -283,7 +283,7 @@
   <main id="results"></main>
 
   <footer>
-    <p>This directory aggregates publicly posted gatherings and organiser submissions. Always verify dates and details with the organiser before travelling. Camps you submit via “Inform a Camp” appear instantly and are saved on this device. <b>Last data build:</b> <span id="buildTime">—</span>.</p>
+    <p>This directory aggregates publicly posted gatherings and organiser submissions. Always verify dates and details with the organiser before travelling. Camps you submit appear instantly and are published for everyone. <b>Last data build:</b> <span id="buildTime">—</span>.</p>
     <p class="support">This directory is free and ad-free. <a id="supportLink" href="#" target="_blank" rel="noopener">Help keep it that way ♡</a></p>
   </footer>
 </div>
@@ -316,7 +316,7 @@
       <button class="x" id="closeModal" aria-label="Close">✕</button>
     </div>
     <div class="modal-body">
-      <p class="form-note">Fill in the camp details below and tap <b>Add to Directory</b>. Your camp appears instantly as a card. Note: submissions are saved on this device — to publish permanently for everyone, add it to your data feed too.</p>
+      <p class="form-note">Fill in the camp details below and tap <b>Add to Directory</b>. Your camp appears instantly and is published for everyone to see.</p>
 
       <div class="fg" data-field="title">
         <label>Camp / Event name <span class="req">*</span></label>
@@ -703,10 +703,11 @@ function card(e){
   const srcBtn = isRealPost ? `<a class="btn src" href="${esc(e.source_url)}" target="_blank" rel="noopener">View ↗</a>` : "";
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
-  const mine = e._mine ? `<span class="mine-tag">Added by you · saved on this device</span>` : "";
+  const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";
   // Origin stamp so you can tell at a glance whether the scraper is live yet
   let stamp;
-  if(e._mine) stamp = `<span class="stamp submitted">⊕ Submitted by you</span>`;
+  if(e._mine) stamp = `<span class="stamp submitted">⊕ Added by you · published</span>`;
+  else if(e._community) stamp = `<span class="stamp submitted">⊕ Community submitted</span>`;
   else if(e._sample) stamp = `<span class="stamp sample">● SAMPLE DATA — not a real camp</span>`;
   else stamp = `<span class="stamp live">✓ Live · fetched ${fmtStamp(e._built)}</span>`;
   const isFresh = e._added && (Date.now() - e._added) < 120000;
@@ -1147,6 +1148,14 @@ document.getElementById("submitBtn").addEventListener("click",()=>{
   saveMine();
   rebuild(SAMPLE_DATA.generated_at && !usingSample ? undefined : new Date().toISOString());
   resetForm(); closeModal(); showToast();
+
+  // Save to the shared store so EVERYONE sees this camp (not just this device).
+  try{
+    fetch("/.netlify/functions/save-camp", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ camp: ev })
+    });
+  }catch(_){ /* if it fails, the card still shows on this device */ }
 
   // jump the view to where the new card lives so the user sees it
   if(ev.country==="India"){ document.querySelector('.tab[data-view="india"]').click(); ui.state=""; document.getElementById("stateSelect").value=""; }
