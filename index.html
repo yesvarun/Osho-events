@@ -93,20 +93,12 @@
   .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
   .del-dot{position:absolute;bottom:10px;right:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
   .del-dot:hover{opacity:1;transform:scale(1.15)}
-  .adjust-btn{position:absolute;top:10px;right:10px;z-index:4;width:28px;height:28px;border:none;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
-  .adjust-btn:hover{background:rgba(0,0,0,.7)}
-  .flyer.adjusting{cursor:grab;touch-action:none;outline:3px solid var(--amber);outline-offset:-3px}
-  .flyer.adjusting img{cursor:grab}
-  .flyer.adjusting .adjust-btn{background:var(--amber);color:#3a2a10}
-  .flyer .zoom-row{position:absolute;left:8px;right:44px;bottom:8px;z-index:4;display:none;align-items:center;gap:8px;background:rgba(0,0,0,.5);padding:6px 10px;border-radius:20px}
-  .flyer.adjusting .zoom-row{display:flex}
-  .flyer .zoom-row input{flex:1}
-  .flyer .zoom-row span{color:#fff;font-size:14px}
   .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#6b5040;padding:0 4px;align-self:center}
   .pinned-grid{margin-bottom:22px}
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(122,38,24,.3)}
   .flyer{position:relative;aspect-ratio:16/10;background:var(--paper-2);overflow:hidden}
-  .flyer img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center center;will-change:transform}
+  .flyer img.main{width:100%;height:100%;object-fit:contain;display:block;position:relative;z-index:1}
+  .flyer img.blurbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(18px) brightness(.92);transform:scale(1.15);z-index:0}
   .flyer.placeholder{display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 30% 20%,var(--amber),var(--rust) 55%,var(--maroon));color:#fbeede}
   .flyer.placeholder .om{font-family:"Fraunces",serif;font-size:46px;opacity:.92}
   .type-tag{position:absolute;top:12px;left:12px;background:rgba(43,29,22,.82);color:#f7ecdd;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;backdrop-filter:blur(4px)}
@@ -697,8 +689,8 @@ function card(e){
     `if(this.dataset.step==='0'){this.dataset.step='1';this.referrerPolicy='';this.src='${fb}';}` +
     `else if(this.dataset.step==='1'){this.dataset.step='2';this.src='${repoImg}';}`;
   const flyer = real
-    ? `<div class="flyer"><img loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"/><button class="adjust-btn" title="Adjust photo" onclick="toggleAdjust(this)">⊹</button></div>`
-    : `<div class="flyer"><img loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/><button class="adjust-btn" title="Adjust photo" onclick="toggleAdjust(this)">⊹</button></div>`;
+    ? `<div class="flyer"><img class="blurbg" aria-hidden="true" src="${real}" referrerpolicy="no-referrer" onerror="this.style.display='none'"/><img class="main" loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"/></div>`
+    : `<div class="flyer"><img class="blurbg" aria-hidden="true" src="${fb}" onerror="this.style.display='none'"/><img class="main" loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/></div>`;
   const loc = [e.city, e.country==="India"? e.state : e.country].filter(Boolean).join(", ");
   const phone = e.phone ? `<a class="btn call" href="tel:${esc(String(e.phone).replace(/\s/g,''))}">📞 Call</a>` : "";
   // WhatsApp: message THIS camp's own number with a friendly pre-filled enquiry.
@@ -1209,60 +1201,6 @@ document.getElementById("submitBtn").addEventListener("click",()=>{
   render();
 });
 function resetForm(){ ["f_title","f_type","f_organizer","f_start","f_end","f_city","f_state","f_venue","f_phone","f_flyer","f_source","f_desc"].forEach(id=>{document.getElementById(id).value="";}); document.getElementById("f_country").value="India"; toggleStateField(); }
-/* ---- Photo adjust: tap ⊹ to enter adjust mode, drag (touch/mouse) to reposition,
-   use the zoom slider to scale, tap ⊹ again to lock in place. Per-card, in-session. ---- */
-function applyImgTransform(img){
-  const x = parseFloat(img.dataset.x||"0"), y = parseFloat(img.dataset.y||"0"), z = parseFloat(img.dataset.z||"1");
-  img.style.transform = `translate(${x}px,${y}px) scale(${z})`;
-}
-function toggleAdjust(btn){
-  const flyer = btn.closest(".flyer");
-  const img = flyer.querySelector("img");
-  if(flyer.classList.contains("adjusting")){
-    // lock
-    flyer.classList.remove("adjusting");
-    const zr = flyer.querySelector(".zoom-row"); if(zr) zr.remove();
-    return;
-  }
-  flyer.classList.add("adjusting");
-  if(!img.dataset.z) img.dataset.z = "1";
-  applyImgTransform(img);
-
-  // zoom slider
-  const zr = document.createElement("div");
-  zr.className = "zoom-row";
-  zr.innerHTML = `<span>−</span><input type="range" min="1" max="3" step="0.02" value="${img.dataset.z}"><span>+</span>`;
-  flyer.appendChild(zr);
-  const slider = zr.querySelector("input");
-  slider.addEventListener("input", ()=>{ img.dataset.z = slider.value; applyImgTransform(img); });
-  zr.addEventListener("click", e=>e.stopPropagation());
-  slider.addEventListener("pointerdown", e=>e.stopPropagation());
-
-  // drag to pan (pointer events cover both touch and mouse)
-  let dragging=false, sx=0, sy=0, ox=0, oy=0;
-  function down(e){
-    if(e.target.closest(".zoom-row")||e.target.closest(".adjust-btn")) return;
-    dragging=true; flyer.style.cursor="grabbing";
-    const p = e.touches?e.touches[0]:e;
-    sx=p.clientX; sy=p.clientY;
-    ox=parseFloat(img.dataset.x||"0"); oy=parseFloat(img.dataset.y||"0");
-    e.preventDefault();
-  }
-  function move(e){
-    if(!dragging) return;
-    const p = e.touches?e.touches[0]:e;
-    img.dataset.x = ox + (p.clientX-sx);
-    img.dataset.y = oy + (p.clientY-sy);
-    applyImgTransform(img);
-    e.preventDefault();
-  }
-  function up(){ dragging=false; flyer.style.cursor="grab"; }
-  // store handlers so they persist while adjusting (removed on lock via clone-free approach)
-  flyer.addEventListener("pointerdown", down);
-  flyer.addEventListener("pointermove", move);
-  window.addEventListener("pointerup", up);
-}
-
 let toastTimer;
 function showToast(){ const t=document.getElementById("toast"); t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),2600); }
 
