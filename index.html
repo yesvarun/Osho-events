@@ -398,6 +398,8 @@
    ============================================================ */
 const DATA_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/events.json";
 const SUBMITTED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/submitted.json";
+const DELETED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/deleted.json";
+let SHARED_DELETED = new Set();   // blocklist fetched from GitHub, applied for EVERYONE
 /* OPTIONAL: paste your support/donation link here (Ko-fi, Buy Me a Coffee, UPI page, etc.).
    Leave "" and the "Help keep it free" line is hidden automatically. */
 const SUPPORT_URL = "";
@@ -507,6 +509,17 @@ async function loadData(){
     }
   }catch(_){ /* submitted.json may not exist yet — fine */ }
 
+  // Load the shared blocklist (deleted.json) so owner-deleted camps are hidden for EVERYONE,
+  // immediately — even before the scraper next runs and rebuilds events.json.
+  try{
+    const durl = DELETED_URL + (DELETED_URL.includes("?")?"&":"?") + "t=" + Date.now();
+    const dres = await fetch(durl,{cache:"no-store"});
+    if(dres.ok){
+      const dlist = await dres.json();
+      if(Array.isArray(dlist)) SHARED_DELETED = new Set(dlist.map(x=>String(x).toLowerCase()));
+    }
+  }catch(_){ /* deleted.json may not exist yet — fine */ }
+
   MY_EVENTS = loadMine();
   rebuild(raw.generated_at);
 }
@@ -535,9 +548,13 @@ function normalise(events){
     return {...e, country, region, _start:start, _end:end};
   })
   .filter(e=> e._end && e._end >= today)              // upcoming only
-  .filter(e=>{                                         // hide anything the owner deleted (permanent on this device)
+  .filter(e=>{                                         // hide anything deleted — locally OR in the shared blocklist (everyone)
     const dk = ((e.start_date||"")+"|"+(e.city||"")).toLowerCase();
-    return !deleted.has(String(e.id)) && !deleted.has(dk);
+    const titleKey = ((e.title||"")+"|"+(e.start_date||"")+"|"+(e.city||"")).toLowerCase();
+    const idl = String(e.id).toLowerCase();
+    if(deleted.has(String(e.id)) || deleted.has(dk)) return false;       // this device
+    if(SHARED_DELETED.has(idl) || SHARED_DELETED.has(dk) || SHARED_DELETED.has(titleKey)) return false; // everyone
+    return true;
   })
   .filter(e=>{                                         // DEDUPE: same date + same place = duplicate (ignore title)
     const k = ((e.start_date||"")+"|"+(e.city||"")+"|"+(e.state||"")+"|"+(e.country||"")).toLowerCase();
@@ -1200,9 +1217,10 @@ async function deleteCard(id, dot){
   const camp = ALL_EVENTS.find(e => String(e.id) === String(id)) || {};
   const blockKey = ((camp.title||"") + "|" + (camp.start_date||"") + "|" + (camp.city||"")).toLowerCase();
   const dateCityKey = ((camp.start_date||"") + "|" + (camp.city||"")).toLowerCase();
-  // Remember the deletion on THIS device permanently, so it never comes back on refresh,
-  // even if the server-side write fails. (date|city key catches scraper re-adds too.)
+  // Remember the deletion on THIS device immediately (so it's gone for you even before reload).
   rememberDeleted(id, dateCityKey);
+  // Also reflect it in the in-session shared set so it hides right away everywhere it's checked.
+  SHARED_DELETED.add(String(id).toLowerCase()); SHARED_DELETED.add(dateCityKey); SHARED_DELETED.add(blockKey);
   // Remove from this device's local submitted list (if it's there)
   MY_EVENTS = MY_EVENTS.filter(e => String(e.id) !== String(id));
   saveMine();
@@ -1210,7 +1228,7 @@ async function deleteCard(id, dot){
   try{
     const r = await fetch("/.netlify/functions/delete-camp", {
       method:"POST", headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ id, block_key: blockKey, password: deletePassword })
+      body: JSON.stringify({ id, block_key: blockKey, date_city_key: dateCityKey, password: deletePassword })
     });
     const d = await r.json().catch(()=>({}));
     if(r.status === 403){ deletePassword=""; alert("Wrong password. The camp is hidden on this device, but not removed for everyone."); }
