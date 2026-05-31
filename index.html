@@ -86,7 +86,8 @@
   .region-head .ct{font-size:13px;color:#8a6c57;font-weight:600;background:var(--paper-2);padding:3px 11px;border-radius:999px;border:1px solid var(--line)}
   .region-head .ln{flex:1;height:1px;background:var(--line)}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;margin:16px 0}
+  .grid{column-width:320px;column-gap:18px;margin:16px 0}
+  .grid>.card{break-inside:avoid;margin-bottom:18px;display:inline-block;width:100%}
   .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.22s;position:relative}
   .card.fresh{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber),0 10px 30px rgba(216,165,52,.28);animation:freshpulse 1.6s ease-in-out infinite}
   @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
@@ -96,9 +97,9 @@
   .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#6b5040;padding:0 4px;align-self:center}
   .pinned-grid{margin-bottom:22px}
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(122,38,24,.3)}
-  .flyer{position:relative;aspect-ratio:16/10;background:var(--paper-2);overflow:hidden}
-  .flyer img.main{width:100%;height:100%;object-fit:contain;display:block;position:relative;z-index:1}
-  .flyer img.blurbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(18px) brightness(.92);transform:scale(1.15);z-index:0}
+  .flyer{position:relative;background:var(--paper-2);overflow:hidden;line-height:0}
+  .flyer img.main{width:100%;height:auto;display:block;max-height:520px;object-fit:contain}
+  .flyer img.blurbg{display:none}
   .flyer.placeholder{display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 30% 20%,var(--amber),var(--rust) 55%,var(--maroon));color:#fbeede}
   .flyer.placeholder .om{font-family:"Fraunces",serif;font-size:46px;opacity:.92}
   .type-tag{position:absolute;top:12px;left:12px;background:rgba(43,29,22,.82);color:#f7ecdd;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;backdrop-filter:blur(4px)}
@@ -183,7 +184,7 @@
     .controls{position:static}
     .row2{grid-template-columns:1fr}
     .wrap{padding:0 14px}
-    .grid{grid-template-columns:1fr}
+    .grid{column-width:auto;column-count:1}
     .field.search{min-width:0}
     .field.search input{min-width:0}
     select,input[type=search]{min-width:0}
@@ -689,8 +690,8 @@ function card(e){
     `if(this.dataset.step==='0'){this.dataset.step='1';this.referrerPolicy='';this.src='${fb}';}` +
     `else if(this.dataset.step==='1'){this.dataset.step='2';this.src='${repoImg}';}`;
   const flyer = real
-    ? `<div class="flyer"><img class="blurbg" aria-hidden="true" src="${real}" referrerpolicy="no-referrer" onerror="this.style.display='none'"/><img class="main" loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"/></div>`
-    : `<div class="flyer"><img class="blurbg" aria-hidden="true" src="${fb}" onerror="this.style.display='none'"/><img class="main" loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/></div>`;
+    ? `<div class="flyer"><img class="main" loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"/></div>`
+    : `<div class="flyer"><img class="main" loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/></div>`;
   const loc = [e.city, e.country==="India"? e.state : e.country].filter(Boolean).join(", ");
   const phone = e.phone ? `<a class="btn call" href="tel:${esc(String(e.phone).replace(/\s/g,''))}">📞 Call</a>` : "";
   // WhatsApp: message THIS camp's own number with a friendly pre-filled enquiry.
