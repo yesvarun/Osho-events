@@ -1,11 +1,10 @@
 // Netlify Function: delete-camp
-// Removes a camp from submitted.json by its id. Password-protected: the caller must
-// send the correct owner password (checked against env var DELETE_PASSWORD).
-// Uses GITHUB_TOKEN (server-side) to write the repo. Neither secret is in the page.
+// Removes a camp from submitted.json AND adds it to deleted.json (a blocklist the
+// scraper respects). Password-protected. Uses GITHUB_TOKEN + DELETE_PASSWORD from
+// Netlify env vars. Returns the REAL error on failure so problems are visible.
 
 const REPO   = "yesvarun/Osho-events";
 const BRANCH = "main";
-const FILE   = "submitted.json";
 
 exports.handler = async (event) => {
   const headers = {
@@ -20,78 +19,89 @@ exports.handler = async (event) => {
 
   const TOKEN = process.env.GITHUB_TOKEN;
   const PASS  = process.env.DELETE_PASSWORD;
-  if (!TOKEN || !PASS)
-    return { statusCode: 500, headers, body: JSON.stringify({ error: "Server not configured" }) };
+  if (!TOKEN) return { statusCode: 500, headers, body: JSON.stringify({ error: "GITHUB_TOKEN not set in Netlify" }) };
+  if (!PASS)  return { statusCode: 500, headers, body: JSON.stringify({ error: "DELETE_PASSWORD not set in Netlify" }) };
 
   let body;
   try { body = JSON.parse(event.body || "{}"); }
-  catch { return { statusCode: 400, headers, body: JSON.stringify({ error: "Bad request" }) }; }
+  catch { return { statusCode: 400, headers, body: JSON.stringify({ error: "Bad request body" }) }; }
 
-  // Check the password
   if (body.password !== PASS)
     return { statusCode: 403, headers, body: JSON.stringify({ error: "Wrong password" }) };
 
   const id = (body.id || "").toString();
-  const blockKey = (body.block_key || "").toString();   // title|start|city for scraper-fed camps
+  const blockKey = (body.block_key || "").toString().toLowerCase();
   if (!id && !blockKey)
-    return { statusCode: 400, headers, body: JSON.stringify({ error: "No id" }) };
+    return { statusCode: 400, headers, body: JSON.stringify({ error: "Nothing to delete (no id/key)" }) };
 
-  const api = `https://api.github.com/repos/${REPO}/contents/${FILE}`;
   const ghHeaders = {
-    "Authorization": `Bearer ${TOKEN}`,
+    "Authorization": "Bearer " + TOKEN,
     "Accept": "application/vnd.github+json",
     "User-Agent": "oshocamps-delete-camp",
+    "X-GitHub-Api-Version": "2022-11-28",
   };
+  const contentUrl = (path) => "https://api.github.com/repos/" + REPO + "/contents/" + path;
 
-  // Helper to read+write a JSON array file in the repo
-  async function readJsonFile(path){
-    const u = `https://api.github.com/repos/${REPO}/contents/${path}`;
-    const r = await fetch(`${u}?ref=${BRANCH}`, { headers: ghHeaders });
-    if (r.status !== 200) return { list: [], sha: undefined };
+  async function readJson(path) {
+    const r = await fetch(contentUrl(path) + "?ref=" + BRANCH, { headers: ghHeaders });
+    if (r.status === 404) return { list: [], sha: null, exists: false };
+    if (!r.ok) {
+      const t = await r.text();
+      throw new Error("READ " + path + " -> " + r.status + ": " + t.slice(0, 150));
+    }
     const cur = await r.json();
     let list = [];
-    try { list = JSON.parse(Buffer.from(cur.content, "base64").toString("utf8")); } catch { list = []; }
+    try { list = JSON.parse(Buffer.from(cur.content, "base64").toString("utf8")); } catch (e) { list = []; }
     if (!Array.isArray(list)) list = [];
-    return { list, sha: cur.sha };
+    return { list: list, sha: cur.sha, exists: true };
   }
-  async function writeJsonFile(path, list, sha, msg){
-    const u = `https://api.github.com/repos/${REPO}/contents/${path}`;
-    return fetch(u, {
+
+  async function writeJson(path, list, sha, msg) {
+    const payload = {
+      message: msg,
+      content: Buffer.from(JSON.stringify(list, null, 2)).toString("base64"),
+      branch: BRANCH,
+    };
+    if (sha) payload.sha = sha;
+    const r = await fetch(contentUrl(path), {
       method: "PUT",
-      headers: { ...ghHeaders, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: msg,
-        content: Buffer.from(JSON.stringify(list, null, 2)).toString("base64"),
-        branch: BRANCH,
-        ...(sha ? { sha } : {}),
-      }),
+      headers: Object.assign({}, ghHeaders, { "Content-Type": "application/json" }),
+      body: JSON.stringify(payload),
     });
+    if (!r.ok) {
+      const t = await r.text();
+      throw new Error("WRITE " + path + " -> " + r.status + ": " + t.slice(0, 150));
+    }
+    return true;
   }
 
   try {
-    // 1. Remove from submitted.json (community/your uploads)
-    const sub = await readJsonFile(FILE);
-    const before = sub.list.length;
-    const newSub = sub.list.filter((c) => c.id !== id);
-    if (newSub.length !== before) {
-      await writeJsonFile(FILE, newSub, sub.sha, "Delete camp " + id);
+    let didSomething = false;
+
+    // 1. Remove from submitted.json if present
+    const sub = await readJson("submitted.json");
+    if (sub.exists) {
+      const kept = sub.list.filter(function (c) { return String(c.id) !== id; });
+      if (kept.length !== sub.list.length) {
+        await writeJson("submitted.json", kept, sub.sha, "Delete camp " + id);
+        didSomething = true;
+      }
     }
 
-    // 2. Add to deleted.json blocklist so the SCRAPER skips it forever.
-    //    We store both the id and a title|start|city key (scraper-fed camps get new ids
-    //    each run, so the key is what makes the block stick across scrapes).
-    const blk = await readJsonFile("deleted.json");
+    // 2. Add to deleted.json blocklist (create if missing)
+    const blk = await readJson("deleted.json");
+    const set = new Set(blk.list.map(function (x) { return String(x).toLowerCase(); }));
     let changed = false;
-    if (id && !blk.list.includes(id)) { blk.list.push(id); changed = true; }
-    if (blockKey && !blk.list.includes(blockKey)) { blk.list.push(blockKey); changed = true; }
+    if (id && !set.has(id.toLowerCase())) { set.add(id.toLowerCase()); changed = true; }
+    if (blockKey && !set.has(blockKey)) { set.add(blockKey); changed = true; }
     if (changed) {
-      // cap the blocklist so it can't grow forever
-      const capped = blk.list.slice(-2000);
-      await writeJsonFile("deleted.json", capped, blk.sha, "Block deleted camp");
+      const arr = Array.from(set).slice(-2000);
+      await writeJson("deleted.json", arr, blk.sha, "Block deleted camp");
+      didSomething = true;
     }
 
-    return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
+    return { statusCode: 200, headers, body: JSON.stringify({ ok: true, didSomething: didSomething }) };
   } catch (e) {
-    return { statusCode: 502, headers, body: JSON.stringify({ error: "Delete failed" }) };
+    return { statusCode: 502, headers, body: JSON.stringify({ error: String(e.message || e) }) };
   }
 };
