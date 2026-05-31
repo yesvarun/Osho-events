@@ -31,6 +31,7 @@ exports.handler = async (event) => {
 
   const id = (body.id || "").toString();
   const blockKey = (body.block_key || "").toString().toLowerCase();
+  const dateCityKey = (body.date_city_key || "").toString().toLowerCase();
   if (!id && !blockKey)
     return { statusCode: 400, headers, body: JSON.stringify({ error: "Nothing to delete (no id/key)" }) };
 
@@ -94,6 +95,7 @@ exports.handler = async (event) => {
     let changed = false;
     if (id && !set.has(id.toLowerCase())) { set.add(id.toLowerCase()); changed = true; }
     if (blockKey && !set.has(blockKey)) { set.add(blockKey); changed = true; }
+    if (dateCityKey && !set.has(dateCityKey)) { set.add(dateCityKey); changed = true; }
     if (changed) {
       const arr = Array.from(set).slice(-2000);
       await writeJson("deleted.json", arr, blk.sha, "Block deleted camp");
