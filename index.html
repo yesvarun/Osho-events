@@ -128,6 +128,49 @@
   .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
   .del-dot{position:absolute;bottom:10px;right:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
   .del-dot:hover{opacity:1;transform:scale(1.15)}
+
+  /* ---- Owner tools row (top-left of card): adjust image + highlight. Hidden until unlocked ---- */
+  .owner-tools{position:absolute;top:10px;left:10px;z-index:6;display:none;gap:7px}
+  body.owner-unlocked .owner-tools{display:flex}
+  .owner-tools button{width:30px;height:30px;border-radius:50%;border:2px solid #fff;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;
+    box-shadow:0 2px 8px rgba(0,0,0,.35);transition:.15s;padding:0}
+  .owner-tools button:hover{transform:scale(1.12)}
+  .owner-tools .adj-btn{background:#2f9e94;color:#fff}
+  .owner-tools .hl-btn{background:#fff;color:#C42A85}
+  .owner-tools .hl-btn.on{background:#C42A85;color:#fff}
+
+  /* ---- Image-adjust mode: pinch/drag the flyer image inside its frame ---- */
+  .flyer.adjusting{cursor:grab;touch-action:none;outline:3px dashed var(--accent-teal);outline-offset:-3px}
+  .flyer.adjusting img.main{transition:none}
+  .adjust-hint{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:5;
+    background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;padding:5px 11px;border-radius:999px;white-space:nowrap}
+
+  /* ---- HIGHLIGHTED camp: artistic golden treatment, stands out from the rest ---- */
+  .card.highlighted{border:none;box-shadow:0 0 0 2.5px var(--amber),0 14px 40px rgba(216,165,52,.4)}
+  .card.highlighted::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:var(--r-lg);
+    background:linear-gradient(135deg,rgba(216,165,52,.10),transparent 38%);}
+  .card.highlighted .flyer::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg,rgba(216,165,52,.18),transparent 42%)}
+  .hl-ribbon{position:absolute;top:0;left:0;z-index:5;display:flex;align-items:center;gap:5px;
+    background:linear-gradient(90deg,var(--amber),#e9c869);color:#3a2a10;font-size:11.5px;font-weight:800;
+    letter-spacing:.05em;padding:6px 14px 6px 12px;border-bottom-right-radius:14px;box-shadow:0 3px 10px rgba(216,165,52,.4)}
+  .hl-ribbon .star{font-size:13px;animation:twinkle 2.4s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.8)}}
+  .card.highlighted h3{color:var(--maroon)}
+  .card.highlighted:hover{box-shadow:0 0 0 3px var(--amber),0 18px 48px rgba(216,165,52,.55)}
+
+  /* ---- Interested button + live count (everyone can press, once each) ---- */
+  .interest-row{display:flex;align-items:center;gap:9px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .btn-interest{display:inline-flex;align-items:center;gap:6px;border:1.6px solid var(--accent-violet);
+    background:transparent;color:var(--accent-violet);font-weight:700;font-size:13px;
+    padding:7px 14px;border-radius:999px;cursor:pointer;transition:.16s;font-family:inherit}
+  .btn-interest:hover{background:rgba(155,93,229,.08)}
+  .btn-interest:active{transform:scale(.96)}
+  .btn-interest.done{background:var(--accent-violet);color:#fff;cursor:default}
+  .btn-interest .heart{font-size:14px;line-height:1}
+  .interest-count{font-size:13px;color:var(--ink-2);font-weight:600}
+  .interest-count b{color:var(--accent-violet);font-weight:800}
   .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#5b5b61;padding:0 4px;align-self:center}
   .pinned-grid{margin-bottom:22px}
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(181,23,107,.3)}
@@ -266,6 +309,8 @@
       <div class="status">
         <span class="pill"><span class="dot" id="liveDot"></span><span id="updatedLabel">Loading…</span></span>
         <span class="pill"><span>Auto-refresh hourly</span> · <button id="refreshBtn">refresh now</button></span>
+        <button id="ownerLockBtn" title="Owner tools (locked)" onclick="toggleOwnerMode()"
+          style="all:unset;cursor:pointer;font-size:16px;padding:4px 8px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line);line-height:1">🔒</button>
       </div>
     </div>
     <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
@@ -525,6 +570,21 @@ let ALL_EVENTS = [];       // merged + normalised + upcoming
 let usingSample = true;
 const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"" };
 
+/* ---- Highlight + Interest + Image-adjust shared state ----
+   HIGHLIGHTED  : Set of campKeys the owner has featured (loaded from highlights.json)
+   INTEREST_COUNTS : {campKey: number} total interested, from the server
+   INTEREST_MINE   : Set of campKeys THIS device already pressed (localStorage, so once-only)
+   IMG_ADJUST      : {campKey: {x,y,scale}} owner image crops (localStorage + server) */
+let HIGHLIGHTED      = new Set();
+let INTEREST_COUNTS  = {};
+let INTEREST_MINE    = new Set(JSON.parse(localStorage.getItem("osho_interest_mine")||"[]"));
+let IMG_ADJUST       = JSON.parse(localStorage.getItem("osho_img_adjust")||"{}");
+let ownerUnlocked    = false;     // becomes true after correct password (this session)
+
+// Public raw URLs for the two shared JSON stores the scraper/functions write.
+const HIGHLIGHTS_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/highlights.json";
+const INTEREST_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/interest.json";
+
 /* ============================================================
    LOAD
    ============================================================ */
@@ -565,6 +625,40 @@ async function loadData(){
       if(Array.isArray(dlist)) SHARED_DELETED = new Set(dlist.map(x=>String(x).toLowerCase()));
     }
   }catch(_){ /* deleted.json may not exist yet — fine */ }
+
+  // Load the shared HIGHLIGHTS (featured camps) so everyone sees the same featured ones.
+  try{
+    const hurl = HIGHLIGHTS_URL + "?t=" + Date.now();
+    const hres = await fetch(hurl,{cache:"no-store"});
+    if(hres.ok){
+      const hlist = await hres.json();
+      if(Array.isArray(hlist)) HIGHLIGHTED = new Set(hlist.map(x=>String(x).toLowerCase()));
+    }
+  }catch(_){ /* highlights.json may not exist yet — fine */ }
+
+  // Load the shared INTEREST counts so everyone sees the same totals.
+  try{
+    const iurl = INTEREST_URL + "?t=" + Date.now();
+    const ires = await fetch(iurl,{cache:"no-store"});
+    if(ires.ok){
+      const idata = await ires.json();
+      if(idata && typeof idata==="object") INTEREST_COUNTS = idata;
+    }
+  }catch(_){ /* interest.json may not exist yet — fine */ }
+
+  // Load shared IMAGE ADJUSTMENTS (owner crops) so everyone sees the same framing.
+  // Local (this-device) adjustments take priority while the owner is mid-edit.
+  try{
+    const aurl = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/img_adjust.json?t=" + Date.now();
+    const ares = await fetch(aurl,{cache:"no-store"});
+    if(ares.ok){
+      const adata = await ares.json();
+      if(adata && typeof adata==="object" && !Array.isArray(adata)){
+        const local = JSON.parse(localStorage.getItem("osho_img_adjust")||"{}");
+        IMG_ADJUST = { ...adata, ...local };   // server base, local overrides
+      }
+    }
+  }catch(_){ /* img_adjust.json may not exist yet — fine */ }
 
   MY_EVENTS = loadMine();
   rebuild(raw.generated_at);
@@ -763,9 +857,15 @@ function card(e){
   for (let i=0;i<qs.length;i++){ qh = (qh*31 + qs.charCodeAt(i)) >>> 0; }
   const quote = QUOTES[qh % QUOTES.length];
   const quoteOverlay = `<div class="quote-ov"><span>“${quote}”</span><small>— Osho</small></div>`;
+  // Saved owner image adjustment (pan/zoom), if any — applied as object-position + scale.
+  const _ak = ((e.title||"") + "|" + (e.start_date||"") + "|" + (e.city||"")).toLowerCase();
+  const adj = IMG_ADJUST[_ak];
+  const adjStyle = adj
+    ? ` style="object-position:${adj.x}% ${adj.y}%;transform:scale(${adj.scale});object-fit:cover"`
+    : "";
   const flyer = real
-    ? `<div class="flyer"><img class="main" loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"/></div>`
-    : `<div class="flyer has-quote"><img class="main" loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"/>${quoteOverlay}</div>`;
+    ? `<div class="flyer" data-campkey="${esc(_ak)}"><img class="main" loading="lazy" data-step="0" referrerpolicy="no-referrer" src="${real}" alt="${esc(e.title)}" onerror="${onErr}"${adjStyle}/></div>`
+    : `<div class="flyer has-quote" data-campkey="${esc(_ak)}"><img class="main" loading="lazy" data-step="1" src="${fb}" alt="${esc(e.title)}" onerror="this.dataset.step='2';this.src='${repoImg}';"${adjStyle}/>${quoteOverlay}</div>`;
   const loc = [e.city, e.country==="India"? e.state : e.country].filter(Boolean).join(", ");
   const phone = e.phone ? `<a class="btn call" href="tel:${esc(String(e.phone).replace(/\s/g,''))}">📞 Call</a>` : "";
   // WhatsApp: message THIS camp's own number with a friendly pre-filled enquiry.
@@ -813,7 +913,38 @@ function card(e){
   else stamp = ``;
   const isFresh = e._added && (Date.now() - e._added) < 120000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
-  return `<article class="card${isFresh?' fresh':''}">
+
+  // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
+  // must persist across runs (highlight state, interest count) is keyed on the camp's
+  // identity (title|date|city), exactly like the delete-block key. Lowercased.
+  const campKey = ((e.title||"") + "|" + (e.start_date||"") + "|" + (e.city||"")).toLowerCase();
+  const campKeyAttr = esc(campKey);
+
+  // Highlight: is this camp marked as highlighted? (owner-set, stored server-side)
+  const isHL = HIGHLIGHTED.has(campKey);
+  const hlRibbon = isHL ? `<div class="hl-ribbon"><span class="star">✦</span>Featured</div>` : "";
+
+  // Interest: how many people pressed "Interested", and did THIS device already press?
+  const iCount = INTEREST_COUNTS[campKey] || 0;
+  const iMine  = INTEREST_MINE.has(campKey);
+  const interestRow =
+    `<div class="interest-row">
+       <button class="btn-interest${iMine?' done':''}" data-campkey="${campKeyAttr}"
+         ${iMine?'disabled':''} onclick="markInterested(this)">
+         <span class="heart">♥</span>${iMine?'Interested':'I&rsquo;m Interested'}
+       </button>
+       <span class="interest-count" data-count-for="${campKeyAttr}">${iCount?`<b>${iCount}</b> interested`:'Be the first'}</span>
+     </div>`;
+
+  // Owner tools (adjust image + highlight) — only visible after the owner unlocks.
+  const ownerTools =
+    `<div class="owner-tools">
+       <button class="adj-btn" title="Adjust image (drag & pinch)" onclick="toggleAdjust(this)">⤢</button>
+       <button class="hl-btn${isHL?' on':''}" title="Highlight this camp" onclick="toggleHighlight(this,'${campKeyAttr}')">★</button>
+     </div>`;
+
+  return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}" data-campkey="${campKeyAttr}">
+    ${hlRibbon}${ownerTools}
     ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
     ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}
     <div class="body">
@@ -824,6 +955,7 @@ function card(e){
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
       <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}</div>
+      ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
 }
@@ -1281,6 +1413,196 @@ function showToast(){ const t=document.getElementById("toast"); t.classList.add(
 
 /* ---- Owner-only card deletion (red dot) ---- */
 let deletePassword = "";
+/* ============================================================
+   OWNER UNLOCK  (password osho2026, same as PASTE_PASSWORD)
+   The cross/lock button at top of the page toggles owner mode on/off.
+   When ON, every card shows the adjust (⤢) and highlight (★) tools.
+   ============================================================ */
+function toggleOwnerMode(){
+  if(ownerUnlocked){
+    // already unlocked → lock again (and close any open adjust session)
+    if(typeof cancelAdjust==="function") cancelAdjust();
+    ownerUnlocked = false;
+    document.body.classList.remove("owner-unlocked");
+    const b=document.getElementById("ownerLockBtn"); if(b){ b.textContent="🔒"; b.title="Owner tools (locked)"; }
+    return;
+  }
+  const p = prompt("Owner tools.\nEnter the password to unlock highlight & image-adjust:");
+  if(p === null) return;
+  if(p !== PASTE_PASSWORD){ alert("Incorrect password."); return; }
+  ownerUnlocked = true;
+  document.body.classList.add("owner-unlocked");
+  const b=document.getElementById("ownerLockBtn"); if(b){ b.textContent="🔓"; b.title="Owner tools (unlocked — tap to lock)"; }
+}
+
+/* ============================================================
+   HIGHLIGHT a camp  (owner only, stored server-side for everyone)
+   ============================================================ */
+async function toggleHighlight(btn, campKey){
+  if(!ownerUnlocked){ alert("Unlock owner tools first (the lock button at the top)."); return; }
+  const turningOn = !HIGHLIGHTED.has(campKey);
+  // optimistic UI
+  if(turningOn){ HIGHLIGHTED.add(campKey); } else { HIGHLIGHTED.delete(campKey); }
+  applyHighlightToDom(campKey, turningOn);
+  try{
+    const r = await fetch("/.netlify/functions/highlight", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ camp_key: campKey, on: turningOn, password: PASTE_PASSWORD })
+    });
+    if(r.status === 403){ alert("Wrong password — highlight not saved for everyone."); }
+    else if(!r.ok){ alert("Couldn't save highlight to the server (it shows on this device only)."); }
+  }catch(_){ alert("Couldn't reach the highlight service (shows on this device only)."); }
+}
+// Update every card with this key in place, without a full re-render.
+function applyHighlightToDom(campKey, on){
+  document.querySelectorAll(`.card[data-campkey="${cssEsc(campKey)}"]`).forEach(cardEl=>{
+    cardEl.classList.toggle("highlighted", on);
+    // ribbon
+    let rib = cardEl.querySelector(".hl-ribbon");
+    if(on && !rib){
+      rib = document.createElement("div");
+      rib.className="hl-ribbon"; rib.innerHTML='<span class="star">✦</span>Featured';
+      cardEl.insertBefore(rib, cardEl.firstChild);
+    } else if(!on && rib){ rib.remove(); }
+    // button state
+    const hb = cardEl.querySelector(".hl-btn"); if(hb) hb.classList.toggle("on", on);
+  });
+}
+function cssEsc(s){ return String(s).replace(/["\\]/g,"\\$&"); }
+
+/* ============================================================
+   INTERESTED button  (everyone, once per device, count stored server-side)
+   ============================================================ */
+async function markInterested(btn){
+  const campKey = btn.dataset.campkey;
+  if(!campKey || INTEREST_MINE.has(campKey)) return;     // already pressed on this device
+  // optimistic UI everywhere this camp appears
+  INTEREST_MINE.add(campKey);
+  localStorage.setItem("osho_interest_mine", JSON.stringify([...INTEREST_MINE]));
+  INTEREST_COUNTS[campKey] = (INTEREST_COUNTS[campKey]||0) + 1;
+  updateInterestDom(campKey);
+  try{
+    const r = await fetch("/.netlify/functions/interest", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ camp_key: campKey })
+    });
+    const d = await r.json().catch(()=>({}));
+    if(r.ok && typeof d.count === "number"){
+      INTEREST_COUNTS[campKey] = d.count;   // trust the server's authoritative count
+      updateInterestDom(campKey);
+    }
+  }catch(_){ /* if it fails, the local +1 still shows on this device */ }
+}
+function updateInterestDom(campKey){
+  const n = INTEREST_COUNTS[campKey]||0;
+  const mine = INTEREST_MINE.has(campKey);
+  document.querySelectorAll(`.btn-interest[data-campkey="${cssEsc(campKey)}"]`).forEach(b=>{
+    if(mine){ b.classList.add("done"); b.disabled=true; b.innerHTML='<span class="heart">♥</span>Interested'; }
+  });
+  document.querySelectorAll(`.interest-count[data-count-for="${cssEsc(campKey)}"]`).forEach(c=>{
+    c.innerHTML = n ? `<b>${n}</b> interested` : "Be the first";
+  });
+}
+
+/* ============================================================
+   ADJUST IMAGE  (owner only) — pinch to zoom, drag to reposition.
+   Tapping ⤢ enters adjust mode on that card's image; tapping again saves & locks.
+   Saved per-camp to localStorage AND to the server so everyone sees the same crop.
+   ============================================================ */
+let _adjEl=null, _adjImg=null, _adjKey=null;
+let _adjState={x:50,y:50,scale:1};
+let _drag=null, _pinch=null;
+
+function toggleAdjust(btn){
+  if(!ownerUnlocked){ alert("Unlock owner tools first (the lock button at the top)."); return; }
+  const cardEl = btn.closest(".card");
+  const flyerEl = cardEl.querySelector(".flyer");
+  if(_adjEl === flyerEl){ saveAdjust(); return; }   // tapping again on same card → save & exit
+  if(_adjEl) cancelAdjust();                          // close any other open one first
+  _adjEl = flyerEl;
+  _adjImg = flyerEl.querySelector("img.main");
+  _adjKey = flyerEl.dataset.campkey;
+  const cur = IMG_ADJUST[_adjKey] || {x:50,y:50,scale:1};
+  _adjState = {x:cur.x, y:cur.y, scale:cur.scale};
+  flyerEl.classList.add("adjusting");
+  _adjImg.style.objectFit = "cover";
+  applyAdjStyle();
+  // hint
+  const hint=document.createElement("div");
+  hint.className="adjust-hint"; hint.textContent="Drag to move · pinch to zoom · tap ⤢ again to save";
+  flyerEl.appendChild(hint);
+  // events
+  flyerEl.addEventListener("touchstart", adjTouchStart, {passive:false});
+  flyerEl.addEventListener("touchmove",  adjTouchMove,  {passive:false});
+  flyerEl.addEventListener("touchend",   adjTouchEnd);
+  flyerEl.addEventListener("mousedown",  adjMouseDown);
+}
+function applyAdjStyle(){
+  if(!_adjImg) return;
+  _adjImg.style.objectPosition = `${_adjState.x}% ${_adjState.y}%`;
+  _adjImg.style.transform = `scale(${_adjState.scale})`;
+}
+function adjTouchStart(e){
+  if(e.touches.length===1){ _drag={px:e.touches[0].clientX, py:e.touches[0].clientY}; }
+  else if(e.touches.length===2){ _pinch={d:_dist(e.touches), s:_adjState.scale}; _drag=null; }
+  e.preventDefault();
+}
+function adjTouchMove(e){
+  if(e.touches.length===2 && _pinch){
+    const d=_dist(e.touches);
+    _adjState.scale = Math.min(4, Math.max(1, _pinch.s * (d/_pinch.d)));
+    applyAdjStyle(); e.preventDefault(); return;
+  }
+  if(e.touches.length===1 && _drag){
+    _panBy(e.touches[0].clientX - _drag.px, e.touches[0].clientY - _drag.py);
+    _drag={px:e.touches[0].clientX, py:e.touches[0].clientY};
+    e.preventDefault();
+  }
+}
+function adjTouchEnd(e){ if(e.touches.length===0){ _drag=null; _pinch=null; } }
+function adjMouseDown(e){
+  _drag={px:e.clientX, py:e.clientY};
+  const mv=ev=>{ _panBy(ev.clientX-_drag.px, ev.clientY-_drag.py); _drag={px:ev.clientX,py:ev.clientY}; };
+  const up=()=>{ document.removeEventListener("mousemove",mv); document.removeEventListener("mouseup",up); _drag=null; };
+  document.addEventListener("mousemove",mv); document.addEventListener("mouseup",up);
+  e.preventDefault();
+}
+function _dist(t){ const dx=t[0].clientX-t[1].clientX, dy=t[0].clientY-t[1].clientY; return Math.hypot(dx,dy); }
+function _panBy(dx,dy){
+  if(!_adjEl) return;
+  const w=_adjEl.clientWidth||300, h=_adjEl.clientHeight||300;
+  // moving finger right should reveal the left part → object-position decreases
+  _adjState.x = Math.min(100, Math.max(0, _adjState.x - (dx/w)*100));
+  _adjState.y = Math.min(100, Math.max(0, _adjState.y - (dy/h)*100));
+  applyAdjStyle();
+}
+async function saveAdjust(){
+  if(!_adjEl) return;
+  const key=_adjKey, state={x:Math.round(_adjState.x), y:Math.round(_adjState.y), scale:+_adjState.scale.toFixed(2)};
+  IMG_ADJUST[key] = state;
+  localStorage.setItem("osho_img_adjust", JSON.stringify(IMG_ADJUST));
+  _finishAdjust();
+  // best-effort save to server so the crop shows for everyone
+  try{
+    await fetch("/.netlify/functions/highlight", {     // reuse highlight fn with an "adjust" payload
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ adjust:true, camp_key:key, crop:state, password: PASTE_PASSWORD })
+    });
+  }catch(_){}
+}
+function cancelAdjust(){ _finishAdjust(); }
+function _finishAdjust(){
+  if(_adjEl){
+    _adjEl.classList.remove("adjusting");
+    const h=_adjEl.querySelector(".adjust-hint"); if(h) h.remove();
+    _adjEl.removeEventListener("touchstart", adjTouchStart);
+    _adjEl.removeEventListener("touchmove",  adjTouchMove);
+    _adjEl.removeEventListener("touchend",   adjTouchEnd);
+    _adjEl.removeEventListener("mousedown",  adjMouseDown);
+  }
+  _adjEl=null; _adjImg=null; _adjKey=null; _drag=null; _pinch=null;
+}
+
 async function deleteCard(id, dot){
   if(!deletePassword){
     const p = prompt("Delete this camp?\nEnter the owner password to confirm:");
