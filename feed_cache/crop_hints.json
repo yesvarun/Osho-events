@@ -1497,5 +1497,12 @@
   "focus_y_pct": 40.0,
   "object_fit": "center",
   "note": "Guru portrait centered, balanced with landscape background"
+ },
+ "6f939068c7902e3b": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Architectural dome is main focus, centered composition"
  }
 }
