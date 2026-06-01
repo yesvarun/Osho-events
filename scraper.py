@@ -1534,15 +1534,49 @@ def build():
     # never hit the API rate limit). Only runs if UNSPLASH_ACCESS_KEY is set. ---
     if UNSPLASH_KEY:
         ucache = _load_unsplash_cache()
+
+        # --- AUTO-ROTATION: replace old LANDSCAPE Unsplash images with true PORTRAIT ---
+        # Runs for a limited number of times only (ROTATE_MAX_RUNS), then stops forever.
+        # Each run, it deletes up to ROTATE_PER_RUN cached entries whose URL is an old
+        # landscape image (no "h=1200"), so they get re-searched as portrait below.
+        # A counter is stored inside the cache under the key "__rotation_runs_done__".
+        ROTATE_PER_RUN  = 15
+        ROTATE_MAX_RUNS = 12
+        runs_done = 0
+        try:
+            runs_done = int(ucache.get("__rotation_runs_done__", 0))
+        except Exception:
+            runs_done = 0
+        if runs_done < ROTATE_MAX_RUNS:
+            # find cached entries that are still old landscape (real Unsplash, no h=1200)
+            landscape_keys = [
+                k for k, v in ucache.items()
+                if isinstance(v, str) and "images.unsplash.com" in v and "h=1200" not in v
+            ]
+            to_drop = landscape_keys[:ROTATE_PER_RUN]
+            for k in to_drop:
+                ucache.pop(k, None)          # deleting → forces a fresh portrait search
+            runs_done += 1
+            ucache["__rotation_runs_done__"] = runs_done
+            print(f"  🔄 Portrait auto-rotation: run {runs_done}/{ROTATE_MAX_RUNS} — "
+                  f"dropped {len(to_drop)} old landscape image(s) for re-search "
+                  f"({len(landscape_keys) - len(to_drop)} still remaining)")
+            if runs_done >= ROTATE_MAX_RUNS:
+                print("  ✅ Portrait auto-rotation finished — it will not run again.")
+
         searched = 0
+        SEARCH_CAP = 45     # stay safely under Unsplash's 50/hour demo limit
         for ev in merged:
             fu = ev.get("flyer_url", "")
             title_key = ev.get("title", "").strip().lower()
             # Re-search if: (a) no image at all, OR (b) it's an Unsplash image whose
-            # cache entry you DELETED (so we fetch a fresh true-portrait photo).
+            # cache entry was deleted (manual delete OR auto-rotation above).
             # A real flyer (githubusercontent etc.) is never touched.
             stale_unsplash = ("images.unsplash.com" in fu) and (title_key not in ucache)
             if fu and not stale_unsplash:
+                continue
+            if searched >= SEARCH_CAP and title_key not in ucache:
+                # hit the safety cap — leave this one for the next run
                 continue
             before = len(ucache)
             url = unsplash_image_for(ev.get("title", ""), ucache)
@@ -1552,8 +1586,10 @@ def build():
                 ev["flyer_url"] = url
                 ev["_img_source"] = "unsplash"
         _save_unsplash_cache(ucache)
+        # don't count the bookkeeping key in the "cached total"
+        total_cached = len([k for k in ucache if not k.startswith("__")])
         print(f"  🖼  Unsplash themed images: {searched} new searches this run "
-              f"({len(ucache)} cached total)")
+              f"({total_cached} cached total)")
 
     # SAFETY: warn loudly if this run drastically shrinks the directory — a sign something
     # went wrong (bad scrape, over-merge). The data is still written, but you'll see the alert.
