@@ -1504,5 +1504,12 @@
   "focus_y_pct": 45.0,
   "object_fit": "center",
   "note": "Architectural dome is main focus, centered composition"
+ },
+ "1ac33c29f973a614": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group of three people, faces centered, balanced composition"
  }
 }
