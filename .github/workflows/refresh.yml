@@ -1,15 +1,16 @@
 # Place this file at:  .github/workflows/refresh.yml
-# It runs the scraper every 6 hours, then commits the fresh events.json
-# so your raw.githubusercontent.com URL always serves the latest data.
+# Runs the scraper automatically once every 24 hours, AND whenever you click
+# "Run workflow" in the Actions tab. Commits the fresh events.json so your
+# raw.githubusercontent.com URL always serves the latest data.
 
 name: Refresh Osho events
 
 on:
-  # Auto-schedule is OFF to protect your Apify credit — runs ONLY when you click
-  # "Run workflow" in the Actions tab. To re-enable automatic 6-hourly runs (costs
-  # credit each time), uncomment the two lines below:
-  # schedule:
-  #   - cron: "0 */6 * * *"
+  # Auto-schedule: runs once every 24 hours at 04:30 UTC (10:00 AM India time).
+  # GitHub's scheduler runs in the cloud, so it works even when your phone is OFF.
+  # Note: scheduled runs can be delayed a few minutes when GitHub is busy.
+  schedule:
+    - cron: "30 4 * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -43,7 +44,5 @@ jobs:
           git add -A
           git diff --staged --quiet && echo "no changes — nothing to commit" && exit 0
           git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
-          # events.json is written ONLY by this bot, so its copy is always authoritative.
-          # Plain "git push" uses the token actions/checkout already configured.
           git pull --rebase -X ours origin main || true
           git push
