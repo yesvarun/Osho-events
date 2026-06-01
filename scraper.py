@@ -1015,37 +1015,9 @@ def read_wp_event_sites():
         print(f"  → {got} events from {site}")
     return out
 
-FLYER_VISION_CACHE_FILE = os.path.join("feed_cache", "flyer_vision.json")
-
-def _load_flyer_vision_cache():
-    try:
-        with open(FLYER_VISION_CACHE_FILE, encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
-
-def _save_flyer_vision_cache(cache):
-    try:
-        os.makedirs("feed_cache", exist_ok=True)
-        with open(FLYER_VISION_CACHE_FILE, "w", encoding="utf-8") as f:
-            json.dump(cache, f, ensure_ascii=False, indent=1)
-    except Exception:
-        pass
-
-def _flyer_cache_key(path):
-    """Stable cache key: filename + file size + last-modified time.
-    If the file is replaced with a new image, the key changes and it re-processes."""
-    try:
-        stat = os.stat(path)
-        raw = f"{os.path.basename(path)}|{stat.st_size}|{int(stat.st_mtime)}"
-        return hashlib.md5(raw.encode()).hexdigest()[:20]
-    except Exception:
-        return hashlib.md5(os.path.basename(path).encode()).hexdigest()[:20]
-
 def read_local_flyers():
     """Read every image in FLYERS_DIR with Claude vision.
     Handles BOTH single-event flyers and multi-event calendar posters.
-    Results are cached by file content — vision is only called for NEW or CHANGED images.
     Returns list of event dicts."""
     import glob
     if not os.path.isdir(FLYERS_DIR):
@@ -1057,42 +1029,25 @@ def read_local_flyers():
     if not files:
         print(f"  (no flyer images in '{FLYERS_DIR}/')")
         return []
-
-    # Load vision cache — avoids re-sending unchanged images to Claude every run
-    vision_cache = _load_flyer_vision_cache()
-    n_cached = n_fresh = 0
-
     print(f"Reading {len(files)} local flyer image(s) with Claude vision…")
     events = []
-    cache_dirty = False
     for path in files:
         try:
             import urllib.parse
             fname = urllib.parse.quote(os.path.basename(path))
             flyer_public_url = FLYERS_BASE_URL + fname
-            cache_key = _flyer_cache_key(path)
 
-            # --- CACHE HIT: skip vision call entirely ---
-            if cache_key in vision_cache:
-                extracted = vision_cache[cache_key]
-                n_cached += 1
-                if not extracted:
-                    print(f"  ♻ {os.path.basename(path)} → not a datable event (cached)")
-                    continue
-                print(f"  ♻ {os.path.basename(path)} → {len(extracted)} event(s) (cached)")
+            # Use multi-event extractor — works for both single and calendar images
+            extracted = extract_events_from_file(path)
+
+            if not extracted:
+                print(f"  – {os.path.basename(path)} → not a datable event")
+                continue
+
+            if len(extracted) > 1:
+                print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer)")
             else:
-                # --- CACHE MISS: call Claude vision ---
-                extracted = extract_events_from_file(path)
-                vision_cache[cache_key] = extracted   # cache result (even empty = not an event)
-                cache_dirty = True
-                n_fresh += 1
-                if not extracted:
-                    print(f"  – {os.path.basename(path)} → not a datable event")
-                    continue
-                if len(extracted) > 1:
-                    print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer)")
-                else:
-                    print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')}")
+                print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')}")
 
             for idx, ev in enumerate(extracted):
                 ev["source_platform"] = "Flyer upload"
@@ -1108,10 +1063,6 @@ def read_local_flyers():
         except Exception as e:
             print(f"  ! {os.path.basename(path)} → skipped ({type(e).__name__})")
             continue
-
-    if cache_dirty:
-        _save_flyer_vision_cache(vision_cache)
-    print(f"  📦 Flyer vision: {n_fresh} new analysed, {n_cached} from cache (0 API cost)")
     return events
 
 
@@ -1311,7 +1262,14 @@ def unsplash_image_for(title, cache):
         return ""
     key = title.strip().lower()
     if key in cache:                       # already searched once → reuse forever
-        return cache[key]
+        cached_url = cache[key]
+        # Upgrade old LANDSCAPE cached URLs to a 6x4 PORTRAIT crop with NO new API call.
+        # (Old entries were the wide 'regular' URL; force them tall via URL params.)
+        if cached_url and "h=1200" not in cached_url:
+            base = cached_url.split("?")[0]
+            cached_url = f"{base}?w=800&h=1200&fit=crop&crop=faces,center&q=70&auto=format"
+            cache[key] = cached_url
+        return cached_url
     # Build a focused query from the title (drop generic filler words).
     q = _re.sub(r"\b(osho|meditation|camp|retreat|shivir|the|of|a|an|with|days?|by)\b", " ",
                 title, flags=_re.I)
@@ -1320,7 +1278,7 @@ def unsplash_image_for(title, cache):
     try:
         r = requests.get(
             "https://api.unsplash.com/search/photos",
-            params={"query": query, "per_page": 1, "orientation": "landscape",
+            params={"query": query, "per_page": 1, "orientation": "portrait",
                     "content_filter": "high"},
             headers={"Authorization": "Client-ID " + UNSPLASH_KEY},
             timeout=20,
@@ -1328,7 +1286,15 @@ def unsplash_image_for(title, cache):
         if r.status_code == 200:
             results = r.json().get("results", [])
             if results:
-                url = results[0].get("urls", {}).get("regular", "")
+                urls = results[0].get("urls", {})
+                # Build an exact 6x4 PORTRAIT crop (800w x 1200h) from the raw URL so the
+                # image always arrives taller-than-wide and fills the card with no letterbox.
+                raw = urls.get("raw", "")
+                if raw:
+                    sep = "&" if "?" in raw else "?"
+                    url = f"{raw}{sep}w=800&h=1200&fit=crop&crop=faces,center&q=70&auto=format"
+                else:
+                    url = urls.get("regular", "")
                 cache[key] = url           # cache the result (even searched-this-run)
                 return url
         cache[key] = ""                    # cache the miss too, so we don't re-search a dud
