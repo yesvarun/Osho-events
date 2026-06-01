@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Living Directory of Osho Camps — Retreats & Meditation Worldwide</title>
 <!-- PWA: makes the site installable as an app (Add to Home Screen / full-screen) -->
-<meta name="theme-color" content="#B5176B" />
+<meta name="theme-color" content="#f5f4f6" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#1c1b1f" media="(prefers-color-scheme: dark)" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-title" content="Sannyas Gatherings" />
@@ -19,12 +20,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --ink:#3a1d2e;--paper:#fdf3f8;--paper-2:#fbe8f2;--card:#fffafc;
+    --ink:#1a1a1c;--ink-2:#5b5b61;--paper:#f5f4f6;--paper-2:#ececef;--card:#ffffff;
     --maroon:#C42A85;--rust:#e0509f;--amber:#f48fb8;--gold:#f0a93c;--moss:#3fa89b;
     --accent-teal:#2f9e94;--accent-coral:#ef6f5e;--accent-violet:#9b5de5;
-    --line:rgba(58,29,46,.13);--line-2:rgba(58,29,46,.07);
-    --shadow:0 1px 2px rgba(196,42,133,.07), 0 12px 30px -18px rgba(196,42,133,.32);
-    --shadow-hi:0 2px 4px rgba(196,42,133,.1), 0 26px 50px -24px rgba(196,42,133,.4);
+    --mag-soft:rgba(196,42,133,.1);
+    --line:rgba(0,0,0,.07);--line-2:rgba(0,0,0,.045);
+    --shadow:0 1px 3px rgba(0,0,0,.04), 0 8px 24px -16px rgba(0,0,0,.25);
+    --shadow-hi:0 2px 6px rgba(0,0,0,.06), 0 18px 40px -22px rgba(0,0,0,.3);
+    --r-lg:28px;--r-md:20px;--r-sm:16px;
+  }
+  /* Automatic night mode — follows the phone's system theme (incl. One UI scheduled dark mode) */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#ececf0;--ink-2:#a9a4ad;--paper:#1c1b1f;--paper-2:#2a282e;--card:#252329;
+      --maroon:#f06fb6;--rust:#e0509f;--amber:#f48fb8;--gold:#f0a93c;--moss:#46b9ac;
+      --accent-teal:#3fc2b4;--accent-coral:#f5876f;--accent-violet:#b07bf0;
+      --mag-soft:rgba(240,111,182,.16);
+      --line:rgba(255,255,255,.1);--line-2:rgba(255,255,255,.06);
+      --shadow:0 1px 3px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+      --shadow-hi:0 2px 6px rgba(0,0,0,.5), 0 18px 40px -22px rgba(0,0,0,.8);
+    }
+    /* Frosted controls bar → dark translucent */
+    .controls{background:rgba(37,35,41,.8) !important}
+    /* Form text inputs readable on dark */
+    .fg input,.fg select,.fg textarea,#pasteBox{background:var(--paper-2);color:var(--ink)}
+    /* Grain texture is too harsh on dark — hide it */
+    .grain{display:none}
+    /* Meta-theme colour for the status bar */
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -32,9 +54,9 @@
   *{overflow-wrap:break-word;word-break:break-word}
   img{max-width:100%;height:auto}
   body{font-family:"Spline Sans",system-ui,sans-serif;color:var(--ink);
-    background:radial-gradient(115% 70% at 8% -5%, rgba(155,93,229,.14), transparent 55%),radial-gradient(110% 75% at 95% 0%, rgba(196,42,133,.16), transparent 55%),radial-gradient(90% 80% at 50% 110%, rgba(47,158,148,.12), transparent 60%),var(--paper);
+    background:radial-gradient(100% 60% at 100% -5%, rgba(196,42,133,.06), transparent 50%),radial-gradient(90% 50% at 0% 0%, rgba(155,93,229,.05), transparent 50%),var(--paper);
     min-height:100vh;-webkit-font-smoothing:antialiased;line-height:1.5}
-  .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:multiply;
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.25;mix-blend-mode:multiply;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E")}
   .wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
 
@@ -47,7 +69,7 @@
   .mark::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--rust)}
   .title h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(26px,4vw,40px);line-height:.98;letter-spacing:-.5px}
   .title .sub{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--maroon);font-weight:600;margin-top:6px}
-  .creator-badge{display:inline-block;margin-top:8px;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:11px;letter-spacing:.04em;color:#9a6f88;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 11px;box-shadow:var(--shadow)}
+  .creator-badge{display:inline-block;margin-top:8px;font-family:"Fraunces",serif;font-style:italic;font-weight:400;font-size:11px;letter-spacing:.04em;color:var(--ink-2);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 11px;box-shadow:var(--shadow)}
   .status{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size:12.5px}
   .pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
     padding:7px 13px;border-radius:999px;box-shadow:var(--shadow);color:var(--ink);font-weight:500;white-space:nowrap}
@@ -56,36 +78,42 @@
   .pill button{all:unset;cursor:pointer;color:var(--rust);font-weight:600;border-bottom:1px dotted var(--rust)}
   .pill button:hover{color:var(--maroon)}
   .tagline{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(15px,2.1vw,19px);color:#5a4234;margin-top:18px;max-width:640px}
-  .share-invite{font-size:14px;color:#7a5068;margin-top:12px;max-width:640px;line-height:1.55}
+  .share-invite{font-size:14px;color:#5b5b61;margin-top:12px;max-width:640px;line-height:1.55}
   .share-invite b{color:var(--maroon)}
 
-  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-  .inform-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:9px;
-    background:var(--maroon);color:#fff;font-weight:600;font-size:15px;padding:13px 22px;border-radius:13px;
-    box-shadow:0 10px 24px -10px rgba(196,42,133,.6);transition:.18s}
+  .cta-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .inform-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    background:var(--maroon);color:#fff;font-weight:600;font-size:15px;padding:16px 20px;border-radius:var(--r-md);
+    box-shadow:0 10px 24px -10px rgba(196,42,133,.6);transition:.18s;text-align:center}
   .inform-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
   .inform-btn svg{flex:0 0 auto}
+  /* single "or" divider line between the two button rows */
+  .cta-or{display:none}
+  .cta-or-line{display:flex;align-items:center;gap:14px;margin:12px 2px;color:var(--ink-2)}
+  .cta-or-line::before,.cta-or-line::after{content:"";flex:1;height:1px;background:var(--line)}
+  .cta-or-line span{font-family:"Fraunces",serif;font-style:italic;font-size:15px}
   /* Each contribution button its own colour — playful, easy to tell apart */
   #adviceBtn{background:var(--accent-teal);box-shadow:0 10px 24px -10px rgba(47,158,148,.6)}
   #uploadFlyerBtn{background:var(--accent-violet);box-shadow:0 10px 24px -10px rgba(155,93,229,.6)}
   #pasteTextBtn{background:var(--accent-coral);box-shadow:0 10px 24px -10px rgba(239,111,94,.6)}
 
-  .controls{position:sticky;top:0;z-index:30;margin:24px 0 8px;padding:14px 0;
-    background:linear-gradient(var(--paper) 70%, transparent);backdrop-filter:blur(2px)}
+  .controls{position:sticky;top:8px;z-index:30;margin:24px 0 8px;padding:14px 16px;
+    background:rgba(255,255,255,.72);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+    border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
   .tabs{display:inline-flex;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
-  .tab{all:unset;cursor:pointer;padding:9px 20px;border-radius:999px;font-weight:600;font-size:14px;color:#7a5068;transition:.2s}
+  .tab{all:unset;cursor:pointer;padding:9px 20px;border-radius:999px;font-weight:600;font-size:14px;color:#5b5b61;transition:.2s}
   .tab.active{background:var(--maroon);color:#fff;box-shadow:0 6px 16px -8px rgba(181,23,107,.7)}
   .bar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
-  .field{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0 12px;box-shadow:var(--shadow);height:46px}
-  .field label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9a6f88;font-weight:600;white-space:nowrap}
+  .field{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:0 14px;box-shadow:var(--shadow);height:50px}
+  .field label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#86868b;font-weight:600;white-space:nowrap}
   select,input[type=search]{all:unset;font-family:inherit;font-size:14.5px;color:var(--ink);min-width:120px;cursor:pointer}
   input[type=search]{cursor:text;min-width:180px}
   .field.search{flex:1;min-width:220px}.field.search input{width:100%}
   .chips{display:flex;gap:8px;flex-wrap:wrap}
   .chip{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;
-    border:1px solid var(--line);background:var(--card);color:#7a5068;box-shadow:var(--shadow);transition:.18s}
+    border:1px solid var(--line);background:var(--card);color:#5b5b61;box-shadow:var(--shadow);transition:.18s}
   .chip[aria-pressed=true]{background:var(--rust);color:#fff;border-color:transparent}
-  .count{font-size:13px;color:#9a6f88;margin-left:auto;font-weight:500}.count b{color:var(--maroon)}
+  .count{font-size:13px;color:#86868b;margin-left:auto;font-weight:500}.count b{color:var(--maroon)}
 
   .region-head{display:flex;align-items:center;gap:14px;margin:34px 0 6px}
   .region-head h2{font-family:"Fraunces",serif;font-size:clamp(20px,3vw,28px);font-weight:600;letter-spacing:-.4px;color:var(--maroon)}
@@ -94,24 +122,27 @@
 
   .grid{column-width:320px;column-gap:18px;margin:16px 0}
   .grid>.card{break-inside:avoid;margin-bottom:18px;display:inline-block;width:100%}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.22s;position:relative}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.22s;position:relative}
   .card.fresh{border-color:var(--maroon);box-shadow:0 0 0 2px var(--maroon),0 10px 30px rgba(196,42,133,.3);animation:freshpulse 1.6s ease-in-out infinite}
   @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
   .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
   .del-dot{position:absolute;bottom:10px;right:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
   .del-dot:hover{opacity:1;transform:scale(1.15)}
-  .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#7a5068;padding:0 4px;align-self:center}
+  .cta-or{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:#5b5b61;padding:0 4px;align-self:center}
   .pinned-grid{margin-bottom:22px}
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(181,23,107,.3)}
   .flyer{position:relative;background:var(--paper-2);overflow:hidden;line-height:0}
   .flyer img.main{width:100%;height:auto;display:block;object-fit:contain}
+  /* Only generated fallback images (.has-quote) are forced to a uniform portrait shape */
+  .flyer.has-quote{aspect-ratio:4/6}
+  .flyer.has-quote img.main{height:100%;object-fit:cover}
   .flyer img.blurbg{display:none}
   /* Osho quote overlay — only on fallback images (.has-quote) */
   .flyer.has-quote{position:relative}
-  .flyer.has-quote::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(181,23,107,.62),rgba(181,23,107,.12) 55%,transparent);pointer-events:none}
+  .flyer.has-quote::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.35),rgba(0,0,0,.08) 45%,rgba(0,0,0,.18));pointer-events:none}
   .quote-ov{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px 20px;pointer-events:none}
-  .quote-ov span{font-family:"Fraunces",serif;font-style:italic;font-weight:500;color:#fff;font-size:clamp(16px,2.4vw,21px);line-height:1.3;text-shadow:0 2px 10px rgba(0,0,0,.45);letter-spacing:.2px}
-  .quote-ov small{margin-top:10px;font-family:"Spline Sans",sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#fff;opacity:.92;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+  .quote-ov span{font-family:"Fraunces",serif;font-style:italic;font-weight:500;color:#fff;font-size:clamp(16px,2.4vw,21px);line-height:1.35;letter-spacing:.2px;background:rgba(0,0,0,.28);backdrop-filter:blur(3px);padding:10px 16px;border-radius:14px;text-shadow:0 1px 6px rgba(0,0,0,.55)}
+  .quote-ov small{margin-top:12px;font-family:"Spline Sans",sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#fff;opacity:.95;text-shadow:0 1px 6px rgba(0,0,0,.6)}
   .flyer.placeholder{display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 30% 20%,var(--accent-violet),var(--maroon) 55%,var(--accent-coral));color:#fff}
   .flyer.placeholder .om{font-family:"Fraunces",serif;font-size:46px;opacity:.92}
   .type-tag{position:absolute;top:12px;left:12px;background:rgba(196,42,133,.9);color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;backdrop-filter:blur(4px)}
@@ -122,12 +153,12 @@
   .countdown.soon{background:var(--rust)}
   .card h3{font-family:"Fraunces",serif;font-size:19px;font-weight:600;line-height:1.12;letter-spacing:-.2px}
   .titleorig{font-family:"Fraunces",serif;font-size:14px;font-style:italic;color:var(--amber);margin-top:2px;letter-spacing:.1px;opacity:.95}
-  .loc{font-size:13.5px;color:#7a5068;display:flex;align-items:center;gap:7px}
+  .loc{font-size:13.5px;color:#5b5b61;display:flex;align-items:center;gap:7px}
   .loc svg{flex:0 0 auto;opacity:.7}
   .desc{font-size:13px;color:#74584a;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .meta{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;border-top:1px solid var(--line-2)}
-  .org{font-size:12px;color:#9a6f88;flex:1;min-width:90px}
-  .btn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;display:inline-flex;align-items:center;gap:6px;transition:.16s}
+  .org{font-size:12px;color:#86868b;flex:1;min-width:90px}
+  .btn{all:unset;cursor:pointer;font-size:12.5px;font-weight:600;padding:9px 14px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;transition:.16s}
   .btn.call{background:var(--moss);color:#f4f1e6}.btn.call:hover{filter:brightness(1.08)}
   .btn.wa{background:#25D366;color:#fff}.btn.wa:hover{filter:brightness(1.06)}.btn.wa svg{fill:#fff}
   .btn.map{background:#3a6ea5;color:#f4f1e6}.btn.map:hover{filter:brightness(1.1)}
@@ -139,10 +170,10 @@
   .stamp.live{background:rgba(90,100,64,.16);color:#46502f;border:1px solid rgba(90,100,64,.4)}
   .stamp.submitted{background:rgba(216,165,52,.18);color:#8a6410;border:1px solid rgba(216,165,52,.5)}
 
-  .empty{text-align:center;padding:70px 20px;color:#9a6f88}
+  .empty{text-align:center;padding:70px 20px;color:#86868b}
   .empty .om{font-family:"Fraunces",serif;font-size:60px;color:var(--rust);opacity:.5}
   .empty h3{font-family:"Fraunces",serif;font-size:22px;color:var(--ink);margin:10px 0 6px}
-  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:18px;height:330px;overflow:hidden;position:relative}
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);height:330px;overflow:hidden;position:relative}
   .loadwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:70px 20px;gap:18px}
   .loadlogo{animation:spin 2.4s linear infinite;filter:drop-shadow(0 4px 14px rgba(122,31,31,.25))}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -151,7 +182,7 @@
   .skeleton::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:sh 1.3s infinite}
   @keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 
-  footer{padding:48px 0 40px;color:#9a6f88;font-size:12.5px;border-top:1px solid var(--line);margin-top:40px}
+  footer{padding:48px 0 40px;color:#86868b;font-size:12.5px;border-top:1px solid var(--line);margin-top:40px}
   footer b{color:var(--maroon)}
   footer .support{margin-top:10px;font-size:12.5px}
   footer .support a{color:var(--maroon);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(181,23,107,.35)}
@@ -162,19 +193,19 @@
   /* ---- Modal form ---- */
   .overlay{position:fixed;inset:0;z-index:100;background:rgba(42,29,22,.55);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
   .overlay.open{display:flex}
-  .modal{background:var(--paper);border-radius:22px;max-width:560px;width:100%;box-shadow:0 40px 80px -30px rgba(42,29,22,.7);border:1px solid var(--line);animation:pop .25s both;margin:auto}
+  .modal{background:var(--paper);border-radius:var(--r-lg);max-width:560px;width:100%;box-shadow:0 40px 80px -30px rgba(0,0,0,.3);border:1px solid var(--line);animation:pop .25s both;margin:auto}
   @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
   .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 14px;border-bottom:1px solid var(--line)}
   .modal-head h2{font-family:"Fraunces",serif;font-size:23px;font-weight:600}
   .modal-head .x{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--paper-2);color:var(--ink);font-size:18px}
   .modal-head .x:hover{background:var(--rust);color:#fff}
   .modal-body{padding:20px 24px 8px}
-  .form-note{font-size:12.5px;color:#9a6f88;background:rgba(224,138,30,.1);border:1px solid rgba(196,85,36,.25);border-radius:10px;padding:10px 12px;margin-bottom:16px;line-height:1.45}
+  .form-note{font-size:12.5px;color:#86868b;background:rgba(224,138,30,.1);border:1px solid rgba(196,85,36,.25);border-radius:10px;padding:10px 12px;margin-bottom:16px;line-height:1.45}
   .fg{margin-bottom:14px}
-  .fg label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;color:#7a5068;margin-bottom:5px}
+  .fg label{display:block;font-size:12px;font-weight:600;letter-spacing:.04em;color:#5b5b61;margin-bottom:5px}
   .fg label .req{color:var(--rust)}
   .fg input,.fg select,.fg textarea{width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);
-    background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;transition:.16s}
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:13px 14px;transition:.16s}
   .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--rust);box-shadow:0 0 0 3px rgba(196,85,36,.14)}
   .fg textarea{resize:vertical;min-height:64px}
   .fg.invalid input,.fg.invalid select{border-color:#b3402a;box-shadow:0 0 0 3px rgba(179,64,42,.16)}
@@ -182,11 +213,11 @@
   #countryWrap{display:none}
   .modal-foot{display:flex;gap:10px;align-items:center;justify-content:flex-end;padding:14px 24px 22px;border-top:1px solid var(--line);margin-top:6px}
   .modal-foot .err{margin-right:auto;color:#b3402a;font-size:13px;font-weight:500;display:none}
-  .btn-ghost{all:unset;cursor:pointer;padding:11px 18px;border-radius:11px;font-weight:600;font-size:14px;color:#7a5068;background:var(--paper-2);border:1px solid var(--line)}
-  .btn-primary{all:unset;cursor:pointer;padding:12px 22px;border-radius:11px;font-weight:600;font-size:14.5px;color:#fff;background:var(--maroon);box-shadow:0 8px 18px -8px rgba(181,23,107,.7)}
+  .btn-ghost{all:unset;cursor:pointer;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;color:#5b5b61;background:var(--paper-2);border:1px solid var(--line)}
+  .btn-primary{all:unset;cursor:pointer;padding:12px 22px;border-radius:999px;font-weight:600;font-size:14.5px;color:#fff;background:var(--maroon);box-shadow:0 8px 18px -8px rgba(181,23,107,.7)}
   .btn-primary:hover{filter:brightness(1.08)}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);z-index:200;
-    background:var(--moss);color:#f4f1e6;padding:13px 22px;border-radius:13px;font-weight:600;font-size:14px;
+    background:var(--moss);color:#f4f1e6;padding:14px 24px;border-radius:var(--r-md);font-weight:600;font-size:14px;
     box-shadow:0 14px 30px -12px rgba(42,29,22,.6);opacity:0;transition:.35s;pointer-events:none}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
@@ -240,21 +271,21 @@
     <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
     <p class="share-invite">Know of a camp that's not listed? Anyone can add it — <b>Inform a Camp</b> with the details, or just <b>Upload a Flyer</b> from your phone and we'll read the date, place and title automatically.</p>
     <div class="cta-row">
-      <a class="inform-btn" id="adviceBtn" href="https://wa.me/919872470204?text=Hello%20Varun%2C%20I%20found%20oshocamps.com%20and%20would%20like%20some%20advice." target="_blank" rel="noopener">
+      <a class="inform-btn" id="adviceBtn" href="https://wa.me/919872470204?text=Hello%20Varun%2C%20I%20found%20oshocamps.com%20and%20would%20like%20to%20share%20some%20feedback." target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-        Advice
+        Feedback
       </a>
-      <span class="cta-or">or</span>
       <button class="inform-btn" id="informBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
         Inform a Camp
       </button>
-      <span class="cta-or">or</span>
+    </div>
+    <div class="cta-or-line"><span>or</span></div>
+    <div class="cta-row">
       <button class="inform-btn" id="uploadFlyerBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16v3a2 2 0 002 2h12a2 2 0 002-2v-3M12 3v13M7 8l5-5 5 5"/></svg>
         Upload Flyer
       </button>
-      <span class="cta-or">or</span>
       <button class="inform-btn" id="pasteTextBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
         Paste Text
@@ -290,7 +321,7 @@
       </div>
 
       <div class="field search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a6f88" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="search" id="searchInput" placeholder="Search by name, city, organiser…" />
       </div>
       <span class="count" id="countLabel"></span>
@@ -313,14 +344,14 @@
       <button class="x" id="closePaste" aria-label="Close">✕</button>
     </div>
     <div class="modal-body">
-      <p style="margin:0 0 12px;color:#7a5068;font-size:14px;line-height:1.5">
+      <p style="margin:0 0 12px;color:#5b5b61;font-size:14px;line-height:1.5">
         Paste any camp message or WhatsApp forward below — we'll read it and turn it into a card automatically.
       </p>
       <textarea id="pasteBox" rows="8" placeholder="Paste the camp announcement here…&#10;&#10;e.g. Osho Dhyan Shivir, 13–16 Aug 2026, Osho Pyramid Surat, contribution ₹3000, call 98765..." style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical"></textarea>
       <p id="pasteErr" style="display:none;margin:10px 0 0;font-size:13px"></p>
       <div style="display:flex;gap:10px;margin-top:14px">
         <button class="inform-btn" id="pasteSubmit" style="flex:1;justify-content:center">Read &amp; Add Camp</button>
-        <button class="btn" id="pasteCancel" style="background:var(--paper-2);color:#7a5068">Cancel</button>
+        <button class="btn" id="pasteCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
       </div>
     </div>
   </div>
@@ -677,7 +708,7 @@ function card(e){
     "photo-1604881991720-f91add269bed", // meditation garden
   ];
   // Portrait crop (taller than wide) — fits the card and avoids letterboxing.
-  const U = id => `https://images.unsplash.com/${id}?w=600&h=800&q=70&auto=format&fit=crop`;
+  const U = id => `https://images.unsplash.com/${id}?w=600&h=900&q=70&auto=format&fit=crop`;
   let fb;
   if      (/festival|celebrat|holi|sufi|dance|music|navratri/.test(t)) fb = U("photo-1518609878373-06d740f60d8b");
   else if (/tantra|love|heart|relation|couple|intimacy/.test(t))      fb = U("photo-1604881991720-f91add269bed");
@@ -694,12 +725,20 @@ function card(e){
     fb = U(POOL[h % POOL.length]);
   }
   const real = e.flyer_url ? esc(e.flyer_url) : "";
-  // Repo-hosted default image (always loads — served from your own site, never fails).
-  const repoImg = "/card-default.jpg";
+  // Repo-hosted portrait defaults (always load — served from your own site, never fail).
+  // Add these portrait images to your repo root: card-default-1.jpg … card-default-5.jpg
+  // (any tall/portrait Osho or meditation images you like). A stable hash picks one per camp.
+  const REPO_POOL = [
+    "/card-default-1.jpg","/card-default-2.jpg","/card-default-3.jpg",
+    "/card-default-4.jpg","/card-default-5.jpg"
+  ];
+  let rh = 0; const rs = (e.title||"") + (e.city||"") + "r";
+  for (let i=0;i<rs.length;i++){ rh = (rh*31 + rs.charCodeAt(i)) >>> 0; }
+  const repoImg = REPO_POOL[rh % REPO_POOL.length];
   // 3-TIER IMAGE FALLBACK, in order:
   //   1. Real image (scraped from source / IG / FB) — loads with no-referrer to beat hotlink protection
-  //   2. Unsplash themed image (referrer cleared, since Unsplash dislikes no-referrer)
-  //   3. Repo-hosted default image (your own /card-default.jpg — guaranteed to load)
+  //   2. Unsplash themed PORTRAIT image (referrer cleared, since Unsplash dislikes no-referrer)
+  //   3. Repo-hosted PORTRAIT default (your own /card-default-N.jpg — guaranteed to load)
   // step encodes which tier we're on: 0=real, 1=unsplash, 2=repo (final).
   const onErr =
     `if(this.dataset.step==='0'){this.dataset.step='1';this.referrerPolicy='';this.src='${fb}';}` +
