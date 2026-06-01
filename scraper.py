@@ -1262,14 +1262,7 @@ def unsplash_image_for(title, cache):
         return ""
     key = title.strip().lower()
     if key in cache:                       # already searched once → reuse forever
-        cached_url = cache[key]
-        # Upgrade old LANDSCAPE cached URLs to a 6x4 PORTRAIT crop with NO new API call.
-        # (Old entries were the wide 'regular' URL; force them tall via URL params.)
-        if cached_url and "h=1200" not in cached_url:
-            base = cached_url.split("?")[0]
-            cached_url = f"{base}?w=800&h=1200&fit=crop&crop=faces,center&q=70&auto=format"
-            cache[key] = cached_url
-        return cached_url
+        return cache[key]
     # Build a focused query from the title (drop generic filler words).
     q = _re.sub(r"\b(osho|meditation|camp|retreat|shivir|the|of|a|an|with|days?|by)\b", " ",
                 title, flags=_re.I)
@@ -1543,7 +1536,13 @@ def build():
         ucache = _load_unsplash_cache()
         searched = 0
         for ev in merged:
-            if ev.get("flyer_url"):              # already has a real image → leave it
+            fu = ev.get("flyer_url", "")
+            title_key = ev.get("title", "").strip().lower()
+            # Re-search if: (a) no image at all, OR (b) it's an Unsplash image whose
+            # cache entry you DELETED (so we fetch a fresh true-portrait photo).
+            # A real flyer (githubusercontent etc.) is never touched.
+            stale_unsplash = ("images.unsplash.com" in fu) and (title_key not in ucache)
+            if fu and not stale_unsplash:
                 continue
             before = len(ucache)
             url = unsplash_image_for(ev.get("title", ""), ucache)
