@@ -1,18 +1,17 @@
 # Place this file at:  .github/workflows/refresh.yml
-# Runs the scraper automatically once every 24 hours, AND whenever you click
-# "Run workflow" in the Actions tab. Commits the fresh events.json so your
-# raw.githubusercontent.com URL always serves the latest data.
+# Runs the scraper once every 24 hours AND on manual "Run workflow".
+# Commits events.json AND all cache files (feed_cache/, card_images/) so the
+# flyer cache, Unsplash cache, and Apify day-cache persist between runs.
 
 name: Refresh Osho events
 
 on:
-  # Auto-schedule: runs once every 24 hours at 04:30 UTC (10:00 AM India time).
   schedule:
-    - cron: "30 4 * * *"
+    - cron: "30 4 * * *"      # 04:30 UTC = 10:00 AM India
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: write              # needed so the job can commit results back
 
 jobs:
   scrape:
@@ -36,12 +35,29 @@ jobs:
           TEST_MODE: ${{ vars.TEST_MODE }}
         run: python scraper.py
 
+      - name: Show what the cache looks like (debug)
+        run: |
+          echo "=== feed_cache/ contents ==="
+          ls -la feed_cache/ || echo "feed_cache/ does NOT exist"
+          echo "=== flyer_cache.json size ==="
+          wc -c feed_cache/flyer_cache.json 2>/dev/null || echo "flyer_cache.json NOT created"
+
       - name: Commit updated data
         run: |
           git config user.name  "events-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add -A
-          git diff --staged --quiet && echo "no changes — nothing to commit" && exit 0
-          git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
+
+          # Pull latest FIRST so we never push on top of a stale tree
           git pull --rebase -X ours origin main || true
+
+          # Force-add cache files even if a .gitignore would skip them
+          git add -A
+          git add -f feed_cache/ card_images/ events.json 2>/dev/null || true
+
+          if git diff --staged --quiet; then
+            echo "no changes — nothing to commit"
+            exit 0
+          fi
+
+          git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
