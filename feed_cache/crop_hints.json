@@ -2246,5 +2246,12 @@
   "focus_y_pct": 40.0,
   "object_fit": "center",
   "note": "Upper-body portrait with hands in prayer pose, balanced composition"
+ },
+ "cc814c4a0613ef8e": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group seated portrait, balance faces and event text overlay"
  }
 }
