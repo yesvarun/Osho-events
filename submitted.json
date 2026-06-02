@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780425231040",
+    "title": "Osho Silence Retreat",
+    "type": "Retreat",
+    "start_date": "2026-10-21",
+    "end_date": "2026-10-25",
+    "venue": "Osho Sanzen, Kotla",
+    "city": "Solan",
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "phone": "8894351962",
+    "flyer_url": "",
+    "organizer": "",
+    "description": "5-day silent meditation retreat facilitated by Ma Dhyan Abha. Deepen meditation practice.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-02T18:33:51.040Z"
+  },
+  {
     "id": "sub_1780425175964",
     "title": "TAI CHI CAMP (4 Days)",
     "type": "Camp",
