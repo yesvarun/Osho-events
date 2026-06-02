@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#1c1b1f" media="(prefers-color-scheme: dark)" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="Sannyas Gatherings" />
+<meta name="apple-mobile-web-app-title" content="Osho Camps" />
 <link rel="apple-touch-icon" href="/icon-192-1.png" />
 <link rel="icon" type="image/png" href="/icon-192-1.png" />
 <!-- Inline SVG favicon (scales crisply, never depends on a separate file loading) -->
@@ -125,8 +125,10 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:.22s;position:relative}
   .card.fresh{border-color:var(--maroon);box-shadow:0 0 0 2px var(--maroon),0 10px 30px rgba(196,42,133,.3);animation:freshpulse 1.6s ease-in-out infinite}
   @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
-  .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
-  .new-badge{position:absolute;top:12px;right:12px;z-index:3;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(214,36,159,.3)}
+  .fresh-badge{position:absolute;top:8px;right:8px;z-index:3;background:rgba(216,165,52,.68);color:#3a2a10;font-size:8px;font-weight:700;letter-spacing:.02em;padding:2px 7px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+  .new-badge{position:absolute;top:8px;right:8px;z-index:4;background:rgba(214,36,159,.7);color:#fff;font-size:8px;font-weight:700;letter-spacing:.02em;padding:2px 7px;border-radius:999px;box-shadow:0 1px 4px rgba(214,36,159,.18)}
+  /* if a card shows BOTH badges, drop the New one below the Just-added one */
+  .card .fresh-badge ~ .new-badge{top:28px}
   .del-dot{position:absolute;bottom:10px;right:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
   .del-dot:hover{opacity:1;transform:scale(1.15)}
 
@@ -203,8 +205,8 @@
   .quote-ov small{margin-top:12px;font-family:"Spline Sans",sans-serif;font-weight:700;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#fff;opacity:.95;text-shadow:0 1px 6px rgba(0,0,0,.6)}
   .flyer.placeholder{display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 30% 20%,var(--accent-violet),var(--maroon) 55%,var(--accent-coral));color:#fff}
   .flyer.placeholder .om{font-family:"Fraunces",serif;font-size:46px;opacity:.92}
-  .type-tag{position:absolute;top:12px;left:12px;background:rgba(196,42,133,.9);color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 11px;border-radius:999px;backdrop-filter:blur(4px)}
-  .src-tag{position:absolute;top:12px;right:12px;background:rgba(251,244,234,.92);color:var(--maroon);font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px}
+  .type-tag{position:absolute;top:8px;left:8px;background:rgba(196,42,133,.58);color:#fff;font-size:8px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:999px;backdrop-filter:blur(4px)}
+  .src-tag{position:absolute;bottom:8px;right:8px;background:rgba(251,244,234,.65);color:var(--maroon);font-size:8px;font-weight:600;padding:2px 7px;border-radius:999px}
   .body{padding:16px 17px 17px;display:flex;flex-direction:column;gap:9px;flex:1}
   .dateline{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--rust);letter-spacing:.02em}
   .countdown{font-size:11px;font-weight:600;color:#fff;background:var(--moss);padding:2px 8px;border-radius:999px}
@@ -252,6 +254,11 @@
   .overlay{position:fixed;inset:0;z-index:100;background:rgba(42,29,22,.55);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
   .overlay.open{display:flex}
   .modal{background:var(--paper);border-radius:var(--r-lg);max-width:560px;width:100%;box-shadow:0 40px 80px -30px rgba(0,0,0,.3);border:1px solid var(--line);animation:pop .25s both;margin:auto}
+  .taxi-field{margin-bottom:11px}
+  .taxi-field label{display:block;font-size:12px;font-weight:600;color:#5b5b61;margin-bottom:4px}
+  .taxi-field input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit}
+  .taxi-toggle{flex:1;cursor:pointer;border:1.6px solid var(--line);background:var(--paper-2);color:#5b5b61;font-weight:600;font-size:13px;padding:10px;border-radius:10px;transition:.16s}
+  .taxi-toggle.on{border-color:#d6249f;background:rgba(214,36,159,.08);color:#a01070}
   @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
   .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 14px;border-bottom:1px solid var(--line)}
   .modal-head h2{font-family:"Fraunces",serif;font-size:23px;font-weight:600}
@@ -352,6 +359,12 @@
       </button>
       <input type="file" id="flyerFileInput" accept="image/*" style="display:none" />
     </div>
+    <div class="cta-row" style="grid-template-columns:1fr">
+      <button class="inform-btn" id="taxiBtn" style="background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 17h14M6 17l1-5 1.5-4h7L17 12l1 5M3 17h1m16 0h1M7 17v2m10-2v2"/><circle cx="8" cy="17" r="1.5"/><circle cx="16" cy="17" r="1.5"/></svg>
+        🚕 Share a Taxi to a Camp
+      </button>
+    </div>
   </header>
 
   <div class="controls">
@@ -412,6 +425,64 @@
       <div style="display:flex;gap:10px;margin-top:14px">
         <button class="inform-btn" id="pasteSubmit" style="flex:1;justify-content:center">Read &amp; Add Camp</button>
         <button class="btn" id="pasteCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Share a Taxi modal ===== -->
+<div class="overlay" id="taxiOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="taxiTitle">
+    <div class="modal-head">
+      <h2 id="taxiTitle">🚕 Share a Taxi</h2>
+      <button class="x" id="closeTaxi" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0 0 14px;color:#5b5b61;font-size:14px;line-height:1.5">
+        Travelling to a camp? Offer a ride or find one. Fill this and we'll post it to the shared WhatsApp ride group where others can join.
+      </p>
+
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <button class="taxi-toggle on" id="taxiOffer" type="button">🚗 I'm offering a ride</button>
+        <button class="taxi-toggle" id="taxiNeed" type="button">🙋 I need a ride</button>
+      </div>
+
+      <div class="taxi-field"><label>Your name</label><input id="tName" type="text" placeholder="e.g. Varun"></div>
+      <div class="taxi-field"><label>Phone (WhatsApp)</label><input id="tPhone" type="tel" placeholder="e.g. 98765 43210"></div>
+      <div class="taxi-field"><label>Starting from</label><input id="tFrom" type="text" placeholder="e.g. Rampura Phul, Bathinda"></div>
+      <div class="taxi-field"><label>Camp / event name</label><input id="tCamp" type="text" placeholder="e.g. Guru Purnima Dhyan Shivir"></div>
+      <div class="taxi-field"><label>Facilitator / organiser (optional)</label><input id="tFac" type="text" placeholder="e.g. Swami Anand / Osho Nisarga"></div>
+      <div class="taxi-field"><label>Camp location (city / venue)</label><input id="tTo" type="text" placeholder="e.g. Osho Nisarga, Dharamshala"></div>
+      <div class="taxi-field"><label>Camp date</label><input id="tDate" type="text" placeholder="e.g. 15 Aug 2026"></div>
+      <div class="taxi-field"><label>Route via (optional)</label><input id="tRoute" type="text" placeholder="e.g. via Chandigarh"></div>
+
+      <!-- Offer-only fields -->
+      <div id="offerFields">
+        <div class="taxi-field"><label>Seats available</label><input id="tSeats" type="number" min="1" placeholder="e.g. 3"></div>
+        <div class="taxi-field"><label>Car make &amp; model</label><input id="tCar" type="text" placeholder="e.g. Maruti Ertiga"></div>
+        <div class="taxi-field"><label>Car number</label><input id="tCarNo" type="text" placeholder="e.g. PB 03 AB 1234"></div>
+        <div class="taxi-field"><label>Approx one-way distance (km)</label><input id="tKm" type="number" min="1" placeholder="e.g. 250"></div>
+        <div class="taxi-field">
+          <label>Fare per person (optional)</label>
+          <div style="display:flex;gap:8px">
+            <input id="tFare" type="text" placeholder="e.g. ₹500 / shared fuel" style="flex:1">
+            <button type="button" id="suggestFare" class="btn" style="background:rgba(214,36,159,.1);color:#a01070;border:1.4px solid #d6249f;white-space:nowrap;padding:0 12px">Suggest fair</button>
+          </div>
+          <p id="fareHint" style="display:none;margin:6px 0 0;font-size:11.5px;color:#5b5b61"></p>
+        </div>
+      </div>
+
+      <!-- Need-only fields -->
+      <div id="needFields" style="display:none">
+        <div class="taxi-field"><label>How many of you?</label><input id="tPax" type="number" min="1" placeholder="e.g. 2"></div>
+        <div class="taxi-field"><label>Pickup point</label><input id="tPickup" type="text" placeholder="e.g. Bathinda bus stand"></div>
+        <div class="taxi-field"><label>Fare you can share (optional)</label><input id="tFareNeed" type="text" placeholder="e.g. up to ₹600"></div>
+      </div>
+
+      <p id="taxiErr" style="display:none;margin:10px 0 0;color:#9a3414;font-size:13px"></p>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="inform-btn" id="taxiSubmit" style="flex:1;justify-content:center;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff">Post to ride group</button>
+        <button class="btn" id="taxiCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
       </div>
     </div>
   </div>
@@ -509,6 +580,133 @@
   <span id="radioLabel">Osho Radio</span>
 </div>
 <audio id="radioAudio" preload="none"></audio>
+
+<script>
+/* ===== Share a Taxi → WhatsApp group ===== */
+// PASTE YOUR WHATSAPP GROUP INVITE LINK BELOW (chat.whatsapp.com/XXXX).
+// Create a WhatsApp group, Group info → Invite via link → copy, paste here.
+const TAXI_GROUP_LINK = "https://chat.whatsapp.com/FpDcpnyfuoUBUW2brUlmTN";
+
+let taxiMode = "offer"; // 'offer' or 'need'
+
+function openTaxi(){ document.getElementById('taxiOverlay').classList.add('open'); }
+function closeTaxiModal(){ document.getElementById('taxiOverlay').classList.remove('open'); }
+
+function setTaxiMode(mode){
+  taxiMode = mode;
+  document.getElementById('taxiOffer').classList.toggle('on', mode==='offer');
+  document.getElementById('taxiNeed').classList.toggle('on', mode==='need');
+  document.getElementById('offerFields').style.display = mode==='offer' ? 'block' : 'none';
+  document.getElementById('needFields').style.display  = mode==='need'  ? 'block' : 'none';
+}
+
+function val(id){ return (document.getElementById(id).value || '').trim(); }
+
+function buildTaxiMessage(){
+  const name=val('tName'), phone=val('tPhone'), from=val('tFrom'),
+        to=val('tTo'), date=val('tDate'), route=val('tRoute');
+  if(!name || !phone || !from || !to || !val('tCamp')){
+    return null; // required fields missing (camp name required too)
+  }
+  let m = '';
+  const camp=val('tCamp'), fac=val('tFac');
+  if(taxiMode==='offer'){
+    m += '🚗 *RIDE OFFERED*\n';
+    if(camp) m += '🏕️ *' + camp + '*\n';
+    if(fac)  m += '🧘 ' + fac + '\n';
+    if(date) m += '📅 ' + date + '\n';
+    m += '\n';
+    m += '👤 ' + name + '\n';
+    m += '📞 ' + phone + '\n';
+    m += '📍 From: ' + from + '\n';
+    m += '🎯 To: ' + to + '\n';
+    if(route) m += '🛣️ Via: ' + route + '\n';
+    const seats=val('tSeats'), car=val('tCar'), carno=val('tCarNo'), fare=val('tFare');
+    if(seats) m += '💺 Seats: ' + seats + '\n';
+    if(car)   m += '🚙 Car: ' + car + '\n';
+    if(carno) m += '🔢 Car no: ' + carno + '\n';
+    if(fare)  m += '💰 Fare/person: ' + fare + '\n';
+    m += '\nReply here if you want to join 🙏';
+  } else {
+    m += '🙋 *RIDE NEEDED*\n';
+    if(camp) m += '🏕️ *' + camp + '*\n';
+    if(fac)  m += '🧘 ' + fac + '\n';
+    if(date) m += '📅 ' + date + '\n';
+    m += '\n';
+    m += '👤 ' + name + '\n';
+    m += '📞 ' + phone + '\n';
+    m += '📍 From: ' + from + '\n';
+    m += '🎯 To: ' + to + '\n';
+    if(route) m += '🛣️ Via: ' + route + '\n';
+    const pax=val('tPax'), pickup=val('tPickup'), fareN=val('tFareNeed');
+    if(pax)    m += '👥 People: ' + pax + '\n';
+    if(pickup) m += '📌 Pickup: ' + pickup + '\n';
+    if(fareN)  m += '💰 Can share: ' + fareN + '\n';
+    m += '\nAnyone driving this route, please offer 🙏';
+  }
+  return m;
+}
+
+function submitTaxi(){
+  const err = document.getElementById('taxiErr');
+  const msg = buildTaxiMessage();
+  if(!msg){
+    err.style.display='block';
+    err.textContent='Please fill camp name, your name, phone, from and to.';
+    return;
+  }
+  err.style.display='none';
+  // 1) Copy the formatted message to clipboard so the user can paste it in the group.
+  try{ navigator.clipboard.writeText(msg.replace(/\\n/g,'\n')); }catch(_){}
+  // 2) Open the WhatsApp group. The user pastes the message there.
+  if(TAXI_GROUP_LINK.indexOf('REPLACE_WITH') !== -1){
+    err.style.display='block';
+    err.textContent='Ride group link not set yet. (Owner: paste your WhatsApp group link in the code.)';
+    return;
+  }
+  window.open(TAXI_GROUP_LINK, '_blank');
+  closeTaxiModal();
+  // Friendly toast
+  const t=document.getElementById('toast');
+  if(t){ t.textContent='Your ride message is copied — paste it in the group ✓'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const b=document.getElementById('taxiBtn'); if(b) b.addEventListener('click', openTaxi);
+  document.getElementById('closeTaxi').addEventListener('click', closeTaxiModal);
+  document.getElementById('taxiCancel').addEventListener('click', closeTaxiModal);
+  document.getElementById('taxiOffer').addEventListener('click', ()=>setTaxiMode('offer'));
+  document.getElementById('taxiNeed').addEventListener('click', ()=>setTaxiMode('need'));
+  document.getElementById('taxiSubmit').addEventListener('click', submitTaxi);
+  const sf=document.getElementById('suggestFare'); if(sf) sf.addEventListener('click', suggestFairFare);
+  document.getElementById('taxiOverlay').addEventListener('click', e=>{ if(e.target.id==='taxiOverlay') closeTaxiModal(); });
+});
+
+// Suggest a fair shared fare based on distance, fuel, tolls, and number of people.
+// Method: a return trip's running cost (fuel + a toll allowance) split across the
+// driver + passengers. Transparent and reasonable — driver isn't profiting, just sharing.
+function suggestFairFare(){
+  const km    = parseFloat((document.getElementById('tKm').value||'').trim());
+  const seats = parseInt((document.getElementById('tSeats').value||'').trim(), 10);
+  const hint  = document.getElementById('fareHint');
+  if(!km || km<=0){
+    hint.style.display='block';
+    hint.textContent='Enter the approx one-way distance (km) first.';
+    return;
+  }
+  const people = (seats && seats>0) ? (seats + 1) : 2;  // passengers + driver; fallback 2 sharing
+  // Assumptions (India, mid-size car): ~15 km/litre, petrol ~₹100/litre → ~₹6.7/km fuel.
+  // Add ~15% for tolls/wear. Cost is for the ROUND trip the driver actually makes.
+  const fuelPerKm = 6.7;
+  const roundTripKm = km * 2;
+  const runningCost = roundTripKm * fuelPerKm * 1.15;
+  const perPerson = Math.round((runningCost / people) / 10) * 10;  // round to nearest ₹10
+  document.getElementById('tFare').value = '₹' + perPerson + ' / person (shared)';
+  hint.style.display='block';
+  hint.textContent = 'Based on ' + km + ' km each way, round-trip fuel + tolls split among ' +
+                     people + ' people. Adjust if you like.';
+}
+</script>
 <script>
 // Music from the World of Osho — real tracks hosted on the Internet Archive.
 // Plays gently in sequence and loops back to the start. Free, no key needed.
