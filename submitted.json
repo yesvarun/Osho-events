@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780425010567",
+    "title": "Osho Meditation Camp",
+    "type": "Camp",
+    "start_date": "2026-08-14",
+    "end_date": "2026-08-16",
+    "venue": "Osho Sanzen, Kotla",
+    "city": "Solan",
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "phone": "8894351962",
+    "flyer_url": "",
+    "organizer": "",
+    "description": "Three days of meditation, awareness, and inner transformation.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-02T18:30:10.567Z"
+  },
+  {
     "id": "sub_1780304486899",
     "title": "OSHO 3 days Residential Meditation Camp",
     "type": "Camp",
