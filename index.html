@@ -259,6 +259,21 @@
   .taxi-field input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit}
   .taxi-toggle{flex:1;cursor:pointer;border:1.6px solid var(--line);background:var(--paper-2);color:#5b5b61;font-weight:600;font-size:13px;padding:10px;border-radius:10px;transition:.16s}
   .taxi-toggle.on{border-color:#d6249f;background:rgba(214,36,159,.08);color:#a01070}
+  .ride-btn{background:rgba(214,36,159,.1);color:#a01070;border:1.4px solid #d6249f}
+  .ride-btn:hover{background:rgba(214,36,159,.18)}
+  /* Step questionnaire */
+  .qstep{text-align:center}
+  .qstep .qprompt{font-family:"Fraunces",serif;font-size:21px;color:var(--maroon);margin:0 0 4px;line-height:1.25}
+  .qstep .qsub{font-size:13px;color:#5b5b61;margin:0 0 18px}
+  .qstep input{width:100%;box-sizing:border-box;padding:13px 14px;border:1.6px solid var(--line);border-radius:11px;font-size:16px;font-family:inherit;text-align:center}
+  .qstep .qrow{display:flex;gap:10px;margin-top:16px}
+  .qstep .qbtn{flex:1;cursor:pointer;border:none;border-radius:11px;padding:13px;font-weight:700;font-size:15px}
+  .qstep .qnext{background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff}
+  .qstep .qback{background:var(--paper-2);color:#5b5b61}
+  .qstep .qchoice{display:flex;gap:10px;margin-top:8px}
+  .qstep .qchoice button{flex:1;cursor:pointer;border:1.6px solid var(--line);background:var(--paper-2);border-radius:11px;padding:14px;font-weight:600;font-size:14px}
+  .qstep .qchoice button.sel{border-color:#d6249f;background:rgba(214,36,159,.08);color:#a01070}
+  .qprogress{font-size:11px;color:#9a8e88;letter-spacing:.05em;margin-bottom:14px;text-transform:uppercase}
   @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
   .modal-head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px 14px;border-bottom:1px solid var(--line)}
   .modal-head h2{font-family:"Fraunces",serif;font-size:23px;font-weight:600}
@@ -488,6 +503,20 @@
   </div>
 </div>
 
+<!-- ===== Step-by-step Ride questionnaire ===== -->
+<div class="overlay" id="rideOverlay">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:440px">
+    <div class="modal-head">
+      <h2 id="rideHeadTitle" style="font-size:18px">🚕 Share a ride</h2>
+      <button class="x" id="closeRide" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="qprogress" id="rideProgress"></div>
+      <div class="qstep" id="rideStep"></div>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
     <div class="modal-head">
@@ -586,6 +615,189 @@
 // PASTE YOUR WHATSAPP GROUP INVITE LINK BELOW (chat.whatsapp.com/XXXX).
 // Create a WhatsApp group, Group info → Invite via link → copy, paste here.
 const TAXI_GROUP_LINK = "https://chat.whatsapp.com/FpDcpnyfuoUBUW2brUlmTN";
+
+/* ===== One-question-at-a-time RIDE questionnaire (per camp card) ===== */
+let rideData = {};
+let rideSteps = [];
+let rideIdx = 0;
+
+function startRide(btn){
+  // Pre-load camp details from the card's data-* attributes
+  rideData = {
+    camp: btn.getAttribute('data-camp') || '',
+    fac:  btn.getAttribute('data-fac')  || '',
+    date: btn.getAttribute('data-date') || '',
+    to:   btn.getAttribute('data-to')   || '',
+    mode:'', name:'', phone:'', from:'', route:'',
+    seats:'', car:'', carno:'', km:'', fare:'',
+    pax:'', pickup:'', fareNeed:''
+  };
+  // Build the question sequence. Camp/date/to already known — we don't ask those.
+  buildRideSteps();
+  rideIdx = 0;
+  document.getElementById('rideOverlay').classList.add('open');
+  renderRideStep();
+}
+
+function buildRideSteps(){
+  rideSteps = [
+    {key:'mode', type:'choice', prompt:'Are you offering a ride or do you need one?',
+     choices:[['offer','🚗 I am offering'],['need','🙋 I need a ride']]},
+    {key:'name', type:'text', prompt:'What is your name?', placeholder:'e.g. Varun'},
+    {key:'phone',type:'text', prompt:'Your WhatsApp number?', placeholder:'e.g. 98765 43210'},
+    {key:'from', type:'text', prompt:'Where are you starting from?', placeholder:'e.g. Rampura Phul, Bathinda'},
+    {key:'route',type:'text', prompt:'Any route / via point? (optional)', placeholder:'e.g. via Chandigarh', optional:true},
+    // offer-only:
+    {key:'seats',type:'text', prompt:'How many seats are free?', placeholder:'e.g. 3', only:'offer'},
+    {key:'car',  type:'text', prompt:'Car make & model?', placeholder:'e.g. Maruti Ertiga', only:'offer'},
+    {key:'carno',type:'text', prompt:'Car number?', placeholder:'e.g. PB 03 AB 1234', only:'offer'},
+    {key:'km',   type:'text', prompt:'Approx one-way distance? (km)', placeholder:'e.g. 250', only:'offer', optional:true},
+    {key:'fare', type:'fare', prompt:'Fare per person?', placeholder:'e.g. ₹500 (or tap Suggest)', only:'offer', optional:true},
+    // need-only:
+    {key:'pax',   type:'text', prompt:'How many of you?', placeholder:'e.g. 2', only:'need'},
+    {key:'pickup',type:'text', prompt:'Preferred pickup point?', placeholder:'e.g. Bathinda bus stand', only:'need'},
+    {key:'fareNeed',type:'text', prompt:'Fare you can share? (optional)', placeholder:'e.g. up to ₹600', only:'need', optional:true},
+  ];
+}
+
+function visibleSteps(){
+  return rideSteps.filter(s => !s.only || s.only === rideData.mode);
+}
+
+function renderRideStep(){
+  const steps = visibleSteps();
+  const step = steps[rideIdx];
+  const box = document.getElementById('rideStep');
+  const prog = document.getElementById('rideProgress');
+  document.getElementById('rideHeadTitle').textContent = rideData.camp ? ('🚕 ' + rideData.camp) : '🚕 Share a ride';
+
+  if(!step){ finishRide(); return; }
+  prog.textContent = 'Step ' + (rideIdx+1) + ' of ' + steps.length;
+
+  let html = '<p class="qprompt">' + step.prompt + '</p>';
+  if(rideData.date || rideData.to) html += '<p class="qsub">' + [rideData.to, rideData.date].filter(Boolean).join(' · ') + '</p>';
+
+  if(step.type === 'choice'){
+    html += '<div class="qchoice">';
+    step.choices.forEach(ch => {
+      const sel = rideData[step.key]===ch[0] ? ' sel' : '';
+      html += '<button class="'+sel+'" onclick="pickChoice(\''+step.key+'\',\''+ch[0]+'\')">'+ch[1]+'</button>';
+    });
+    html += '</div>';
+  } else if(step.type === 'fare'){
+    html += '<input id="qinput" type="text" value="'+(rideData[step.key]||'')+'" placeholder="'+step.placeholder+'">';
+    html += '<button class="qbtn qnext" style="margin-top:10px" onclick="suggestRideFare()">💡 Suggest fair fare</button>';
+    html += '<p id="qfareHint" style="font-size:11.5px;color:#5b5b61;margin:8px 0 0;display:none"></p>';
+  } else {
+    html += '<input id="qinput" type="text" value="'+(rideData[step.key]||'')+'" placeholder="'+step.placeholder+'">';
+  }
+
+  html += '<div class="qrow">';
+  if(rideIdx>0) html += '<button class="qbtn qback" onclick="rideBack()">Back</button>';
+  const isLast = rideIdx === steps.length-1;
+  html += '<button class="qbtn qnext" onclick="rideNext()">'+(isLast?'Post to group ✓':'Next →')+'</button>';
+  html += '</div>';
+
+  box.innerHTML = html;
+  const inp = document.getElementById('qinput');
+  if(inp){ inp.focus(); inp.addEventListener('keydown', e=>{ if(e.key==='Enter') rideNext(); }); }
+}
+
+function pickChoice(key, val){
+  rideData[key] = val;
+  renderRideStep(); // re-render to show selection, then user taps Next
+}
+
+function rideNext(){
+  const steps = visibleSteps();
+  const step = steps[rideIdx];
+  const inp = document.getElementById('qinput');
+  if(inp) rideData[step.key] = inp.value.trim();
+  // validate required
+  if(!step.optional && step.type!=='choice' && !rideData[step.key]){
+    if(inp){ inp.style.borderColor='#c0392b'; inp.placeholder='This one is needed…'; }
+    return;
+  }
+  if(step.type==='choice' && !rideData[step.key]) return; // must pick
+  rideIdx++;
+  if(rideIdx >= steps.length){ finishRide(); return; }
+  renderRideStep();
+}
+
+function rideBack(){ if(rideIdx>0){ rideIdx--; renderRideStep(); } }
+
+function suggestRideFare(){
+  const km = parseFloat(rideData.km);
+  const seats = parseInt(rideData.seats,10);
+  const hint = document.getElementById('qfareHint');
+  if(!km || km<=0){ if(hint){hint.style.display='block'; hint.textContent='Add the one-way km in the previous step to estimate.';} return; }
+  const people = (seats && seats>0) ? seats+1 : 2;
+  const perPerson = Math.round((km*2*6.7*1.15/people)/10)*10;
+  const inp = document.getElementById('qinput');
+  if(inp) inp.value = '₹'+perPerson+' / person (shared)';
+  rideData.fare = inp ? inp.value : '';
+  if(hint){ hint.style.display='block'; hint.textContent='Round-trip fuel + tolls for '+km+' km, split among '+people+' people.'; }
+}
+
+function finishRide(){
+  const d = rideData;
+  let m = '';
+  if(d.mode==='offer'){
+    m += '🚗 *RIDE OFFERED*\n';
+    if(d.camp) m += '🏕️ *'+d.camp+'*\n';
+    if(d.fac)  m += '🧘 '+d.fac+'\n';
+    if(d.date) m += '📅 '+d.date+'\n';
+    m += '\n👤 '+d.name+'\n📞 '+d.phone+'\n📍 From: '+d.from+'\n';
+    if(d.to) m += '🎯 To: '+d.to+'\n';
+    if(d.route) m += '🛣️ Via: '+d.route+'\n';
+    if(d.seats) m += '💺 Seats: '+d.seats+'\n';
+    if(d.car)   m += '🚙 Car: '+d.car+'\n';
+    if(d.carno) m += '🔢 Car no: '+d.carno+'\n';
+    if(d.fare)  m += '💰 Fare/person: '+d.fare+'\n';
+    m += '\nReply here if you want to join 🙏';
+  } else {
+    m += '🙋 *RIDE NEEDED*\n';
+    if(d.camp) m += '🏕️ *'+d.camp+'*\n';
+    if(d.fac)  m += '🧘 '+d.fac+'\n';
+    if(d.date) m += '📅 '+d.date+'\n';
+    m += '\n👤 '+d.name+'\n📞 '+d.phone+'\n📍 From: '+d.from+'\n';
+    if(d.to) m += '🎯 To: '+d.to+'\n';
+    if(d.route) m += '🛣️ Via: '+d.route+'\n';
+    if(d.pax)    m += '👥 People: '+d.pax+'\n';
+    if(d.pickup) m += '📌 Pickup: '+d.pickup+'\n';
+    if(d.fareNeed) m += '💰 Can share: '+d.fareNeed+'\n';
+    m += '\nAnyone driving this route, please offer 🙏';
+  }
+  // WhatsApp GROUP links cannot pre-fill text, so we show the message with a
+  // Copy button + Open-group button. User copies, opens group, pastes. Clear & reliable.
+  rideFinalMsg = m.replace(/\\n/g,'\n');
+  const box = document.getElementById('rideStep');
+  document.getElementById('rideProgress').textContent = 'Ready to post';
+  document.getElementById('rideHeadTitle').textContent = '🚕 Your ride message';
+  box.innerHTML =
+    '<p class="qsub" style="margin-bottom:10px">Copy this, then open the group and paste it 👇</p>' +
+    '<textarea id="rideMsgBox" readonly style="width:100%;box-sizing:border-box;height:200px;padding:12px;border:1.6px solid var(--line);border-radius:11px;font-size:13px;font-family:inherit;line-height:1.5;white-space:pre-wrap">'+rideFinalMsg+'</textarea>' +
+    '<button class="qbtn qnext" style="width:100%;margin-top:12px" onclick="copyRideMsg(this)">📋 Copy message</button>' +
+    '<button class="qbtn qnext" style="width:100%;margin-top:8px" onclick="openRideGroup()">💬 Open WhatsApp group</button>';
+  try{ navigator.clipboard.writeText(rideFinalMsg); }catch(_){}
+}
+let rideFinalMsg = '';
+function copyRideMsg(btn){
+  const ta=document.getElementById('rideMsgBox');
+  if(ta){ ta.select(); ta.setSelectionRange(0,99999); }
+  try{ navigator.clipboard.writeText(rideFinalMsg); }catch(_){ try{ document.execCommand('copy'); }catch(e){} }
+  btn.textContent='✓ Copied!';
+  setTimeout(()=>{ btn.textContent='📋 Copy message'; }, 1800);
+}
+function openRideGroup(){
+  window.open(TAXI_GROUP_LINK, '_blank');
+  document.getElementById('rideOverlay').classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const cr=document.getElementById('closeRide'); if(cr) cr.addEventListener('click', ()=>document.getElementById('rideOverlay').classList.remove('open'));
+  const ro=document.getElementById('rideOverlay'); if(ro) ro.addEventListener('click', e=>{ if(e.target.id==='rideOverlay') ro.classList.remove('open'); });
+});
 
 let taxiMode = "offer"; // 'offer' or 'need'
 
@@ -1206,6 +1418,12 @@ function card(e){
   const isFlyerUpload = e.source_platform === "Flyer upload" || (!e.source_url && e.flyer_url);
   const isRealPost = !isFlyerUpload && e.source_url && e.source_url!=="#" && /\/[^/]+\/[^/]/.test(e.source_url.replace(/^https?:\/\//,""));
   const srcBtn = isRealPost ? `<a class="btn src" href="${esc(e.source_url)}" target="_blank" rel="noopener">View ↗</a>` : "";
+  // Per-card "Share a ride" — opens the step-by-step ride questionnaire pre-loaded with THIS camp.
+  const rideCamp = esc(e.title||"");
+  const rideFac  = esc(e.organizer||"");
+  const rideDate = esc(e._start ? dateRange(e) : "");
+  const rideTo   = esc([e.venue, e.city].filter(Boolean).join(", ") || e.city || "");
+  const rideBtn = `<button class="btn ride-btn" onclick='startRide(this)' data-camp="${rideCamp}" data-fac="${rideFac}" data-date="${rideDate}" data-to="${rideTo}">🚕 Share a ride</button>`;
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
   const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";
@@ -1267,7 +1485,7 @@ function card(e){
       ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
-      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}</div>
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${rideBtn}</div>
       ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
