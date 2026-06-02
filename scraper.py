@@ -1018,6 +1018,8 @@ def read_wp_event_sites():
 def read_local_flyers():
     """Read every image in FLYERS_DIR with Claude vision.
     Handles BOTH single-event flyers and multi-event calendar posters.
+    CACHED: Claude vision is only called for new or modified files.
+    Cache key = filename|mtime — so editing a flyer triggers re-extraction.
     Returns list of event dicts."""
     import glob
     if not os.path.isdir(FLYERS_DIR):
@@ -1029,6 +1031,11 @@ def read_local_flyers():
     if not files:
         print(f"  (no flyer images in '{FLYERS_DIR}/')")
         return []
+
+    flyer_cache = _load_flyer_cache()
+    cached_count = 0
+    fresh_count = 0
+
     print(f"Reading {len(files)} local flyer image(s) with Claude vision…")
     events = []
     for path in files:
@@ -1037,17 +1044,31 @@ def read_local_flyers():
             fname = urllib.parse.quote(os.path.basename(path))
             flyer_public_url = FLYERS_BASE_URL + fname
 
-            # Use multi-event extractor — works for both single and calendar images
-            extracted = extract_events_from_file(path)
+            # Cache key: filename + modification time
+            # If the file is replaced/edited, mtime changes → cache miss → re-extracted
+            mtime = str(os.path.getmtime(path))
+            cache_key = os.path.basename(path) + "|" + mtime
+
+            if cache_key in flyer_cache:
+                # Serve from cache — zero Claude cost
+                extracted = flyer_cache[cache_key]
+                cached_count += 1
+                hit_label = "(cached)"
+            else:
+                # New or modified file — call Claude vision
+                extracted = extract_events_from_file(path)
+                flyer_cache[cache_key] = extracted  # persist result
+                fresh_count += 1
+                hit_label = ""
 
             if not extracted:
-                print(f"  – {os.path.basename(path)} → not a datable event")
+                print(f"  – {os.path.basename(path)} → not a datable event {hit_label}".strip())
                 continue
 
             if len(extracted) > 1:
-                print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer)")
+                print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer) {hit_label}".strip())
             else:
-                print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')}")
+                print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')} {hit_label}".strip())
 
             for idx, ev in enumerate(extracted):
                 ev["source_platform"] = "Flyer upload"
@@ -1063,8 +1084,10 @@ def read_local_flyers():
         except Exception as e:
             print(f"  ! {os.path.basename(path)} → skipped ({type(e).__name__})")
             continue
-    return events
 
+    _save_flyer_cache(flyer_cache)
+    print(f"  📁 Flyer cache: {cached_count} served from cache, {fresh_count} newly extracted by Claude")
+    return events
 
 def make_id(ev):
     """Stable dedup id that survives across runs.
@@ -1186,6 +1209,10 @@ def smart_crop_hint(img_path_or_bytes):
 # Crop-hint cache file — so we don't re-analyse the same image every run.
 CROP_HINT_CACHE_FILE = os.path.join("feed_cache", "crop_hints.json")
 
+# Flyer vision cache — so Claude is NOT called again for unchanged flyer files.
+# Key = "filename|mtime". New/modified flyers are detected automatically.
+FLYER_CACHE_FILE = os.path.join("feed_cache", "flyer_cache.json")
+
 def _load_crop_cache():
     try:
         with open(CROP_HINT_CACHE_FILE, encoding="utf-8") as f:
@@ -1197,6 +1224,21 @@ def _save_crop_cache(cache):
     try:
         os.makedirs("feed_cache", exist_ok=True)
         with open(CROP_HINT_CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(cache, f, ensure_ascii=False, indent=1)
+    except Exception:
+        pass
+
+def _load_flyer_cache():
+    try:
+        with open(FLYER_CACHE_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+def _save_flyer_cache(cache):
+    try:
+        os.makedirs("feed_cache", exist_ok=True)
+        with open(FLYER_CACHE_FILE, "w", encoding="utf-8") as f:
             json.dump(cache, f, ensure_ascii=False, indent=1)
     except Exception:
         pass
@@ -1566,9 +1608,22 @@ def build():
 
         searched = 0
         SEARCH_CAP = 45     # stay safely under Unsplash's 50/hour demo limit
+        portrait_fixed = 0
         for ev in merged:
             fu = ev.get("flyer_url", "")
             title_key = ev.get("title", "").strip().lower()
+
+            # FIX: event carries an OLD landscape Unsplash URL but cache already has
+            # the portrait version — just apply it directly, no new API search needed.
+            is_landscape_unsplash = (
+                "images.unsplash.com" in fu and "h=1200" not in fu
+            )
+            if is_landscape_unsplash and title_key in ucache:
+                ev["flyer_url"] = ucache[title_key]
+                ev["_img_source"] = "unsplash"
+                portrait_fixed += 1
+                continue
+
             # Re-search if: (a) no image at all, OR (b) it's an Unsplash image whose
             # cache entry was deleted (manual delete OR auto-rotation above).
             # A real flyer (githubusercontent etc.) is never touched.
@@ -1585,6 +1640,8 @@ def build():
             if url:
                 ev["flyer_url"] = url
                 ev["_img_source"] = "unsplash"
+        if portrait_fixed:
+            print(f"  🖼  Portrait fix: updated {portrait_fixed} event(s) from landscape → portrait URL")
         _save_unsplash_cache(ucache)
         # don't count the bookkeeping key in the "cached total"
         total_cached = len([k for k in ucache if not k.startswith("__")])
