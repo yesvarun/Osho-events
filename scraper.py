@@ -1047,10 +1047,12 @@ def read_local_flyers():
             fname = urllib.parse.quote(os.path.basename(path))
             flyer_public_url = FLYERS_BASE_URL + fname
 
-            # Cache key: filename + modification time
-            # If the file is replaced/edited, mtime changes → cache miss → re-extracted
-            mtime = str(os.path.getmtime(path))
-            cache_key = os.path.basename(path) + "|" + mtime
+            # Cache key: filename + MD5 of file contents
+            # mtime changes on every fresh git checkout, so we use content hash instead.
+            # If the file is replaced/edited, hash changes → cache miss → re-extracted
+            import hashlib as _hl
+            file_hash = _hl.md5(open(path, "rb").read()).hexdigest()[:16]
+            cache_key = os.path.basename(path) + "|" + file_hash
 
             if cache_key in flyer_cache:
                 # Serve from cache — zero Claude cost
