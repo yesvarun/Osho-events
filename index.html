@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="/icon-192-1.png" />
 <link rel="icon" type="image/png" href="/icon-192-1.png" />
 <!-- Inline SVG favicon (scales crisply, never depends on a separate file loading) -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23B5176B'/%3E%3Cpath d='M50 2a48 48 0 000 96 24 24 0 010-48 24 24 0 000-48z' fill='%23fbeede'/%3E%3Ccircle cx='50' cy='26' r='7' fill='%23B5176B'/%3E%3Ccircle cx='50' cy='74' r='7' fill='%23fbeede'/%3E%3C/svg%3E" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23d6249f'/%3E%3Cpath d='M50 2a48 48 0 000 96 24 24 0 010-48 24 24 0 000-48z' fill='%23fbeede'/%3E%3Ccircle cx='50' cy='26' r='7' fill='%23d6249f'/%3E%3Ccircle cx='50' cy='74' r='7' fill='%23fbeede'/%3E%3C/svg%3E" />
 <link rel="manifest" href="/manifest.json" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -146,19 +146,33 @@
   .adjust-hint{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:5;
     background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:600;padding:5px 11px;border-radius:999px;white-space:nowrap}
 
-  /* ---- HIGHLIGHTED camp: artistic golden treatment, stands out from the rest ---- */
-  .card.highlighted{border:none;box-shadow:0 0 0 2.5px var(--amber),0 14px 40px rgba(216,165,52,.4)}
+  /* ---- HIGHLIGHTED camp: bright magenta treatment + falling rose petals ---- */
+  .card.highlighted{border:none;box-shadow:0 0 0 5px #d6249f,0 14px 44px rgba(214,36,159,.5)}
   .card.highlighted::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:var(--r-lg);
-    background:linear-gradient(135deg,rgba(216,165,52,.10),transparent 38%);}
+    background:linear-gradient(135deg,rgba(214,36,159,.12),transparent 40%);}
   .card.highlighted .flyer::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:linear-gradient(180deg,rgba(216,165,52,.18),transparent 42%)}
+    background:linear-gradient(180deg,rgba(214,36,159,.16),transparent 42%)}
   .hl-ribbon{position:absolute;top:0;left:0;z-index:5;display:flex;align-items:center;gap:5px;
-    background:linear-gradient(90deg,var(--amber),#e9c869);color:#3a2a10;font-size:11.5px;font-weight:800;
-    letter-spacing:.05em;padding:6px 14px 6px 12px;border-bottom-right-radius:14px;box-shadow:0 3px 10px rgba(216,165,52,.4)}
+    background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;font-size:11.5px;font-weight:800;
+    letter-spacing:.05em;padding:6px 14px 6px 12px;border-bottom-right-radius:14px;box-shadow:0 3px 12px rgba(214,36,159,.5)}
   .hl-ribbon .star{font-size:13px;animation:twinkle 2.4s ease-in-out infinite}
   @keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.8)}}
-  .card.highlighted h3{color:var(--maroon)}
-  .card.highlighted:hover{box-shadow:0 0 0 3px var(--amber),0 18px 48px rgba(216,165,52,.55)}
+  .card.highlighted h3{color:#a01070}
+  .card.highlighted:hover{box-shadow:0 0 0 6px #d6249f,0 18px 52px rgba(214,36,159,.65)}
+
+  /* Falling rose petals — only on highlighted cards. Very few, gentle. */
+  .petals{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden;border-radius:var(--r-lg)}
+  .petals span{position:absolute;top:-18px;font-size:15px;opacity:0;animation:petalfall linear infinite}
+  .petals span:nth-child(1){left:12%;animation-duration:7s;animation-delay:0s}
+  .petals span:nth-child(2){left:42%;animation-duration:9s;animation-delay:2.5s}
+  .petals span:nth-child(3){left:73%;animation-duration:8s;animation-delay:1.2s}
+  .petals span:nth-child(4){left:88%;animation-duration:10s;animation-delay:4s}
+  @keyframes petalfall{
+    0%{transform:translateY(-18px) rotate(0deg);opacity:0}
+    10%{opacity:.85}
+    90%{opacity:.7}
+    100%{transform:translateY(420px) rotate(220deg);opacity:0}
+  }
 
   /* ---- Interested button + live count (everyone can press, once each) ---- */
   .interest-row{display:flex;align-items:center;gap:9px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
@@ -483,6 +497,86 @@
 
 <div class="toast" id="toast">Camp added to the directory ✓</div>
 
+<!-- ===== Floating radio player (stays fixed while scrolling) ===== -->
+<div id="radioPlayer" style="position:fixed;right:16px;bottom:18px;z-index:90;
+     display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
+     border-radius:999px;padding:7px 14px 7px 9px;box-shadow:0 6px 22px rgba(42,29,22,.22);
+     font-family:'Spline Sans',sans-serif;font-size:12.5px;color:var(--ink-2);cursor:pointer;user-select:none"
+     onclick="toggleRadio()">
+  <span id="radioIcon" style="width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
+        justify-content:center;background:linear-gradient(135deg,#d6249f,#ff5fb0);color:#fff;font-size:13px">▶</span>
+  <span id="radioLabel">Osho Radio</span>
+</div>
+<audio id="radioAudio" preload="none"></audio>
+<script>
+// Music from the World of Osho — real tracks hosted on the Internet Archive.
+// Plays gently in sequence and loops back to the start. Free, no key needed.
+const RADIO_BASE = "https://archive.org/download/OshoMusicFromTheWorldOfOshoCD005Song005RhythmOfLife/";
+const RADIO_TRACKS = [
+  "Osho_Music%20from%20the%20world%20of%20Osho_CD001_Song002_Heart%20Song.mp3",
+  "Osho_Music%20from%20the%20world%20of%20Osho_CD002_Song003_Rainbow.mp3",
+  "Osho_Music%20from%20the%20world%20of%20Osho_CD003_Song006_Home.mp3",
+  "Osho_Music%20from%20the%20world%20of%20Osho_CD002_Song008_Clouds%20Moving.mp3",
+  "Osho_Music%20from%20the%20world%20of%20Osho_CD003_Song015_Back%20To%20The%20Source.mp3"
+];
+let radioPlaying = false;
+let radioTrack = Math.floor(Math.random() * RADIO_TRACKS.length);
+
+const _ra = document.getElementById('radioAudio');
+// When a track ends, move to the next (loop around) and keep playing.
+_ra.addEventListener('ended', ()=>{
+  // Pick a random different track each time so it never feels repetitive.
+  let next = Math.floor(Math.random() * RADIO_TRACKS.length);
+  if(RADIO_TRACKS.length > 1 && next === radioTrack){
+    next = (next + 1) % RADIO_TRACKS.length;
+  }
+  radioTrack = next;
+  _ra.src = RADIO_BASE + RADIO_TRACKS[radioTrack];
+  _ra.play().catch(()=>{});
+});
+
+// AUTO-PLAY: try to start on load. Browsers block audio until the user
+// interacts, so if the first attempt is blocked we start on the very first
+// tap/scroll/keypress anywhere on the page. The Stop button always works.
+function startRadio(){
+  if(radioPlaying) return;
+  if(!_ra.src){ _ra.src = RADIO_BASE + RADIO_TRACKS[radioTrack]; }
+  _ra.play().then(()=>{
+    radioPlaying = true;
+    document.getElementById('radioIcon').textContent = '⏸';
+    document.getElementById('radioLabel').textContent = 'Playing…';
+  }).catch(()=>{ /* blocked — will retry on first interaction */ });
+}
+window.addEventListener('load', startRadio);
+['pointerdown','touchstart','scroll','keydown'].forEach(ev=>{
+  window.addEventListener(ev, function once(){
+    startRadio();
+    ['pointerdown','touchstart','scroll','keydown'].forEach(e=>window.removeEventListener(e, once));
+  }, {once:false, passive:true});
+});
+
+function toggleRadio(){
+  const a = document.getElementById('radioAudio');
+  const icon = document.getElementById('radioIcon');
+  const label = document.getElementById('radioLabel');
+  if(radioPlaying){
+    a.pause();
+    icon.textContent = '▶';
+    label.textContent = 'Osho Radio';
+    radioPlaying = false;
+  } else {
+    if(!a.src){ a.src = RADIO_BASE + RADIO_TRACKS[radioTrack]; }
+    a.play().then(()=>{
+      icon.textContent = '⏸';
+      label.textContent = 'Playing…';
+      radioPlaying = true;
+    }).catch(()=>{
+      label.textContent = 'Tap again';
+    });
+  }
+}
+</script>
+
 <script>
 /* ============================================================
    CONFIG — connected to your live scraped feed.
@@ -701,15 +795,20 @@ function normalise(events){
     if(seen.has(k)) return false; seen.add(k); return true;
   })
   .sort((a,b)=>{
-    // Freshly added cards (within 2 minutes) stay pinned at the very top,
-    // newest first, so the person sees their upload land. After 2 min they
-    // fall into the normal date-sorted position automatically.
+    // 1) Freshly added cards (within 3 minutes) pin at the very top, newest first.
+    // 2) Then FEATURED (highlighted) cards rise above the rest, so a boosted
+    //    poster sits near the top until the owner un-highlights it.
+    // 3) Everything else sorts by start date.
     const now = Date.now();
-    const aFresh = a._added && (now - a._added) < 120000;
-    const bFresh = b._added && (now - b._added) < 120000;
-    if(aFresh && bFresh) return b._added - a._added;   // both fresh → newest first
-    if(aFresh) return -1;                              // a fresh → a on top
-    if(bFresh) return 1;                               // b fresh → b on top
+    const aFresh = a._added && (now - a._added) < 180000;
+    const bFresh = b._added && (now - b._added) < 180000;
+    if(aFresh && bFresh) return b._added - a._added;
+    if(aFresh) return -1;
+    if(bFresh) return 1;
+    const aHL = HIGHLIGHTED.has(((a.title||"")+"|"+(a.start_date||"")+"|"+(a.city||"")).toLowerCase());
+    const bHL = HIGHLIGHTED.has(((b.title||"")+"|"+(b.start_date||"")+"|"+(b.city||"")).toLowerCase());
+    if(aHL && !bHL) return -1;                         // featured rises up
+    if(bHL && !aHL) return 1;
     return a._start - b._start;                        // normal: by start date
   });
 }
@@ -734,8 +833,8 @@ function currentList(){
     // Re-apply fresh-pin at render time too (belt and suspenders): a card added in
     // the last 2 minutes sits at the very top, newest first; otherwise by start date.
     const now = Date.now();
-    const aFresh = a._added && (now - a._added) < 120000;
-    const bFresh = b._added && (now - b._added) < 120000;
+    const aFresh = a._added && (now - a._added) < 180000;
+    const bFresh = b._added && (now - b._added) < 180000;
     if(aFresh && bFresh) return b._added - a._added;
     if(aFresh) return -1;
     if(bFresh) return 1;
@@ -754,7 +853,7 @@ function render(){
   // regardless of the current view, region, state, or filters. They show here even
   // if they wouldn't match the current filter, so the person always sees their upload.
   const now = Date.now();
-  const fresh = ALL_EVENTS.filter(e=> e._added && (now - e._added) < 120000)
+  const fresh = ALL_EVENTS.filter(e=> e._added && (now - e._added) < 180000)
                     .sort((a,b)=> b._added - a._added);
   const freshIds = new Set(fresh.map(e=>e.id));
   const freshStrip = fresh.length
@@ -911,7 +1010,7 @@ function card(e){
   else if(e._community) stamp = `<span class="stamp submitted">⊕ Community submitted</span>`;
   else if(e._sample) stamp = `<span class="stamp sample">● SAMPLE DATA — not a real camp</span>`;
   else stamp = ``;
-  const isFresh = e._added && (Date.now() - e._added) < 120000;
+  const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
@@ -923,6 +1022,8 @@ function card(e){
   // Highlight: is this camp marked as highlighted? (owner-set, stored server-side)
   const isHL = HIGHLIGHTED.has(campKey);
   const hlRibbon = isHL ? `<div class="hl-ribbon"><span class="star">✦</span>Featured</div>` : "";
+  // Rose petals overlay — only rendered on highlighted (featured) cards.
+  const petals = isHL ? `<div class="petals"><span>🌸</span><span>🌸</span><span>🌸</span><span>🌸</span></div>` : "";
 
   // Interest: how many people pressed "Interested", and did THIS device already press?
   const iCount = INTEREST_COUNTS[campKey] || 0;
@@ -944,7 +1045,7 @@ function card(e){
      </div>`;
 
   return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}" data-campkey="${campKeyAttr}">
-    ${hlRibbon}${ownerTools}
+    ${hlRibbon}${ownerTools}${petals}
     ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
     ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}
     <div class="body">
