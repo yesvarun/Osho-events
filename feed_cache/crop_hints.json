@@ -2596,5 +2596,19 @@
   "focus_y_pct": 35.0,
   "object_fit": "center",
   "note": "Group of three seated, bamboo backdrop. Center composition balances faces and text."
+ },
+ "f53c7356c9b61967": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Head-tilted upward pose, prioritize face and upper body positioning"
+ },
+ "c44d978900f841d5": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 30.0,
+  "object_fit": "top",
+  "note": "Osho portrait dominates upper section, text below needs space"
  }
 }
