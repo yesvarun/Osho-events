@@ -2610,5 +2610,40 @@
   "focus_y_pct": 30.0,
   "object_fit": "top",
   "note": "Osho portrait dominates upper section, text below needs space"
+ },
+ "9db85ca6e86b989c": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Portrait headshot, face positioned upper third, include shoulders"
+ },
+ "9114957eae120c9d": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group composition with adult and child, centered framing optimal"
+ },
+ "eabe48e699db6459": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Large portrait of Osho right side, text heavy left"
+ },
+ "627d8728f509d1ed": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Two people mid-frame, balanced composition for event card"
+ },
+ "c7ca21e79812ca63": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Text-based design, centered quote composition"
  }
 }
