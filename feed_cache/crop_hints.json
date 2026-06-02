@@ -2232,5 +2232,19 @@
   "focus_y_pct": 40.0,
   "object_fit": "center",
   "note": "Head/shoulders portrait with text overlay above"
+ },
+ "03956d9ea637bb61": {
+  "has_person": true,
+  "face_y_pct": 30,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Person seated, face in upper portion, full body visible"
+ },
+ "f930bc264bb45f3f": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Upper-body portrait with hands in prayer pose, balanced composition"
  }
 }
