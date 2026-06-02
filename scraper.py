@@ -284,7 +284,10 @@ def scrape_instagram():
     if IG_SESSION_COOKIE:
         sid = IG_SESSION_COOKIE.split("sessionid=")[-1].strip().strip(";")
         payload["sessionCookies"] = [{"name":"sessionid","value":sid,"domain":".instagram.com"}]
-        print("  (using Instagram session cookie)")
+        # Diagnostic: a valid sessionid is long (40+ chars) and contains "%3A".
+        looks_valid = len(sid) >= 30 and "%3A" in sid
+        print(f"  (using Instagram session cookie — length {len(sid)}, "
+              f"{'looks valid ✓' if looks_valid else 'WARNING: looks too short / wrong cookie ✗'})")
     else:
         print("  (no IG session cookie set — hashtag results may be empty; see config note)")
     items = run_actor(IG_ACTOR, payload)
