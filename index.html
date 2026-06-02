@@ -126,6 +126,7 @@
   .card.fresh{border-color:var(--maroon);box-shadow:0 0 0 2px var(--maroon),0 10px 30px rgba(196,42,133,.3);animation:freshpulse 1.6s ease-in-out infinite}
   @keyframes freshpulse{0%,100%{box-shadow:0 0 0 2px var(--amber),0 8px 24px rgba(216,165,52,.22)}50%{box-shadow:0 0 0 3px var(--amber),0 12px 34px rgba(216,165,52,.42)}}
   .fresh-badge{position:absolute;top:12px;right:12px;z-index:3;background:var(--amber);color:#3a2a10;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+  .new-badge{position:absolute;top:12px;right:12px;z-index:3;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;padding:5px 11px;border-radius:999px;box-shadow:0 2px 8px rgba(214,36,159,.3)}
   .del-dot{position:absolute;bottom:10px;right:10px;z-index:4;width:13px;height:13px;border-radius:50%;background:#e02424;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;opacity:.55;transition:.15s}
   .del-dot:hover{opacity:1;transform:scale(1.15)}
 
@@ -809,6 +810,12 @@ function normalise(events){
     const bHL = HIGHLIGHTED.has(((b.title||"")+"|"+(b.start_date||"")+"|"+(b.city||"")).toLowerCase());
     if(aHL && !bHL) return -1;                         // featured rises up
     if(bHL && !aHL) return 1;
+    // New finds (discovered in last 2 HOURS) rise above normal date order.
+    const TWO_HOURS = 2*60*60*1000;
+    const aNew = a.first_seen && (now - new Date(a.first_seen).getTime()) < TWO_HOURS;
+    const bNew = b.first_seen && (now - new Date(b.first_seen).getTime()) < TWO_HOURS;
+    if(aNew && !bNew) return -1;
+    if(bNew && !aNew) return 1;
     return a._start - b._start;                        // normal: by start date
   });
 }
@@ -1012,6 +1019,13 @@ function card(e){
   else stamp = ``;
   const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
+  // "✨ New" badge: events the scraper discovered in the last 2 days (first_seen stamp).
+  let isNewFind = false;
+  if(!isFresh && e.first_seen){
+    const fs = new Date(e.first_seen);   // full ISO timestamp from the scraper
+    if(!isNaN(fs)) isNewFind = (Date.now() - fs.getTime()) < 2*60*60*1000;  // 2 hours
+  }
+  const newBadge = isNewFind ? `<span class="new-badge">✨ New</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
   // must persist across runs (highlight state, interest count) is keyed on the camp's
@@ -1047,7 +1061,7 @@ function card(e){
   return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}" data-campkey="${campKeyAttr}">
     ${hlRibbon}${ownerTools}${petals}
     ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
-    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}
+    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}${newBadge}
     <div class="body">
       ${stamp}
       <span class="dateline">${dateRange(e)} ${countdownTag(e)}</span>
