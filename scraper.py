@@ -488,10 +488,26 @@ def _download_image_b64(url):
     except Exception:
         return None, None
 
+def _caption_has_date(caption):
+    """Rough check: does the caption text itself contain a date?
+    If NOT, the date is probably in the flyer image — so we should read it."""
+    t = (caption or "").lower()
+    # month names (en) + common date patterns + Hindi/Devanagari month hints
+    if _re.search(r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", t): return True
+    if _re.search(r"\d{1,2}\s*[-/.]\s*\d{1,2}", t): return True       # 12/05, 12-5
+    if _re.search(r"\d{1,2}(st|nd|rd|th)\b", t): return True            # 12th
+    if _re.search(r"\d{4}", t) and _re.search(r"\d{1,2}", t): return True
+    return False
+
 def extract_event(caption, image_url=None):
-    # Decide whether to use vision: only when caption is thin AND we have an image.
-    use_image = bool(VISION_FOR_IMAGE_POSTS and image_url
-                     and len((caption or "").strip()) < VISION_MIN_CAPTION_LEN)
+    # Read the FLYER IMAGE when we have one AND either:
+    #   (a) the caption is very short, OR
+    #   (b) the caption has NO date in it (date is likely in the flyer).
+    # This catches the big miss: long captions whose real date lives in the poster.
+    cap = (caption or "").strip()
+    use_image = bool(VISION_FOR_IMAGE_POSTS and image_url and (
+        len(cap) < VISION_MIN_CAPTION_LEN or not _caption_has_date(cap)
+    ))
     content = []
     if use_image:
         b64, mtype = _download_image_b64(image_url)
@@ -1520,6 +1536,19 @@ def build():
 
     merged, seen_ids = [], set()
 
+    # --- FIRST-SEEN MAP: remember when each event was first discovered ---
+    # So the website can badge genuinely NEW finds. Carried-forward events keep
+    # their original first_seen; brand-new ones get today's date.
+    _now_iso = dt.datetime.utcnow().isoformat() + "Z"   # full timestamp so the site can measure HOURS
+    first_seen_map = {}
+    for _ev in existing:
+        try:
+            _k = make_id(_ev)
+            if _ev.get("first_seen"):
+                first_seen_map[_k] = _ev["first_seen"]
+        except Exception:
+            pass
+
     # --- BLOCKLIST: load ONCE here so it blocks both new events AND carried-forward ones ---
     blockset = set()
     try:
@@ -1557,6 +1586,7 @@ def build():
             n_blocked_new += 1
             continue
         if ev["id"] not in seen_ids:
+            ev["first_seen"] = first_seen_map.get(ev["id"], _now_iso)
             seen_ids.add(ev["id"]); merged.append(ev)
     carried = 0
     n_blocked_carried = 0
@@ -1569,6 +1599,7 @@ def build():
             continue
         if keep_upcoming(ev):               # only carry forward events that haven't passed
             ev["id"] = eid
+            ev["first_seen"] = first_seen_map.get(eid, ev.get("first_seen") or _now_iso)
             seen_ids.add(eid); merged.append(ev); carried += 1
 
     if n_blocked_new or n_blocked_carried:
