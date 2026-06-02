@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780425143108",
+    "title": "Gurdjieff Sacred Dances",
+    "type": "Retreat",
+    "start_date": "2026-09-22",
+    "end_date": "2026-09-27",
+    "venue": "Osho Sanzen, Kotla",
+    "city": "Solan",
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "phone": "8894351962",
+    "flyer_url": "",
+    "organizer": "Osho Sanzen",
+    "description": "5-day program discovering presence, balance, and meditation through sacred movements.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-02T18:32:23.108Z"
+  },
+  {
     "id": "sub_1780425076253",
     "title": "Osho Meditation Camp",
     "type": "Camp",
