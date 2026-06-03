@@ -575,6 +575,10 @@ def extract_event(caption, image_url=None):
     #   (a) the caption is very short, OR
     #   (b) the caption has NO date in it (date is likely in the flyer).
     # This catches the big miss: long captions whose real date lives in the poster.
+    if isinstance(caption, dict):
+        caption = caption.get("text") or caption.get("caption") or ""
+    elif not isinstance(caption, str):
+        caption = str(caption or "")
     cap = (caption or "").strip()
     use_image = bool(VISION_FOR_IMAGE_POSTS and image_url and (
         len(cap) < VISION_MIN_CAPTION_LEN or not _caption_has_date(cap)
@@ -1486,7 +1490,12 @@ def build():
     n_crop_analysed = 0
     for i, p in enumerate(posts, 1):
         # Cache key from caption + image — identical posts reuse the saved result.
-        _ek = hashlib.md5(((p.get("caption") or "") + "|" + (p.get("image") or "")).encode("utf-8")).hexdigest()
+        # Coerce to str first: some actors return caption/image as a dict or list.
+        _cap = p.get("caption") or ""
+        _img = p.get("image") or ""
+        if not isinstance(_cap, str): _cap = str(_cap)
+        if not isinstance(_img, str): _img = str(_img)
+        _ek = hashlib.md5((_cap + "|" + _img).encode("utf-8")).hexdigest()
         if _ek in extract_cache:
             ev = extract_cache[_ek]
             n_extract_cached += 1
