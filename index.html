@@ -1333,8 +1333,8 @@ function normalise(events){
     if(aHL && !bHL) return -1;                         // featured rises up (2 days)
     if(bHL && !aHL) return 1;
     // New finds (discovered in last 3 HOURS) rise above normal date order.
-    const aNew = firstSeenWithin(a.first_seen, 3*60*60*1000);
-    const bNew = firstSeenWithin(b.first_seen, 3*60*60*1000);
+    const aNew = firstSeenWithin(a.first_seen, 24*60*60*1000);
+    const bNew = firstSeenWithin(b.first_seen, 24*60*60*1000);
     if(aNew && !bNew) return -1;
     if(bNew && !aNew) return 1;
     return a._start - b._start;                        // normal: by start date
@@ -1362,7 +1362,7 @@ function currentList(){
     if(ui.view==="world" && ui.region && e.region!==ui.region) return false;
     if(ui.view==="world" && ui.country && e.country!==ui.country) return false;
     if(ui.types.size && !ui.types.has(e.type)) return false;
-    if(ui.newOnly && !firstSeenWithin(e.first_seen, 3*60*60*1000)) return false;
+    if(ui.newOnly && !firstSeenWithin(e.first_seen, 24*60*60*1000)) return false;
     if(ui.q){
       const hay=(e.title+" "+(e.title_original||"")+" "+e.city+" "+(e.state||"")+" "+e.country+" "+(e.organizer||"")+" "+(e.venue||"")).toLowerCase();
       if(!hay.includes(ui.q.toLowerCase())) return false;
@@ -1564,7 +1564,7 @@ function card(e){
   const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
   // "✨ New" badge: camps the scraper discovered in the last 3 HOURS (first_seen stamp).
-  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 3*60*60*1000);
+  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 24*60*60*1000);
   const newBadge = isNewFind ? `<span class="new-badge">✨ New</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
