@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780471930900",
+    "title": "Meditation Camp at Osho Pyramid",
+    "type": "Camp",
+    "start_date": "2026-06-25",
+    "end_date": "2026-06-28",
+    "venue": "Osho Pyramid Surat",
+    "city": "Surat",
+    "state": "Gujarat",
+    "country": "India",
+    "phone": "9374718325, 9327799399, 9374710414",
+    "flyer_url": "",
+    "organizer": "",
+    "description": "Meditation and love retreat combining mindfulness practices with pyramid energy amplification.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-03T07:32:10.900Z"
+  },
+  {
     "id": "sub_1780425231040",
     "title": "Osho Silence Retreat",
     "type": "Retreat",
