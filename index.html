@@ -259,6 +259,8 @@
   .taxi-field input{width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit}
   .taxi-toggle{flex:1;cursor:pointer;border:1.6px solid var(--line);background:var(--paper-2);color:#5b5b61;font-weight:600;font-size:13px;padding:10px;border-radius:10px;transition:.16s}
   .taxi-toggle.on{border-color:#d6249f;background:rgba(214,36,159,.08);color:#a01070}
+  .share-btn{background:rgba(73,80,200,.1);color:#3a40a0;border:1.4px solid #6a70d0}
+  .share-btn:hover{background:rgba(73,80,200,.18)}
   .ride-btn{background:rgba(214,36,159,.1);color:#a01070;border:1.4px solid #d6249f}
   .ride-btn:hover{background:rgba(214,36,159,.18)}
   /* Step questionnaire */
@@ -380,6 +382,11 @@
         🚕 Share a Taxi to a Camp
       </button>
     </div>
+    <div class="cta-row" style="grid-template-columns:1fr">
+      <button class="inform-btn" id="linkBtn" style="background:rgba(73,80,200,.12);color:#3a40a0;border:1.5px solid #6a70d0">
+        🔗 Post a social-media link of a camp
+      </button>
+    </div>
   </header>
 
   <div class="controls">
@@ -412,6 +419,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="search" id="searchInput" placeholder="Search by name, city, organiser…" />
       </div>
+      <button id="newFilterBtn" class="chip" aria-pressed="false" title="Show only newly discovered camps" style="white-space:nowrap">✨ New</button>
       <span class="count" id="countLabel"></span>
     </div>
   </div>
@@ -498,6 +506,33 @@
       <div style="display:flex;gap:10px;margin-top:16px">
         <button class="inform-btn" id="taxiSubmit" style="flex:1;justify-content:center;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff">Post to ride group</button>
         <button class="btn" id="taxiCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Post a social-media link modal ===== -->
+<div class="overlay" id="linkOverlay">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:460px">
+    <div class="modal-head">
+      <h2 style="font-size:18px">🔗 Post a camp link</h2>
+      <button class="x" id="closeLink" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0 0 14px;color:#5b5b61;font-size:14px;line-height:1.5">
+        Paste the link of an Instagram, Facebook, or any public post about an Osho camp. We'll read it and create a card automatically.
+      </p>
+      <div class="taxi-field"><label>Post link (URL)</label><input id="linkUrl" type="url" placeholder="https://instagram.com/p/..."></div>
+      <div class="taxi-field"><label>A note (optional)</label><input id="linkNote" type="text" placeholder="e.g. happening in Bathinda"></div>
+      <p id="linkErr" style="display:none;margin:8px 0 0;color:#9a3414;font-size:13px"></p>
+      <div id="linkThanks" style="display:none;text-align:center;padding:10px 0">
+        <div style="font-size:38px;margin-bottom:6px">🙏</div>
+        <p style="font-family:'Fraunces',serif;font-size:18px;color:var(--maroon);margin:0 0 6px">Thank you!</p>
+        <p style="color:#5b5b61;font-size:14px;line-height:1.5;margin:0">Your camp link has been received. It will be read and appear in the list after the daily update at <b>10 AM</b>. 🌸</p>
+      </div>
+      <div id="linkForm" style="display:flex;gap:10px;margin-top:16px">
+        <button class="inform-btn" id="linkSubmit" style="flex:1;justify-content:center;background:linear-gradient(90deg,#6a70d0,#9a9ff0);color:#fff">Submit link</button>
+        <button class="btn" id="linkCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
       </div>
     </div>
   </div>
@@ -620,6 +655,23 @@ const TAXI_GROUP_LINK = "https://chat.whatsapp.com/FpDcpnyfuoUBUW2brUlmTN";
 let rideData = {};
 let rideSteps = [];
 let rideIdx = 0;
+
+function shareCamp(btn){
+  const title = btn.getAttribute('data-title')||'Osho Camp';
+  const text  = btn.getAttribute('data-text')||'';
+  const img   = btn.getAttribute('data-img')||'';
+  const url   = btn.getAttribute('data-url')||img||location.href;
+  const shareText = text + (url ? ('\n' + url) : '');
+  // Native share sheet (mobile) — lets user pick WhatsApp, Telegram, etc.
+  if(navigator.share){
+    navigator.share({ title: title, text: shareText, url: url||undefined }).catch(()=>{});
+  } else {
+    // Desktop fallback: copy the text + link
+    try{ navigator.clipboard.writeText(shareText); }catch(_){}
+    const t=document.getElementById('toast');
+    if(t){ t.textContent='Camp details copied to share ✓'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+  }
+}
 
 function startRide(btn){
   // Pre-load camp details from the card's data-* attributes
@@ -797,6 +849,47 @@ function openRideGroup(){
 document.addEventListener('DOMContentLoaded', ()=>{
   const cr=document.getElementById('closeRide'); if(cr) cr.addEventListener('click', ()=>document.getElementById('rideOverlay').classList.remove('open'));
   const ro=document.getElementById('rideOverlay'); if(ro) ro.addEventListener('click', e=>{ if(e.target.id==='rideOverlay') ro.classList.remove('open'); });
+});
+
+/* ===== Post a social-media link → queue for the scraper ===== */
+function openLink(){
+  document.getElementById('linkOverlay').classList.add('open');
+  document.getElementById('linkForm').style.display='flex';
+  document.getElementById('linkThanks').style.display='none';
+  document.getElementById('linkErr').style.display='none';
+  document.getElementById('linkUrl').value='';
+  document.getElementById('linkNote').value='';
+}
+function closeLinkModal(){ document.getElementById('linkOverlay').classList.remove('open'); }
+
+async function submitLink(){
+  const url = (document.getElementById('linkUrl').value||'').trim();
+  const note = (document.getElementById('linkNote').value||'').trim();
+  const err = document.getElementById('linkErr');
+  if(!/^https?:\/\//i.test(url)){
+    err.style.display='block';
+    err.textContent='Please paste a valid link starting with http(s)://';
+    return;
+  }
+  err.style.display='none';
+  // Send to the queue function. Even if it fails, we still thank the user
+  // (the link is logged) — we don't want to discourage submissions.
+  try{
+    await fetch("/.netlify/functions/submit-link", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ url, note, at: new Date().toISOString() })
+    });
+  }catch(_){ /* still show thanks */ }
+  document.getElementById('linkForm').style.display='none';
+  document.getElementById('linkThanks').style.display='block';
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  const lb=document.getElementById('linkBtn'); if(lb) lb.addEventListener('click', openLink);
+  const cl=document.getElementById('closeLink'); if(cl) cl.addEventListener('click', closeLinkModal);
+  const lc=document.getElementById('linkCancel'); if(lc) lc.addEventListener('click', closeLinkModal);
+  const ls=document.getElementById('linkSubmit'); if(ls) ls.addEventListener('click', submitLink);
+  const lo=document.getElementById('linkOverlay'); if(lo) lo.addEventListener('click', e=>{ if(e.target.id==='linkOverlay') closeLinkModal(); });
 });
 
 let taxiMode = "offer"; // 'offer' or 'need'
@@ -1073,7 +1166,7 @@ let FEED_EVENTS = [];      // from live feed / sample
 let MY_EVENTS = [];        // submitted on this device
 let ALL_EVENTS = [];       // merged + normalised + upcoming
 let usingSample = true;
-const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"" };
+const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"", newOnly:false };
 
 /* ---- Highlight + Interest + Image-adjust shared state ----
    HIGHLIGHTED  : Set of campKeys the owner has featured (loaded from highlights.json)
@@ -1081,6 +1174,7 @@ const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"
    INTEREST_MINE   : Set of campKeys THIS device already pressed (localStorage, so once-only)
    IMG_ADJUST      : {campKey: {x,y,scale}} owner image crops (localStorage + server) */
 let HIGHLIGHTED      = new Set();
+let HIGHLIGHTED_RECENT = new Set();  // featured within last 2 days → pinned on top
 let INTEREST_COUNTS  = {};
 let INTEREST_MINE    = new Set(JSON.parse(localStorage.getItem("osho_interest_mine")||"[]"));
 let IMG_ADJUST       = JSON.parse(localStorage.getItem("osho_img_adjust")||"{}");
@@ -1137,7 +1231,22 @@ async function loadData(){
     const hres = await fetch(hurl,{cache:"no-store"});
     if(hres.ok){
       const hlist = await hres.json();
-      if(Array.isArray(hlist)) HIGHLIGHTED = new Set(hlist.map(x=>String(x).toLowerCase()));
+      if(Array.isArray(hlist)){
+        // Old format: plain list of keys → featured stays on top until un-starred.
+        HIGHLIGHTED = new Set(hlist.map(x=>String(x).toLowerCase()));
+      } else if(hlist && typeof hlist === 'object'){
+        // New format: { key: "ISO timestamp" } → featured rises to top for 2 DAYS,
+        // then the magenta styling stays but it falls back into normal date order.
+        const TWO_DAYS = 2*24*60*60*1000;
+        HIGHLIGHTED = new Set();
+        HIGHLIGHTED_RECENT = new Set();
+        for(const k in hlist){
+          const key = String(k).toLowerCase();
+          HIGHLIGHTED.add(key);  // styling (border/petals) applies regardless
+          const t = new Date(hlist[k]).getTime();
+          if(!isNaN(t) && (Date.now() - t) < TWO_DAYS) HIGHLIGHTED_RECENT.add(key);
+        }
+      }
     }
   }catch(_){ /* highlights.json may not exist yet — fine */ }
 
@@ -1216,20 +1325,32 @@ function normalise(events){
     if(aFresh && bFresh) return b._added - a._added;
     if(aFresh) return -1;
     if(bFresh) return 1;
-    const aHL = HIGHLIGHTED.has(((a.title||"")+"|"+(a.start_date||"")+"|"+(a.city||"")).toLowerCase());
-    const bHL = HIGHLIGHTED.has(((b.title||"")+"|"+(b.start_date||"")+"|"+(b.city||"")).toLowerCase());
-    if(aHL && !bHL) return -1;                         // featured rises up
+    // For the "on top" pin, prefer the 2-day-recent set; if it's empty (old array
+    // format), fall back to all highlighted so behaviour is unchanged.
+    const PIN = (HIGHLIGHTED_RECENT && HIGHLIGHTED_RECENT.size) ? HIGHLIGHTED_RECENT : HIGHLIGHTED;
+    const aHL = PIN.has(((a.title||"")+"|"+(a.start_date||"")+"|"+(a.city||"")).toLowerCase());
+    const bHL = PIN.has(((b.title||"")+"|"+(b.start_date||"")+"|"+(b.city||"")).toLowerCase());
+    if(aHL && !bHL) return -1;                         // featured rises up (2 days)
     if(bHL && !aHL) return 1;
-    // New finds (discovered in last 2 HOURS) rise above normal date order.
-    const TWO_HOURS = 2*60*60*1000;
-    const aNew = a.first_seen && (now - new Date(a.first_seen).getTime()) < TWO_HOURS;
-    const bNew = b.first_seen && (now - new Date(b.first_seen).getTime()) < TWO_HOURS;
+    // New finds (discovered in last 3 HOURS) rise above normal date order.
+    const aNew = firstSeenWithin(a.first_seen, 3*60*60*1000);
+    const bNew = firstSeenWithin(b.first_seen, 3*60*60*1000);
     if(aNew && !bNew) return -1;
     if(bNew && !aNew) return 1;
     return a._start - b._start;                        // normal: by start date
   });
 }
 function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
+// Robustly parse the scraper's first_seen timestamp and check if it's within `ms` of now.
+function firstSeenWithin(ts, ms){
+  if(!ts) return false;
+  // Handle ISO with or without Z, with or without microseconds.
+  let d = new Date(ts);
+  if(isNaN(d)){ d = new Date(String(ts).replace(' ','T').replace(/\.\d+/,'') ); }
+  if(isNaN(d)) return false;
+  const diff = Date.now() - d.getTime();
+  return diff >= 0 && diff < ms;
+}
 
 /* ============================================================
    FILTER + RENDER
@@ -1241,6 +1362,7 @@ function currentList(){
     if(ui.view==="world" && ui.region && e.region!==ui.region) return false;
     if(ui.view==="world" && ui.country && e.country!==ui.country) return false;
     if(ui.types.size && !ui.types.has(e.type)) return false;
+    if(ui.newOnly && !firstSeenWithin(e.first_seen, 3*60*60*1000)) return false;
     if(ui.q){
       const hay=(e.title+" "+(e.title_original||"")+" "+e.city+" "+(e.state||"")+" "+e.country+" "+(e.organizer||"")+" "+(e.venue||"")).toLowerCase();
       if(!hay.includes(ui.q.toLowerCase())) return false;
@@ -1424,6 +1546,12 @@ function card(e){
   const rideDate = esc(e._start ? dateRange(e) : "");
   const rideTo   = esc([e.venue, e.city].filter(Boolean).join(", ") || e.city || "");
   const rideBtn = `<button class="btn ride-btn" onclick='startRide(this)' data-camp="${rideCamp}" data-fac="${rideFac}" data-date="${rideDate}" data-to="${rideTo}">🚕 Share a ride</button>`;
+  // Share THIS camp (text + picture) to any app via the phone's native share sheet.
+  const shareTitle = esc(e.title||"Osho Camp");
+  const shareText  = esc([e.title, (e._start?dateRange(e):""), [e.venue,e.city].filter(Boolean).join(", "), e.organizer].filter(Boolean).join(" • "));
+  const shareImg   = esc(e.flyer_url||"");
+  const shareUrl   = esc(e.source_url||"");
+  const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
   const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";
@@ -1435,12 +1563,8 @@ function card(e){
   else stamp = ``;
   const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
-  // "✨ New" badge: events the scraper discovered in the last 2 days (first_seen stamp).
-  let isNewFind = false;
-  if(!isFresh && e.first_seen){
-    const fs = new Date(e.first_seen);   // full ISO timestamp from the scraper
-    if(!isNaN(fs)) isNewFind = (Date.now() - fs.getTime()) < 2*60*60*1000;  // 2 hours
-  }
+  // "✨ New" badge: camps the scraper discovered in the last 3 HOURS (first_seen stamp).
+  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 3*60*60*1000);
   const newBadge = isNewFind ? `<span class="new-badge">✨ New</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
@@ -1485,7 +1609,7 @@ function card(e){
       ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
-      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${rideBtn}</div>
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}</div>
       ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
@@ -1602,6 +1726,12 @@ let qTimer; document.getElementById("searchInput").addEventListener("input",e=>{
   clearTimeout(qTimer); qTimer=setTimeout(()=>{ui.q=e.target.value.trim();render();},180);
 });
 document.getElementById("refreshBtn").addEventListener("click",loadData);
+const _nfb=document.getElementById("newFilterBtn");
+if(_nfb) _nfb.addEventListener("click",()=>{
+  ui.newOnly=!ui.newOnly;
+  _nfb.setAttribute("aria-pressed", String(ui.newOnly));
+  render();
+});
 
 /* ============================================================
    MODAL FORM
