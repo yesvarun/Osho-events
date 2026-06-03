@@ -3051,5 +3051,12 @@
   "focus_y_pct": 55.0,
   "object_fit": "center",
   "note": "Person positioned lower, text occupies upper half of frame"
+ },
+ "717dc25e2e0895de": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Group event, lead subject center-left, crop emphasizes faces"
  }
 }
