@@ -113,6 +113,8 @@
   .chip{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;
     border:1px solid var(--line);background:var(--card);color:#5b5b61;box-shadow:var(--shadow);transition:.18s}
   .chip[aria-pressed=true]{background:var(--rust);color:#fff;border-color:transparent}
+  .newchip{all:unset;cursor:pointer;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:600;border:1.4px solid #d6249f;color:#a01070;background:rgba(214,36,159,.08)}
+  .newchip[aria-pressed=true]{background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;border-color:transparent}
   .count{font-size:13px;color:#86868b;margin-left:auto;font-weight:500}.count b{color:var(--maroon)}
 
   .region-head{display:flex;align-items:center;gap:14px;margin:34px 0 6px}
@@ -419,7 +421,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <input type="search" id="searchInput" placeholder="Search by name, city, organiser…" />
       </div>
-      <button id="newFilterBtn" class="chip" aria-pressed="false" title="Show only newly discovered camps" style="white-space:nowrap">✨ New</button>
+      <button id="newFilterBtn" class="newchip" aria-pressed="false" title="Show only newly discovered camps" style="white-space:nowrap">✨ New</button>
       <span class="count" id="countLabel"></span>
     </div>
   </div>
@@ -1357,12 +1359,17 @@ function firstSeenWithin(ts, ms){
    ============================================================ */
 function currentList(){
   return ALL_EVENTS.filter(e=>{
-    if(ui.view==="india" && e.country!=="India") return false;
-    if(ui.view==="india" && ui.state && e.state!==ui.state) return false;
-    if(ui.view==="world" && ui.region && e.region!==ui.region) return false;
-    if(ui.view==="world" && ui.country && e.country!==ui.country) return false;
-    if(ui.types.size && !ui.types.has(e.type)) return false;
-    if(ui.newOnly && !firstSeenWithin(e.first_seen, 24*60*60*1000)) return false;
+    // When the "✨ New" filter is ON, show ALL newly-found camps regardless of
+    // region/state/view — "what's new" matters more than location here.
+    if(ui.newOnly){
+      if(!firstSeenWithin(e.first_seen, 24*60*60*1000)) return false;
+    } else {
+      if(ui.view==="india" && e.country!=="India") return false;
+      if(ui.view==="india" && ui.state && e.state!==ui.state) return false;
+      if(ui.view==="world" && ui.region && e.region!==ui.region) return false;
+      if(ui.view==="world" && ui.country && e.country!==ui.country) return false;
+      if(ui.types.size && !ui.types.has(e.type)) return false;
+    }
     if(ui.q){
       const hay=(e.title+" "+(e.title_original||"")+" "+e.city+" "+(e.state||"")+" "+e.country+" "+(e.organizer||"")+" "+(e.venue||"")).toLowerCase();
       if(!hay.includes(ui.q.toLowerCase())) return false;
@@ -1398,7 +1405,7 @@ function render(){
   const freshStrip = fresh.length
     ? `<div class="grid pinned-grid">${fresh.map(card).join("")}</div>` : "";
 
-  if(ui.view==="world" && !ui.region){
+  if(ui.view==="world" && !ui.region && !ui.newOnly){
     let html = freshStrip;
     REGION_ORDER.forEach(reg=>{
       const items=list.filter(e=>e.region===reg && !freshIds.has(e.id));
