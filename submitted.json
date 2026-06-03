@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780484516324",
+    "title": "Kabir Meditation Retreat",
+    "type": "Retreat",
+    "start_date": "2026-06-22",
+    "end_date": "2026-06-27",
+    "venue": "Shree Rajneesh Dhyan Mandir, Kumashpur-Deepalpur Road, Vill. Deepalpur, Bahalgarh",
+    "city": "Sonipat",
+    "state": "Haryana",
+    "country": "India",
+    "phone": "+91 7015800931",
+    "flyer_url": "",
+    "organizer": "Osho Fragrance",
+    "description": "Explore inner awakening through Kabir's mystical wisdom, songs and teachings.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-03T11:01:56.324Z"
+  },
+  {
     "id": "sub_1780471930900",
     "title": "Meditation Camp at Osho Pyramid",
     "type": "Camp",
