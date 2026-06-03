@@ -269,6 +269,28 @@ def render_with_browser(url):
         print(f"    !! JS render failed: {type(e).__name__}: {e}")
     return ""
 
+def _ig_post(it):
+    """Parse one Instagram actor item into our standard post dict, or None."""
+    cap = (it.get("caption") or it.get("text") or it.get("title")
+           or it.get("description") or it.get("edge_media_to_caption") or "")
+    if isinstance(cap, dict):
+        cap = cap.get("text") or cap.get("caption") or ""
+    link = it.get("url") or it.get("postUrl") or it.get("inputUrl") or ""
+    if not link and it.get("shortCode"):
+        link = f"https://www.instagram.com/p/{it['shortCode']}/"
+    img = it.get("displayUrl") or it.get("imageUrl")
+    if not img and isinstance(it.get("images"), list) and it["images"]:
+        img = it["images"][0]
+    if not cap and not img:
+        return None
+    return {
+        "caption": cap,
+        "url": link,
+        "image": img or "",
+        "platform": "Instagram",
+        "timestamp": it.get("timestamp") or it.get("takenAt"),
+    }
+
 def scrape_instagram():
     print("Scraping Instagram…")
     payload = {
@@ -498,6 +520,55 @@ def _caption_has_date(caption):
     if _re.search(r"\d{1,2}(st|nd|rd|th)\b", t): return True            # 12th
     if _re.search(r"\d{4}", t) and _re.search(r"\d{1,2}", t): return True
     return False
+
+SUBMITTED_LINKS_FILE = "submitted_links.json"
+
+def scrape_submitted_links():
+    """Read user-submitted post links from submitted_links.json and scrape each
+    one with the right Apify actor (Instagram or Facebook). Returns post dicts in
+    the same shape as the other scrapers, so they flow through Claude extraction."""
+    if not os.path.exists(SUBMITTED_LINKS_FILE):
+        return []
+    try:
+        links = json.load(open(SUBMITTED_LINKS_FILE, encoding="utf-8"))
+    except Exception:
+        return []
+    if not isinstance(links, list) or not links:
+        return []
+
+    pending = [l for l in links if isinstance(l, dict) and l.get("status") != "done" and l.get("url")]
+    if not pending:
+        return []
+
+    print(f"\nReading {len(pending)} user-submitted link(s)…")
+    posts = []
+    for item in pending:
+        url = item["url"].strip()
+        try:
+            if "instagram.com" in url:
+                payload = {"directUrls": [url], "resultsType": "posts", "resultsLimit": 1}
+                for it in run_actor(IG_ACTOR, payload):
+                    p = _ig_post(it)
+                    if p: posts.append(p)
+            elif "facebook.com" in url or "fb.com" in url or "fb.watch" in url:
+                payload = {"startUrls": [{"url": url}], "maxPosts": 1}
+                for it in run_actor(FB_PAGES_ACTOR, payload):
+                    p = _fb_post(it)
+                    if p: posts.append(p)
+            else:
+                # Unknown platform — skip but mark done so it doesn't retry forever
+                print(f"  – skipped (unsupported link): {url[:50]}")
+            item["status"] = "done"
+        except Exception as e:
+            print(f"  ! failed to read {url[:50]} ({type(e).__name__})")
+            # leave status pending so it can retry next run
+    # Save back the updated statuses
+    try:
+        json.dump(links, open(SUBMITTED_LINKS_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    except Exception:
+        pass
+    print(f"  → {len(posts)} post(s) from submitted links")
+    return posts
 
 def extract_event(caption, image_url=None):
     # Read the FLYER IMAGE when we have one AND either:
@@ -1399,7 +1470,7 @@ def build():
         except Exception:
             posts = None
     if posts is None:
-        posts = scrape_instagram() + scrape_facebook()
+        posts = scrape_instagram() + scrape_facebook() + scrape_submitted_links()
         if posts:                                  # only cache a successful scrape
             try:
                 json.dump({"date": today_str, "posts": posts}, open(posts_cache, "w"))
