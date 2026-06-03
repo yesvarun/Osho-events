@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780484596548",
+    "title": "One Day Meditation Retreat",
+    "type": "Retreat",
+    "start_date": "2026-06-21",
+    "end_date": "2026-06-21",
+    "venue": "Shree Rajneesh Dhyan Mandir, Kumashpur-Deepalpur Road, Vill. Deepalpur, Bahalgarh",
+    "city": "Sonipat",
+    "state": "Haryana",
+    "country": "India",
+    "phone": "917015800931",
+    "flyer_url": "",
+    "organizer": "Osho Fragrance",
+    "description": "One day meditation retreat with focus on meditation and mindfulness.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-03T11:03:16.548Z"
+  },
+  {
     "id": "sub_1780484516324",
     "title": "Kabir Meditation Retreat",
     "type": "Retreat",
