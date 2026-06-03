@@ -1454,28 +1454,13 @@ def build():
         print(f"✓ TEST_MODE: re-saved {len(existing)} existing events (0 Apify cost).")
         return
 
-    # ONCE-A-DAY APIFY CACHE: scrape Instagram/Facebook at most once per calendar day.
-    # Repeat runs the same day reuse the saved raw posts → no extra Apify charge.
+    # EVERY RUN scrapes fresh from Apify so NEW camps are found each time (manual or
+    # scheduled). Cost is kept down NOT by skipping Apify, but by caching the expensive
+    # Claude EXTRACTION per-post below: posts already extracted in a previous run are
+    # served from cache (no Claude charge); only brand-new posts hit Claude.
     os.makedirs("feed_cache", exist_ok=True)
-    posts_cache = os.path.join("feed_cache", "apify_posts.json")
-    today_str = dt.date.today().isoformat()
-    posts = None
-    if os.path.exists(posts_cache):
-        try:
-            c = json.load(open(posts_cache))
-            if c.get("date") == today_str:
-                posts = c.get("posts", [])
-                print(f"\n♻️  Reusing {len(posts)} Instagram/Facebook posts scraped earlier today "
-                      f"(no extra Apify cost). Fresh scrape happens tomorrow.")
-        except Exception:
-            posts = None
-    if posts is None:
-        posts = scrape_instagram() + scrape_facebook() + scrape_submitted_links()
-        if posts:                                  # only cache a successful scrape
-            try:
-                json.dump({"date": today_str, "posts": posts}, open(posts_cache, "w"))
-            except Exception:
-                pass
+    print(f"\n🔄  Scraping fresh — looking for NEW camps (existing ones stay, new ones add on top)…")
+    posts = scrape_instagram() + scrape_facebook() + scrape_submitted_links()
     print(f"\nTOTAL posts scraped from all platforms: {len(posts)}")
     if not posts:
         print("⚠️  Zero posts scraped. The problem is APIFY (token, actor, or no posts for these tags),")
@@ -1486,13 +1471,29 @@ def build():
         print("⚠️  Anthropic key not working — every post will be marked 'not an event'.")
         print("    THIS is why events.json is empty. Fix the key, then re-run.")
 
-    print(f"\nExtracting {len(posts)} posts with Claude…")
+    # Per-post EXTRACTION cache — so re-seen posts don't cost a Claude call again.
+    EXTRACT_CACHE_FILE = os.path.join("feed_cache", "extract_cache.json")
+    try:
+        extract_cache = json.load(open(EXTRACT_CACHE_FILE, encoding="utf-8"))
+    except Exception:
+        extract_cache = {}
+    n_extract_cached = n_extract_fresh = 0
+
+    print(f"\nExtracting {len(posts)} posts with Claude (cached posts cost nothing)…")
     events, seen = [], set()
     n_is_event = n_upcoming = 0
     crop_cache = _load_crop_cache()
     n_crop_analysed = 0
     for i, p in enumerate(posts, 1):
-        ev = extract_event(p["caption"], p.get("image"))
+        # Cache key from caption + image — identical posts reuse the saved result.
+        _ek = hashlib.md5(((p.get("caption") or "") + "|" + (p.get("image") or "")).encode("utf-8")).hexdigest()
+        if _ek in extract_cache:
+            ev = extract_cache[_ek]
+            n_extract_cached += 1
+        else:
+            ev = extract_event(p["caption"], p.get("image"))
+            extract_cache[_ek] = ev
+            n_extract_fresh += 1
         if not ev.get("is_event"):
             continue
         n_is_event += 1
@@ -1526,6 +1527,13 @@ def build():
     if n_crop_analysed:
         _save_crop_cache(crop_cache)
         print(f"  🖼  AI crop analysis: {n_crop_analysed} new images analysed ({len(crop_cache)} cached)")
+
+    # Persist the extraction cache so future runs skip already-seen posts.
+    try:
+        json.dump(extract_cache, open(EXTRACT_CACHE_FILE, "w", encoding="utf-8"), ensure_ascii=False)
+    except Exception:
+        pass
+    print(f"  🧠 Extraction: {n_extract_fresh} new posts read by Claude, {n_extract_cached} served from cache (free)")
 
     # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
