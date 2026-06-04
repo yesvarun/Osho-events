@@ -47,10 +47,8 @@ jobs:
           git config user.name  "events-bot"
           git config user.email "bot@users.noreply.github.com"
 
-          # Pull latest FIRST so we never push on top of a stale tree
-          git pull --rebase -X ours origin main || true
-
-          # Force-add cache files even if a .gitignore would skip them
+          # 1) STAGE + COMMIT the scraper's changes FIRST. (The old order tried to pull
+          #    while these were unstaged, which made rebase fail and the push get rejected.)
           git add -A
           git add -f feed_cache/ card_images/ events.json 2>/dev/null || true
 
@@ -60,4 +58,15 @@ jobs:
           fi
 
           git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
-          git push
+
+          # 2) Now bring in any commits made on GitHub (e.g. your manual uploads) and
+          #    replay our commit on top. -X ours keeps our scraper data on conflicts.
+          #    Retry the whole pull+push a few times in case the remote moves again.
+          for i in 1 2 3; do
+            git pull --rebase -X ours origin main && git push && { echo "pushed ✓"; exit 0; }
+            echo "push attempt $i failed — retrying after pulling latest…"
+            sleep 3
+          done
+
+          echo "ERROR: could not push after 3 attempts"
+          exit 1
