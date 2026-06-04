@@ -338,6 +338,7 @@
 <div class="wrap">
 
   <header>
+    <button id="installAppBtn" style="display:none;width:100%;margin:0 0 14px;padding:13px;border:none;border-radius:999px;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;box-shadow:0 8px 22px -8px rgba(214,36,159,.5)">⤓ Install this app on your phone</button>
     <div class="brand-row">
       <div class="logo">
         <div class="mark" aria-hidden="true"></div>
@@ -1169,7 +1170,6 @@ function offset(days){const d=new Date();d.setDate(d.getDate()+days);return d.to
 let FEED_EVENTS = [];      // from live feed / sample
 let MY_EVENTS = [];        // submitted on this device
 let ALL_EVENTS = [];       // merged + normalised + upcoming
-let NEWEST_SEEN = 0;       // ms timestamp of the most recent first_seen in the data
 let usingSample = true;
 const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"", newOnly:false };
 
@@ -1251,7 +1251,7 @@ async function loadData(){
       } else if(hlist && typeof hlist === 'object'){
         // New format: { key: "ISO timestamp" } → featured rises to top for 2 DAYS,
         // then the magenta styling stays but it falls back into normal date order.
-        const TWO_DAYS = 2*6*60*60*1000;
+        const TWO_DAYS = 2*72*60*60*1000;
         HIGHLIGHTED = new Set();
         HIGHLIGHTED_RECENT = new Set();
         for(const k in hlist){
@@ -1294,15 +1294,6 @@ async function loadData(){
 
 function rebuild(genAt){
   ALL_EVENTS = normalise([...MY_EVENTS, ...FEED_EVENTS]);
-  // Compute the newest first_seen so "New" means "from the latest scrape batch",
-  // which stays correct no matter when the user opens the page.
-  NEWEST_SEEN = 0;
-  for(const e of ALL_EVENTS){
-    if(e.first_seen){
-      const t = new Date(e.first_seen).getTime();
-      if(!isNaN(t) && t > NEWEST_SEEN) NEWEST_SEEN = t;
-    }
-  }
   document.getElementById("buildTime").textContent = fmtBuild(genAt);
   const dot = document.getElementById("liveDot");
   dot.className = "dot" + (usingSample ? " warn" : "");
@@ -1356,8 +1347,8 @@ function normalise(events){
     if(aHL && !bHL) return -1;                         // featured rises up (2 days)
     if(bHL && !aHL) return 1;
     // New finds (discovered in last 3 HOURS) rise above normal date order.
-    const aNew = firstSeenWithin(a.first_seen, 6*60*60*1000);
-    const bNew = firstSeenWithin(b.first_seen, 6*60*60*1000);
+    const aNew = firstSeenWithin(a.first_seen, 72*60*60*1000);
+    const bNew = firstSeenWithin(b.first_seen, 72*60*60*1000);
     if(aNew && !bNew) return -1;
     if(bNew && !aNew) return 1;
     return a._start - b._start;                        // normal: by start date
@@ -1366,17 +1357,13 @@ function normalise(events){
 function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
 // Robustly parse the scraper's first_seen timestamp and check if it's within `ms` of now.
 function firstSeenWithin(ts, ms){
-  // "New" = part of the most recent scrape batch. We measure distance from the
-  // NEWEST first_seen in the data (not from the current time), so newly-found camps
-  // stay flagged as New until the NEXT scrape replaces them — regardless of when the
-  // page is opened. `ms` is reused as the batch window (e.g. 6h spans one run's
-  // cached+fresh stamps).
-  if(!ts || !NEWEST_SEEN) return false;
+  if(!ts) return false;
+  // Handle ISO with or without Z, with or without microseconds.
   let d = new Date(ts);
   if(isNaN(d)){ d = new Date(String(ts).replace(' ','T').replace(/\.\d+/,'') ); }
   if(isNaN(d)) return false;
-  const diff = NEWEST_SEEN - d.getTime();
-  return diff >= 0 && diff <= ms;
+  const diff = Date.now() - d.getTime();
+  return diff >= 0 && diff < ms;
 }
 
 /* ============================================================
@@ -1387,7 +1374,7 @@ function currentList(){
     // When the "✨ New" filter is ON, show ALL newly-found camps regardless of
     // region/state/view — "what's new" matters more than location here.
     if(ui.newOnly){
-      if(!firstSeenWithin(e.first_seen, 6*60*60*1000)) return false;
+      if(!firstSeenWithin(e.first_seen, 72*60*60*1000)) return false;
     } else {
       if(ui.view==="india" && e.country!=="India") return false;
       if(ui.view==="india" && ui.state && e.state!==ui.state) return false;
@@ -1596,7 +1583,7 @@ function card(e){
   const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
   // "✨ New" badge: camps the scraper discovered in the last 3 HOURS (first_seen stamp).
-  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 6*60*60*1000);
+  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 72*60*60*1000);
   const newBadge = isNewFind ? `<span class="new-badge">✨ New</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
@@ -2353,6 +2340,39 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(() => {});
   });
 }
+</script>
+
+<script>
+/* ===== Install App button (PWA beforeinstallprompt) ===== */
+(function(){
+  let deferredPrompt = null;
+  const btn = document.getElementById('installAppBtn');
+  // Fires when the browser deems the site installable
+  window.addEventListener('beforeinstallprompt', (e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    if(btn) btn.style.display = 'block';
+  });
+  if(btn){
+    btn.addEventListener('click', async ()=>{
+      if(!deferredPrompt){
+        // Fallback guidance if the prompt isn't available (e.g. iOS, or already dismissed)
+        alert("To install: open the browser menu (⋮) and tap \"Add to Home screen\".");
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      if(outcome === 'accepted' && btn) btn.style.display = 'none';
+    });
+  }
+  // Hide the button if already running as an installed app
+  if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone){
+    if(btn) btn.style.display = 'none';
+  }
+  // Hide after successful install
+  window.addEventListener('appinstalled', ()=>{ if(btn) btn.style.display='none'; });
+})();
 </script>
 </body>
 </html>
