@@ -1031,6 +1031,7 @@ let radioPlaying = false;
 let radioTrack = Math.floor(Math.random() * RADIO_TRACKS.length);
 
 const _ra = document.getElementById('radioAudio');
+_ra.volume = 0.3;   // low volume (0 = mute, 1 = full)
 // When a track ends, move to the next (loop around) and keep playing.
 _ra.addEventListener('ended', ()=>{
   // Pick a random different track each time so it never feels repetitive.
@@ -1336,18 +1337,20 @@ function normalise(events){
     if(SHARED_DELETED.has(idl) || SHARED_DELETED.has(dk) || SHARED_DELETED.has(titleKey)) return false; // everyone
     return true;
   })
-  .filter(e=>{                                         // DEDUPE — venue+date is the gate, title is a loose tie-breaker.
-    // STEP 1: same VENUE + same date = candidate same camp. No venue -> fall back to CITY + date.
-    //         No venue AND no city -> keep (can't judge, so never merge).
+  .filter(e=>{                                         // DEDUPE — CITY+DATE is the gate, title is a loose tie-breaker.
+    // STEP 1: same CITY + same date = candidate same camp. City is written consistently, whereas the
+    //         VENUE is often typed many ways ("Osho Nisarga" / "O-Nisarga" / "Osho Nisarga, Dharamshala…")
+    //         which would otherwise split one camp into several cards. If city is missing, fall back to
+    //         venue; if neither, keep (can't judge, never merge).
     // STEP 2 (only after step 1 matches): titles are unreliable (reworded every repost), so they are
     //         compared LOOSELY — a reworded title is treated as the same camp and dropped, while a
-    //         clearly different programme at the same venue/date is KEPT. So no genuine camp is lost.
-    const place = dNorm(e.venue) || dNorm(e.city);
-    if(!place) return true;                            // no venue & no city -> keep
+    //         clearly different programme in the same city/date is KEPT. So no genuine camp is lost.
+    const place = dNorm(e.city) || dNorm(e.venue);
+    if(!place) return true;                            // no city & no venue -> keep
     const key = place+"|"+dNorm(e.country)+"|"+(e.start_date||"");
     const w = dWords(e.title);
     const reps = seen.get(key) || [];
-    if(reps.some(r=>dSameCamp(w,r))) return false;     // reworded duplicate of a camp already kept -> drop
+    if(reps.some(r=>dSameCamp(w,r))) return false;     // reworded/respelled duplicate of a camp already kept -> drop
     reps.push(w); seen.set(key, reps); return true;    // genuinely different camp -> keep
   })
   .sort((a,b)=>{
