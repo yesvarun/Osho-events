@@ -357,6 +357,7 @@
       </div>
     </div>
     <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
+    <div class="today-date" id="todayDate"></div>
     <p class="share-invite">Know of a camp that's not listed? Anyone can add it — <b>Inform a Camp</b> with the details, or just <b>Upload a Flyer</b> from your phone and we'll read the date, place and title automatically.</p>
     <div class="cta-row">
       <a class="inform-btn" id="adviceBtn" href="https://wa.me/919872470204?text=Hello%20Varun%2C%20I%20found%20oshocamps.com%20and%20would%20like%20to%20share%20some%20feedback." target="_blank" rel="noopener">
@@ -1642,6 +1643,18 @@ function card(e){
        <button class="hl-btn${isHL?' on':''}" title="Highlight this camp" onclick="toggleHighlight(this,'${campKeyAttr}')">★</button>
      </div>`;
 
+  // Calendar + Reminder buttons (only when we have a start date)
+  const calStart = esc(e.start_date||"");
+  const calEnd   = esc(e.end_date||e.start_date||"");
+  const calTitle = esc(e.title||"Osho Camp");
+  const remSet = (()=>{ try{ return !!(JSON.parse(localStorage.getItem("oshoReminders")||"{}")[campKey]); }catch(_){ return false; } })();
+  const calBtn = e.start_date
+    ? `<button class="btn cal-btn" onclick="openCampCalendar(this)" data-start="${calStart}" data-end="${calEnd}" data-title="${calTitle}">📅 Calendar</button>`
+    : "";
+  const remindBtn = e.start_date
+    ? `<button class="btn remind-btn${remSet?' done':''}" onclick="setCampReminder(this)" data-start="${calStart}" data-end="${calEnd}" data-title="${calTitle}" data-key="${campKeyAttr}">${remSet?'🔔 Reminder set ✓':'🔔 Remind me'}</button>`
+    : "";
+
   return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}" data-campkey="${campKeyAttr}">
     ${hlRibbon}${ownerTools}${petals}
     ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
@@ -1653,7 +1666,7 @@ function card(e){
       ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
-      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}</div>
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}</div>
       ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
@@ -2402,6 +2415,191 @@ if ("serviceWorker" in navigator) {
     btn.style.display = 'none';
   }
   window.addEventListener('appinstalled', ()=>{ btn.style.display='none'; });
+})();
+</script>
+
+<!-- ===== Camp Calendar popup + Reminder engine (wind chimes, notifications, .ics) ===== -->
+<style>
+  .btn.cal-btn{background:var(--mag-soft);color:var(--maroon)}
+  .btn.remind-btn{background:var(--mag-soft);color:var(--maroon)}
+  .btn.remind-btn.done{background:var(--maroon);color:#fff}
+  .cc-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);
+    display:none;align-items:center;justify-content:center;padding:22px}
+  .cc-overlay.show{display:flex}
+  .cc-modal{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);
+    box-shadow:var(--shadow-hi);max-width:380px;width:100%;padding:20px 18px 18px;position:relative}
+  .cc-close{position:absolute;top:10px;right:12px;all:unset;cursor:pointer;font-size:18px;color:var(--ink-2);
+    width:30px;height:30px;text-align:center;line-height:30px;border-radius:50%}
+  .cc-close:hover{background:var(--line)}
+  .cc-title{font-weight:800;font-size:17px;padding-right:28px;line-height:1.25}
+  .cc-sub{color:var(--ink-2);font-size:13px;margin:2px 0 14px}
+  .cc-grid{display:flex;flex-direction:column;gap:6px}
+  .cc-head,.cc-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cc-head span{text-align:center;font-size:11px;font-weight:700;color:var(--ink-2)}
+  .cc-day{text-align:center;font-size:13.5px;padding:8px 0;border-radius:10px;color:var(--ink-2)}
+  .cc-day.camp{background:linear-gradient(135deg,var(--maroon),var(--gold));color:#fff;font-weight:700;
+    box-shadow:0 4px 12px -6px var(--maroon)}
+  .cc-legend{display:flex;align-items:center;gap:7px;margin-top:14px;font-size:12px;color:var(--ink-2)}
+  .cc-legend .dot{width:13px;height:13px;border-radius:4px;background:linear-gradient(135deg,var(--maroon),var(--gold))}
+  .cc-today{margin-top:10px;font-size:12.5px;color:var(--ink-2)}
+  .cc-today b{color:var(--maroon)}
+  .today-date{margin-top:12px;display:inline-block;font-size:13px;font-weight:700;color:var(--maroon);
+    background:var(--mag-soft);padding:6px 14px;border-radius:999px}
+  .cc-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);z-index:400;
+    background:var(--maroon);color:#fff;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:600;
+    box-shadow:var(--shadow-hi);opacity:0;transition:.3s;max-width:88vw;text-align:center}
+  .cc-toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+<script>
+(function(){
+  const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const D = s => { const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; };
+
+  // ---- beautiful wind-chime tone (synthesised, no audio file needed) ----
+  function windChime(){
+    try{
+      const AC = window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      const ctx = new AC();
+      const notes=[1046.5,1318.5,1567.98,2093.0,1760.0];  // C6 E6 G6 C7 A6 — soft pentatonic shimmer
+      notes.forEach((f,i)=>{
+        const o=ctx.createOscillator(), g=ctx.createGain();
+        o.type="sine"; o.frequency.value=f;
+        const t0=ctx.currentTime + i*0.13;
+        g.gain.setValueAtTime(0,t0);
+        g.gain.linearRampToValueAtTime(0.22,t0+0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001,t0+1.8);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(t0); o.stop(t0+1.9);
+      });
+      setTimeout(()=>{ try{ctx.close();}catch(_){}},2800);
+    }catch(_){}
+  }
+
+  function campToast(msg){
+    let t=document.getElementById("campToast");
+    if(!t){ t=document.createElement("div"); t.id="campToast"; t.className="cc-toast"; document.body.appendChild(t); }
+    t.textContent=msg; t.classList.add("show");
+    clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove("show"),3400);
+  }
+
+  // ---- Calendar popup: render the week(s) covering the camp ----
+  function buildCalendar(startStr,endStr,title){
+    const start=D(startStr), end=D(endStr)||start;
+    if(!start) return "<div class='cc-title'>"+esc(title)+"</div><div class='cc-sub'>Date not available</div>";
+    const first=new Date(start); first.setDate(first.getDate()-first.getDay());      // back to Sunday
+    const last=new Date(end);   last.setDate(last.getDate()+(6-last.getDay()));       // forward to Saturday
+    const names=["S","M","T","W","T","F","S"];
+    const sameMonth=start.getMonth()===end.getMonth()&&start.getFullYear()===end.getFullYear();
+    const monthLabel = sameMonth
+      ? start.toLocaleDateString([],{month:"long",year:"numeric"})
+      : start.toLocaleDateString([],{month:"short",day:"numeric"})+" – "+end.toLocaleDateString([],{month:"short",day:"numeric",year:"numeric"});
+    let html="<div class='cc-title'>"+esc(title)+"</div><div class='cc-sub'>"+monthLabel+"</div>";
+    html+="<div class='cc-grid'><div class='cc-head'>"+names.map(n=>"<span>"+n+"</span>").join("")+"</div>";
+    const cur=new Date(first);
+    while(cur<=last){
+      html+="<div class='cc-week'>";
+      for(let i=0;i<7;i++){
+        const inCamp = cur>=start && cur<=end;
+        html+="<span class='cc-day"+(inCamp?" camp":"")+"'>"+cur.getDate()+"</span>";
+        cur.setDate(cur.getDate()+1);
+      }
+      html+="</div>";
+    }
+    html+="</div><div class='cc-legend'><span class='dot'></span> Camp days</div>";
+    html+="<div class='cc-today'>Today: <b>"+new Date().toLocaleDateString([],{weekday:"long",day:"numeric",month:"long",year:"numeric"})+"</b></div>";
+    return html;
+  }
+  window.openCampCalendar=function(btn){
+    let ov=document.getElementById("campCalOverlay");
+    if(!ov){
+      ov=document.createElement("div"); ov.id="campCalOverlay"; ov.className="cc-overlay";
+      ov.addEventListener("click",e=>{ if(e.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov);
+    }
+    ov.innerHTML="<div class='cc-modal'><button class='cc-close' onclick=\"document.getElementById('campCalOverlay').classList.remove('show')\">✕</button>"
+      + buildCalendar(btn.dataset.start, btn.dataset.end, btn.dataset.title) + "</div>";
+    ov.classList.add("show");
+  };
+
+  // ---- Reminder storage ----
+  function loadRem(){ try{return JSON.parse(localStorage.getItem("oshoReminders")||"{}");}catch(_){return{};} }
+  function saveRem(o){ try{localStorage.setItem("oshoReminders",JSON.stringify(o));}catch(_){} }
+
+  // Best-effort closed-app scheduling (Chrome Notification Triggers, where available).
+  // Tagged per-camp so we can cancel them if the reminder is toggled off.
+  async function scheduleTriggers(key,title,startStr){
+    try{
+      if(!("serviceWorker" in navigator)||!("Notification" in window)) return;
+      if(Notification.permission!=="granted") return;
+      if(!("TimestampTrigger" in window)) return;            // unsupported in most browsers -> on-open fallback covers it
+      const reg=await navigator.serviceWorker.getRegistration(); if(!reg||!reg.showNotification) return;
+      const base=new Date(startStr+"T09:00:00").getTime(), day=86400000;
+      const sched=[["in 2 days",base-2*day],["tomorrow",base-1*day],["tomorrow",base-1*day+10800000]];
+      sched.forEach((s,i)=>{ const tm=s[1]; if(tm>Date.now()){
+        reg.showNotification("🔔 "+title,{body:"Your Osho camp is "+s[0]+" 🌸",
+          tag:"osho-"+key+"-"+i, showTrigger:new window.TimestampTrigger(tm)});
+      }});
+    }catch(_){}
+  }
+  async function cancelTriggers(key){
+    try{
+      if(!("serviceWorker" in navigator)) return;
+      const reg=await navigator.serviceWorker.getRegistration(); if(!reg||!reg.getNotifications) return;
+      let ns; try{ ns=await reg.getNotifications({includeTriggered:true}); }catch(_){ ns=await reg.getNotifications(); }
+      (ns||[]).forEach(n=>{ if(n.tag && n.tag.indexOf("osho-"+key+"-")===0) n.close(); });
+    }catch(_){}
+  }
+
+  // Toggle: tap to set the reminder, tap again to remove it.
+  window.setCampReminder=async function(btn){
+    const key=btn.dataset.key;
+    const r=loadRem();
+    if(r[key]){                                               // ---- already set -> turn OFF ----
+      delete r[key]; saveRem(r);
+      cancelTriggers(key);
+      btn.classList.remove("done"); btn.innerHTML="🔔 Remind me";
+      campToast("Reminder removed");
+      return;
+    }
+    // ---- set ON ----
+    const title=btn.dataset.title, start=btn.dataset.start, end=btn.dataset.end||btn.dataset.start;
+    windChime();                                              // chime on press
+    r[key]={title,start,end,set:Date.now(),fired:{}}; saveRem(r);
+    let granted = ("Notification" in window) && Notification.permission==="granted";
+    if(("Notification" in window) && Notification.permission==="default"){
+      try{ granted = (await Notification.requestPermission())==="granted"; }catch(_){}
+    }
+    scheduleTriggers(key,title,start);
+    btn.classList.add("done"); btn.innerHTML="🔔 Reminder set ✓";
+    campToast(granted
+      ? "Reminder set 🌬️🔔  We'll notify you 2 days & 1 day before."
+      : "Reminder saved 🌬️  Turn on notifications to get the alerts.");
+  };
+
+  // Site-open fallback: if a reminder is due (2 or 1 days out) while the site is open, fire it with chimes.
+  function checkDueReminders(){
+    try{
+      const r=loadRem(); const today=new Date(); today.setHours(0,0,0,0); let changed=false;
+      for(const k in r){
+        const s=D(r[k].start); if(!s){ continue; } s.setHours(0,0,0,0);
+        const days=Math.round((s-today)/86400000);
+        r[k].fired=r[k].fired||{};
+        if((days===2||days===1) && !r[k].fired[days]){
+          if("Notification" in window && Notification.permission==="granted"){
+            try{ new Notification("🔔 "+r[k].title,{body:days+" day"+(days>1?"s":"")+" to go 🌸"}); }catch(_){}
+          }
+          windChime(); r[k].fired[days]=true; changed=true;
+        }
+        if(days<0){ delete r[k]; changed=true; }              // tidy up past camps
+      }
+      if(changed) saveRem(r);
+    }catch(_){}
+  }
+  window.addEventListener("load", ()=>{
+    setTimeout(checkDueReminders,1200);
+    const td=document.getElementById("todayDate");
+    if(td) td.textContent="📅 Today · "+new Date().toLocaleDateString([],{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  });
 })();
 </script>
 </body>
