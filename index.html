@@ -2380,5 +2380,12 @@ if ("serviceWorker" in navigator) {
   window.addEventListener('appinstalled', ()=>{ btn.style.display='none'; });
 })();
 </script>
+<!-- TBA review button (links to password-gated tba.html) -->
+<a href="tba.html" id="tbaReviewBtn" aria-label="Review undated events"
+   style="position:fixed;top:10px;right:12px;z-index:95;text-decoration:none;
+   font-family:inherit;font-weight:700;font-size:13px;color:#fff;
+   padding:8px 15px;border-radius:999px;display:flex;align-items:center;gap:6px;
+   background:linear-gradient(90deg,#ff4fa3,#c026d3);
+   box-shadow:0 6px 16px -6px rgba(192,38,211,.6)">🔍 TBA</a>
 </body>
 </html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>TBA Review · Sannyas Gatherings</title>
+<style>
+  :root{
+    --bg:#0e0a14; --card:#1a1320; --line:#2c2233;
+    --pink:#ff4fa3; --pink2:#c026d3; --purple:#a78bfa;
+    --text:#f3e9f6; --muted:#9b8aa6;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    padding:18px 14px 60px;line-height:1.45}
+  h1{font-size:22px;margin:0 0 4px;background:linear-gradient(90deg,var(--pink),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+
+  /* gate */
+  #gate{max-width:420px;margin:60px auto;text-align:center}
+  #gate input{width:100%;padding:14px 16px;border-radius:14px;border:1px solid var(--line);
+    background:var(--card);color:var(--text);font-size:16px;margin:14px 0;outline:none}
+  #gate input:focus{border-color:var(--pink)}
+  .btn{display:inline-block;border:none;cursor:pointer;font-size:15px;font-weight:700;
+    padding:13px 22px;border-radius:999px;color:#fff;
+    background:linear-gradient(90deg,var(--pink),var(--pink2))}
+  .btn:active{transform:scale(.97)}
+  #gateMsg{color:#ff7a9c;font-size:13px;min-height:18px;margin-top:6px}
+
+  /* summary */
+  .summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .stat{flex:1;min-width:90px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:12px 14px}
+  .stat b{display:block;font-size:22px;color:var(--pink)}
+  .stat span{font-size:12px;color:var(--muted)}
+
+  .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .pill{font-size:12px;color:var(--muted);background:var(--card);border:1px solid var(--line);
+    padding:6px 12px;border-radius:999px}
+
+  /* event rows */
+  .ev{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:12px;margin-bottom:12px;display:flex;gap:12px}
+  .ev img{width:64px;height:64px;border-radius:12px;object-fit:cover;flex:0 0 auto;background:#241a2c}
+  .ev .body{flex:1;min-width:0}
+  .ev .t{font-weight:700;font-size:15px;margin-bottom:3px}
+  .ev .meta{font-size:12px;color:var(--muted);margin-bottom:6px}
+  .why{font-size:11px;color:#ffb3c8;background:rgba(255,79,163,.1);
+    border:1px solid rgba(255,79,163,.25);padding:3px 8px;border-radius:8px;display:inline-block}
+  .row-actions{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+  .mini{font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);
+    background:transparent;color:var(--purple);cursor:pointer;text-decoration:none}
+  .mini:active{background:#241a2c}
+  pre.raw{display:none;white-space:pre-wrap;word-break:break-word;font-size:11px;
+    color:var(--muted);background:#120d18;border:1px solid var(--line);border-radius:10px;
+    padding:10px;margin-top:8px;max-height:240px;overflow:auto}
+  .empty{text-align:center;color:var(--muted);padding:40px 10px}
+</style>
+</head>
+<body>
+
+<!-- ============ EDIT THIS ============ -->
+<script>
+  // ⚠️ This is client-side obscurity, NOT real security.
+  // Anyone who views the page source can read it. Fine for hiding a
+  // review button from casual visitors; do NOT put anything truly
+  // sensitive behind it.
+  const TBA_PASSWORD = "change-me";
+
+  // Where your data lives (same folder = leave as is)
+  const EVENTS_URL = "events.json";
+</script>
+<!-- =================================== -->
+
+<div id="gate">
+  <h1>🔒 TBA Review</h1>
+  <div class="sub">Private review of events with no usable date</div>
+  <input id="pw" type="password" placeholder="Password" autocomplete="off">
+  <div><button class="btn" id="enter">Enter</button></div>
+  <div id="gateMsg"></div>
+</div>
+
+<div id="app" style="display:none">
+  <h1>✨ TBA Review</h1>
+  <div class="sub" id="genAt">Loading…</div>
+
+  <div class="summary" id="summary"></div>
+  <div class="toolbar">
+    <span class="pill" id="note">These are hidden from the public site because no date was found.</span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+
+  // ---- gate ----
+  function tryEnter(){
+    if($("#pw").value === TBA_PASSWORD){
+      $("#gate").style.display="none";
+      $("#app").style.display="block";
+      load();
+    } else {
+      $("#gateMsg").textContent = "Wrong password.";
+    }
+  }
+  $("#enter").addEventListener("click", tryEnter);
+  $("#pw").addEventListener("keydown", e => { if(e.key==="Enter") tryEnter(); });
+
+  // ---- helpers ----
+  const DATE_FIELDS = ["start","start_date","startISO","start_iso","start_time",
+                       "date","dateStart","begins","when","starts_at","startDate"];
+  const TITLE_FIELDS = ["title","name","event","heading","event_title"];
+  const IMG_FIELDS   = ["image","img","photo","thumbnail","flyer","image_url","cover","imageUrl"];
+  const LINK_FIELDS  = ["url","link","source_url","post_url","permalink","href","original_url"];
+  const SRC_FIELDS   = ["source","platform","origin","from","channel"];
+
+  const pick = (o,fields) => { for(const f of fields){ if(o && o[f]!=null && o[f]!=="") return o[f]; } return null; };
+
+  function hasUsableDate(o){
+    const v = pick(o, DATE_FIELDS);
+    if(v==null) return false;
+    const s = String(v).trim().toLowerCase();
+    if(!s || s==="none" || s==="null" || s==="tba" || s==="n/a") return false;
+    const d = new Date(v);
+    return !isNaN(d.getTime());
+  }
+
+  // flatten: handle multi-event flyers that nest sub-events
+  function flatten(arr, out){
+    out = out || [];
+    for(const item of (arr||[])){
+      if(!item || typeof item!=="object") continue;
+      let nested = null;
+      for(const k of ["events","sub_events","items","subEvents"]){
+        if(Array.isArray(item[k]) && item[k].some(x=>x&&typeof x==="object"&&pick(x,TITLE_FIELDS))){
+          nested = item[k]; break;
+        }
+      }
+      if(nested) flatten(nested, out);
+      else if(pick(item,TITLE_FIELDS)) out.push(item);
+    }
+    return out;
+  }
+
+  function whyTba(o){
+    const v = pick(o, DATE_FIELDS);
+    if(v==null) return "no date field";
+    const s = String(v).trim().toLowerCase();
+    if(!s || s==="none" || s==="null") return "date is empty / None";
+    return "date unreadable: " + String(v).slice(0,30);
+  }
+
+  const esc = s => String(s==null?"":s).replace(/[&<>"]/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  // ---- load ----
+  async function load(){
+    try{
+      const res = await fetch(EVENTS_URL + "?cb=" + Date.now(), {cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const data = await res.json();
+
+      const rawArr = Array.isArray(data) ? data : (data.events || data.items || []);
+      const all = flatten(rawArr);
+      const tba = all.filter(e => !hasUsableDate(e));
+      const dated = all.length - tba.length;
+
+      $("#genAt").textContent = data.generated_at ? ("File generated: " + data.generated_at) : "";
+
+      $("#summary").innerHTML =
+        stat(all.length, "events in file") +
+        stat(dated, "have a date") +
+        stat(tba.length, "no date (hidden)");
+
+      const list = $("#list");
+      if(tba.length===0){
+        list.innerHTML = '<div class="empty">🎉 Nothing hidden — every event has a usable date.</div>';
+        return;
+      }
+
+      list.innerHTML = tba.map((e,i)=>{
+        const title = pick(e,TITLE_FIELDS) || "(untitled)";
+        const img   = pick(e,IMG_FIELDS);
+        const link  = pick(e,LINK_FIELDS);
+        const src   = pick(e,SRC_FIELDS) || "";
+        const raw   = esc(JSON.stringify(e,null,2));
+        return `
+        <div class="ev">
+          ${img?`<img src="${esc(img)}" onerror="this.style.display='none'">`:`<div style="width:64px;height:64px;border-radius:12px;background:#241a2c;flex:0 0 auto"></div>`}
+          <div class="body">
+            <div class="t">${esc(title)}</div>
+            <div class="meta">${esc(src)}</div>
+            <span class="why">⚠ ${esc(whyTba(e))}</span>
+            <div class="row-actions">
+              ${link?`<a class="mini" href="${esc(link)}" target="_blank" rel="noopener">Open source ↗</a>`:""}
+              <button class="mini" onclick="(function(b){const p=b.parentElement.parentElement.querySelector('.raw');p.style.display=p.style.display==='block'?'none':'block';})(this)">Raw JSON</button>
+              <button class="mini" onclick="navigator.clipboard&&navigator.clipboard.writeText(${'`'}${raw.replace(/`/g,'\\`')}${'`'});this.textContent='Copied ✓'">Copy</button>
+            </div>
+            <pre class="raw">${raw}</pre>
+          </div>
+        </div>`;
+      }).join("");
+
+    }catch(err){
+      $("#genAt").textContent = "";
+      $("#list").innerHTML = '<div class="empty">Couldn\'t load '+EVENTS_URL+
+        '<br><small>'+esc(err.message)+'</small><br><br>'+
+        'This page must be hosted on the same domain as events.json '+
+        '(e.g. oshocamps.com/tba.html). It won\'t load data from a preview.</div>';
+    }
+  }
+
+  function stat(n,label){ return '<div class="stat"><b>'+n+'</b><span>'+label+'</span></div>'; }
+})();
+</script>
+</body>
+</html>
