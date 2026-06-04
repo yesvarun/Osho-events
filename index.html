@@ -1307,8 +1307,19 @@ function rebuild(genAt){
 
 function normalise(events){
   const today = new Date(); today.setHours(0,0,0,0);
-  const seen = new Set();
+  const seen = new Map();                // place|country|date  ->  [title word-sets kept]
   const deleted = loadDeleted();        // ids + date|city keys the owner deleted on this device
+  // ---- dedupe helpers: venue+date is the gate, title is only a loose tie-breaker ----
+  const dNorm = s => (s||"").toLowerCase().replace(/[^a-z0-9]/g,"");
+  const D_STOP = new Set(["osho","meditation","retreat","camp","workshop","days","day","course","shibir","dhyan","the","and","for","with","retreats","celebration","festival","experience"]);
+  const dWords = t => new Set(((t||"").toLowerCase().replace(/\(?20\d\d\)?/g,"").match(/[a-z]{4,}/g)||[]).filter(w=>!D_STOP.has(w)));
+  const dSameCamp = (a,b)=>{               // loose: reworded titles = same camp; different = not
+    if(a.size===0 || b.size===0) return true;            // a generic/empty title at same venue+date = same camp
+    let inter=0; a.forEach(w=>{ if(b.has(w)) inter++; });
+    const uni = new Set([...a,...b]).size || 1;
+    const subset = [...a].every(w=>b.has(w)) || [...b].every(w=>a.has(w));
+    return subset || inter/uni >= 0.5;
+  };
   return events.map(e=>{
     const start = parseDate(e.start_date);
     const end = parseDate(e.end_date || e.start_date);
@@ -1325,9 +1336,19 @@ function normalise(events){
     if(SHARED_DELETED.has(idl) || SHARED_DELETED.has(dk) || SHARED_DELETED.has(titleKey)) return false; // everyone
     return true;
   })
-  .filter(e=>{                                         // DEDUPE: same date + same place = duplicate (ignore title)
-    const k = ((e.start_date||"")+"|"+(e.city||"")+"|"+(e.state||"")+"|"+(e.country||"")).toLowerCase();
-    if(seen.has(k)) return false; seen.add(k); return true;
+  .filter(e=>{                                         // DEDUPE — venue+date is the gate, title is a loose tie-breaker.
+    // STEP 1: same VENUE + same date = candidate same camp. No venue -> fall back to CITY + date.
+    //         No venue AND no city -> keep (can't judge, so never merge).
+    // STEP 2 (only after step 1 matches): titles are unreliable (reworded every repost), so they are
+    //         compared LOOSELY — a reworded title is treated as the same camp and dropped, while a
+    //         clearly different programme at the same venue/date is KEPT. So no genuine camp is lost.
+    const place = dNorm(e.venue) || dNorm(e.city);
+    if(!place) return true;                            // no venue & no city -> keep
+    const key = place+"|"+dNorm(e.country)+"|"+(e.start_date||"");
+    const w = dWords(e.title);
+    const reps = seen.get(key) || [];
+    if(reps.some(r=>dSameCamp(w,r))) return false;     // reworded duplicate of a camp already kept -> drop
+    reps.push(w); seen.set(key, reps); return true;    // genuinely different camp -> keep
   })
   .sort((a,b)=>{
     // 1) Freshly added cards (within 3 minutes) pin at the very top, newest first.
@@ -2380,12 +2401,5 @@ if ("serviceWorker" in navigator) {
   window.addEventListener('appinstalled', ()=>{ btn.style.display='none'; });
 })();
 </script>
-<!-- TBA review button (links to password-gated tba.html) -->
-<a href="tba.html" id="tbaReviewBtn" aria-label="Review undated events"
-   style="position:fixed;top:10px;right:12px;z-index:95;text-decoration:none;
-   font-family:inherit;font-weight:700;font-size:13px;color:#fff;
-   padding:8px 15px;border-radius:999px;display:flex;align-items:center;gap:6px;
-   background:linear-gradient(90deg,#ff4fa3,#c026d3);
-   box-shadow:0 6px 16px -6px rgba(192,38,211,.6)">🔍 TBA</a>
 </body>
 </html>
