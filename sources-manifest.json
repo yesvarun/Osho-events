@@ -1,0 +1,25 @@
+{
+  "name": "Source Collector — Osho Camps",
+  "short_name": "Sources",
+  "description": "Collect and sort Instagram/Facebook links into sources.json for the Osho Camps scraper.",
+  "start_url": "/link-sorter.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1a1410",
+  "theme_color": "#1a1410",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/sources-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/sources-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "share_target": {
+    "action": "/link-sorter.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}

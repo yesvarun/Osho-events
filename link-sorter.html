@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Source Collector — Osho Camps</title>
+<meta name="theme-color" content="#1a1410">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sources">
+<link rel="apple-touch-icon" href="/sources-icon-192.png">
+<link rel="manifest" href="/sources-manifest.json">
+<style>
+  :root{
+    --bg:#1a1410; --bg2:#221b15; --card:#2a201a; --line:#3d2f25;
+    --saffron:#e8913a; --saffron-soft:rgba(232,145,58,.14);
+    --magenta:#d6249f; --magenta-soft:rgba(214,36,159,.14);
+    --ink:#f3e9dd; --muted:#a08b78; --green:#5fcf8e;
+    --r:16px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:
+    radial-gradient(1200px 500px at 80% -10%, rgba(232,145,58,.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(214,36,159,.07), transparent 60%),
+    var(--bg);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+    min-height:100vh;
+  }
+  body{padding:max(16px,env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom));max-width:680px;margin:0 auto}
+  header{padding:14px 4px 18px}
+  .kicker{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--saffron);font-family:ui-monospace,monospace;margin:0 0 6px}
+  h1{font-size:30px;line-height:1.04;margin:0;font-weight:600;letter-spacing:-.01em}
+  h1 .om{color:var(--magenta)}
+  .sub{color:var(--muted);font-size:14.5px;line-height:1.5;margin:10px 2px 0}
+
+  .panel{background:linear-gradient(180deg,var(--bg2),var(--card));border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:16px 0;box-shadow:0 18px 40px -28px rgba(0,0,0,.7)}
+  label.fld{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,monospace;margin:0 0 8px}
+  textarea{width:100%;min-height:120px;resize:vertical;background:#160f0b;border:1px solid var(--line);border-radius:12px;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.6;padding:13px;outline:none}
+  textarea:focus{border-color:var(--saffron)}
+  .hint{font-size:12.5px;color:var(--muted);margin:9px 2px 0;line-height:1.5}
+
+  .btn{appearance:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:15px;border-radius:999px;padding:13px 18px;transition:.16s transform,.16s filter}
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:linear-gradient(90deg,var(--saffron),#f0a857);color:#2a1c0c;width:100%;margin-top:12px}
+  .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+  .btn-magenta{background:linear-gradient(90deg,var(--magenta),#ff5fb0);color:#fff}
+  .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-row .btn{flex:1;min-width:120px;text-align:center}
+
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:4px 0 0}
+  .stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+  .stat b{display:block;font-size:22px;color:var(--saffron);font-family:ui-monospace,monospace}
+  .stat span{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+  .group{margin-top:18px}
+  .group h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--saffron);font-family:ui-monospace,monospace;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .group h2 .n{margin-left:auto;background:var(--saffron-soft);color:var(--saffron);font-size:11px;padding:2px 9px;border-radius:999px}
+  .item{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:7px}
+  .item .url{flex:1;font-family:ui-monospace,monospace;font-size:12px;color:var(--ink);word-break:break-all;line-height:1.4}
+  .item .del{flex:none;width:30px;height:30px;border-radius:8px;border:none;background:var(--magenta-soft);color:#ff8dcf;font-size:16px;cursor:pointer;display:grid;place-items:center}
+  .item .del:active{transform:scale(.9)}
+  .empty{color:var(--muted);font-size:13px;font-style:italic;padding:6px 2px}
+
+  .out{background:#120c08;border:1px solid var(--line);border-radius:12px;padding:13px;font-family:ui-monospace,monospace;font-size:12px;color:#cdbba8;white-space:pre-wrap;word-break:break-all;max-height:280px;overflow:auto;line-height:1.55}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--green);color:#06250f;font-weight:700;font-size:14px;padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:0 14px 30px -10px rgba(0,0,0,.6)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .divider{height:1px;background:var(--line);margin:22px 0}
+  .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:26px;line-height:1.6}
+  .pill-note{display:inline-block;background:var(--magenta-soft);color:#ff8dcf;font-size:11px;padding:3px 10px;border-radius:999px;margin-top:4px}
+</style>
+</head>
+<body>
+<header>
+  <p class="kicker">Osho Camps · field tool</p>
+  <h1>Source <span class="om">Collector</span></h1>
+  <p class="sub">Paste any Instagram or Facebook links — profiles, pages, groups, posts, hashtags. It sorts them, remembers them, and builds your <b>sources.json</b> to paste into GitHub.</p>
+</header>
+
+<div class="panel">
+  <label class="fld">Paste links here (any number, any format)</label>
+  <textarea id="input" placeholder="Paste one or many, e.g.:
+https://www.instagram.com/oshopune/
+https://www.facebook.com/groups/123456/
+instagram.com/p/Cabc123/
+#oshomeditation"></textarea>
+  <button class="btn btn-primary" id="addBtn">Sort &amp; save these links</button>
+  <p class="hint">Tip: you can also <b>Share</b> a link from Instagram/Facebook straight into this app (once installed). Duplicates are ignored automatically.</p>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div id="groups"></div>
+
+<div class="divider"></div>
+
+<div class="panel">
+  <label class="fld">Your sources.json (old + new combined)</label>
+  <div class="out" id="output">No sources yet — paste some links above.</div>
+  <div class="btn-row" style="margin-top:13px">
+    <button class="btn btn-magenta" id="copyBtn">📋 Copy sources.json</button>
+    <button class="btn btn-ghost" id="copyPostsBtn">📋 Copy post links</button>
+  </div>
+  <p class="hint">Paste the <b>sources.json</b> content into the <code>sources.json</code> file on GitHub (replace everything), commit, and the scheduled scraper picks up every page next run. Post links are separate (one-time posts) — paste those into <code>submitted_links.json</code> if you want them scraped once.</p>
+</div>
+
+<div class="panel">
+  <label class="fld">Backup / restore (so you never lose your list)</label>
+  <div class="btn-row">
+    <button class="btn btn-ghost" id="exportBtn">⬇ Export backup</button>
+    <button class="btn btn-ghost" id="importBtn">⬆ Import backup</button>
+    <button class="btn btn-ghost" id="clearBtn" style="color:#ff8dcf;border-color:#5a2f48">🗑 Clear all</button>
+  </div>
+  <input type="file" id="importFile" accept="application/json" style="display:none">
+</div>
+
+<p class="foot">Everything is saved on this phone only.<br><span class="pill-note">Add to Home Screen to use it like an app</span></p>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   Source Collector — sorts pasted links, persists locally,
+   builds sources.json for the Osho-events scraper.
+   ============================================================ */
+const KEY = "osho_sources_v1";
+const CATS = {
+  ig_profiles: { label:"Instagram profiles", json:"instagram_profiles" },
+  fb_pages:    { label:"Facebook pages",     json:"facebook_pages" },
+  fb_groups:   { label:"Facebook groups",    json:"facebook_groups" },
+  hashtags:    { label:"Hashtags",           json:"instagram_hashtags" },
+  posts:       { label:"Posts (one-time)",   json:null },
+};
+const ORDER = ["ig_profiles","fb_pages","fb_groups","hashtags","posts"];
+
+let store = load();
+
+function load(){
+  try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && typeof s==="object") return normalize(s); }catch(e){}
+  return { ig_profiles:[], fb_pages:[], fb_groups:[], hashtags:[], posts:[] };
+}
+function normalize(s){
+  const out = { ig_profiles:[], fb_pages:[], fb_groups:[], hashtags:[], posts:[] };
+  for(const k in out){ if(Array.isArray(s[k])) out[k] = s[k]; }
+  return out;
+}
+function save(){ localStorage.setItem(KEY, JSON.stringify(store)); }
+
+/* ---- Classify one raw token into a category + cleaned value ---- */
+function classify(raw){
+  let t = raw.trim();
+  if(!t) return null;
+
+  // bare hashtag
+  if(t.startsWith("#")){
+    const tag = t.replace(/^#/,"").trim();
+    return tag ? { cat:"hashtags", val:tag } : null;
+  }
+
+  // normalise URL-ish text → add https:// if missing
+  let url = t;
+  if(!/^https?:\/\//i.test(url)){
+    if(/^(www\.)?(instagram|facebook|fb)\.com/i.test(url)) url = "https://" + url.replace(/^www\./i,"");
+    else if(!url.includes(".")) {
+      // not a url, not a tag with #, but maybe a plain hashtag word
+      return { cat:"hashtags", val:url };
+    }
+  }
+
+  let host="", path="";
+  try{ const u = new URL(url); host = u.hostname.replace(/^www\./i,"").toLowerCase(); path = u.pathname; }
+  catch(e){ return null; }
+
+  const clean = (host + path).replace(/\/+$/,""); // strip trailing slash for compare
+  const rebuilt = "https://www." + clean + "/";
+
+  // Instagram
+  if(host.includes("instagram.com")){
+    if(/^\/(p|reel|reels|tv)\//i.test(path)) return { cat:"posts", val:"https://www.instagram.com"+path.replace(/\/+$/,"")+"/" };
+    if(/^\/explore\/tags\//i.test(path)){
+      const tag = path.split("/").filter(Boolean).pop();
+      return tag ? { cat:"hashtags", val:tag } : null;
+    }
+    // profile: /username  (ignore reels, stories segments)
+    const seg = path.split("/").filter(Boolean);
+    if(seg.length>=1){
+      const handle = seg[0].toLowerCase();
+      if(["p","reel","reels","tv","explore","stories","accounts"].includes(handle)) return null;
+      return { cat:"ig_profiles", val:"https://www.instagram.com/"+handle+"/" };
+    }
+    return null;
+  }
+
+  // Facebook
+  if(host.includes("facebook.com") || host.includes("fb.com") || host.includes("fb.watch")){
+    if(/^\/groups\//i.test(path)){
+      const seg = path.split("/").filter(Boolean); // groups/<id>
+      const gid = seg[1] || "";
+      return gid ? { cat:"fb_groups", val:"https://www.facebook.com/groups/"+gid+"/" } : null;
+    }
+    if(/\/posts\//i.test(path) || /\/permalink\//i.test(path) || /story\.php/i.test(path) || /\/videos\//i.test(path) || host.includes("fb.watch")){
+      return { cat:"posts", val:rebuilt };
+    }
+    // otherwise treat as a page
+    const seg = path.split("/").filter(Boolean);
+    if(seg.length>=1){
+      const page = seg[0];
+      return { cat:"fb_pages", val:"https://www.facebook.com/"+page+"/" };
+    }
+    return null;
+  }
+
+  // unknown host → treat as a post link (one-time), keep as-is
+  return { cat:"posts", val:url };
+}
+
+function addLinks(text){
+  // split on whitespace, commas, newlines
+  const tokens = text.split(/[\s,]+/).map(s=>s.trim()).filter(Boolean);
+  let added=0, dup=0;
+  for(const tok of tokens){
+    const r = classify(tok);
+    if(!r) continue;
+    const arr = store[r.cat];
+    const exists = arr.some(x => x.toLowerCase() === r.val.toLowerCase());
+    if(exists){ dup++; continue; }
+    arr.push(r.val); added++;
+  }
+  save(); render();
+  if(added) toast(`Added ${added} link${added>1?"s":""}${dup?` · ${dup} dup skipped`:""} ✓`);
+  else if(dup) toast(`All ${dup} already saved`);
+  else toast("No valid links found");
+  return added;
+}
+
+function removeItem(cat, idx){
+  store[cat].splice(idx,1); save(); render();
+}
+
+/* ---- Build the sources.json text (pages only; posts excluded) ---- */
+function buildSourcesJSON(){
+  const obj = {
+    _README: "Pasted from Source Collector. Replace the whole sources.json with this. Pages/profiles/groups/hashtags are scraped every run.",
+    instagram_profiles: store.ig_profiles,
+    facebook_pages: store.fb_pages,
+    facebook_groups: store.fb_groups,
+    instagram_hashtags: store.hashtags,
+  };
+  return JSON.stringify(obj, null, 2);
+}
+
+function render(){
+  // stats
+  const statsEl = document.getElementById("stats");
+  statsEl.innerHTML = ORDER.map(c=>{
+    const n = store[c].length;
+    const short = {ig_profiles:"IG prof",fb_pages:"FB page",fb_groups:"FB grp",hashtags:"#tags",posts:"posts"}[c];
+    return `<div class="stat"><b>${n}</b><span>${short}</span></div>`;
+  }).join("");
+
+  // groups
+  const g = document.getElementById("groups");
+  g.innerHTML = ORDER.map(c=>{
+    const items = store[c];
+    const rows = items.length
+      ? items.map((u,i)=>`<div class="item"><span class="url">${esc(u)}</span><button class="del" onclick="removeItem('${c}',${i})">✕</button></div>`).join("")
+      : `<div class="empty">none yet</div>`;
+    return `<div class="group">
+      <h2>${CATS[c].label}<span class="n">${items.length}</span></h2>
+      ${rows}
+    </div>`;
+  }).join("");
+
+  // output
+  document.getElementById("output").textContent =
+    (store.ig_profiles.length||store.fb_pages.length||store.fb_groups.length||store.hashtags.length)
+      ? buildSourcesJSON()
+      : "No page sources yet — paste some links above.";
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),2200); }
+async function copy(text, msg){
+  try{ await navigator.clipboard.writeText(text); toast(msg); }
+  catch(e){
+    // fallback
+    const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast(msg); }catch(_){ toast("Copy failed — long-press to select"); }
+    ta.remove();
+  }
+}
+
+/* ---- wire up ---- */
+document.getElementById("addBtn").addEventListener("click",()=>{
+  const box=document.getElementById("input");
+  if(addLinks(box.value)) box.value="";
+});
+document.getElementById("copyBtn").addEventListener("click",()=>{
+  if(!store.ig_profiles.length && !store.fb_pages.length && !store.fb_groups.length && !store.hashtags.length){ toast("Nothing to copy yet"); return; }
+  copy(buildSourcesJSON(), "sources.json copied ✓");
+});
+document.getElementById("copyPostsBtn").addEventListener("click",()=>{
+  if(!store.posts.length){ toast("No post links saved"); return; }
+  copy(JSON.stringify(store.posts.map(u=>({url:u})), null, 2), "Post links copied ✓");
+});
+document.getElementById("exportBtn").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(store,null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+  a.download="osho-sources-backup.json"; a.click(); URL.revokeObjectURL(a.href);
+  toast("Backup downloaded ✓");
+});
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{
+    const s=normalize(JSON.parse(r.result));
+    // merge imported into current (union)
+    for(const k in s){ for(const u of s[k]){ if(!store[k].some(x=>x.toLowerCase()===u.toLowerCase())) store[k].push(u); } }
+    save(); render(); toast("Backup imported ✓");
+  }catch(_){ toast("Invalid backup file"); } };
+  r.readAsText(f); e.target.value="";
+});
+document.getElementById("clearBtn").addEventListener("click",()=>{
+  if(confirm("Clear ALL saved links on this phone? (Export a backup first if unsure.)")){
+    store={ ig_profiles:[], fb_pages:[], fb_groups:[], hashtags:[], posts:[] }; save(); render(); toast("Cleared");
+  }
+});
+
+/* ---- accept shared text via Web Share Target (if launched with ?text=) ---- */
+(function(){
+  const p = new URLSearchParams(location.search);
+  // Android share sheets may put the link in any of these — combine them all.
+  const parts = [p.get("url"), p.get("text"), p.get("title")].filter(Boolean);
+  if(parts.length){
+    addLinks(parts.join(" "));
+    history.replaceState(null,"",location.pathname);
+  }
+})();
+
+render();
+</script>
+</body>
+</html>
