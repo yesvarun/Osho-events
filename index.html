@@ -338,7 +338,7 @@
 <div class="wrap">
 
   <header>
-    <button id="installAppBtn" style="display:none;width:100%;margin:0 0 14px;padding:13px;border:none;border-radius:999px;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;box-shadow:0 8px 22px -8px rgba(214,36,159,.5)">⤓ Install this app on your phone</button>
+    <button id="installAppBtn" style="width:100%;margin:0 0 14px;padding:12px 13px;border:none;border-radius:999px;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;box-shadow:0 8px 22px -8px rgba(214,36,159,.5);display:flex;align-items:center;justify-content:center;gap:9px"><svg width="24" height="24" viewBox="0 0 100 100" style="flex:none"><circle cx="50" cy="50" r="49" fill="#fff"/><path d="M50 4a46 46 0 000 92 23 23 0 010-46 23 23 0 000-46z" fill="#d6249f"/><circle cx="50" cy="27" r="6.5" fill="#fff"/><circle cx="50" cy="73" r="6.5" fill="#d6249f"/></svg><span>Install this app on your phone</span></button>
     <div class="brand-row">
       <div class="logo">
         <div class="mark" aria-hidden="true"></div>
@@ -2347,31 +2347,36 @@ if ("serviceWorker" in navigator) {
 (function(){
   let deferredPrompt = null;
   const btn = document.getElementById('installAppBtn');
-  // Fires when the browser deems the site installable
+  if(!btn) return;
+
+  // Capture the native install prompt if/when the browser offers it.
   window.addEventListener('beforeinstallprompt', (e)=>{
     e.preventDefault();
     deferredPrompt = e;
-    if(btn) btn.style.display = 'block';
   });
-  if(btn){
-    btn.addEventListener('click', async ()=>{
-      if(!deferredPrompt){
-        // Fallback guidance if the prompt isn't available (e.g. iOS, or already dismissed)
-        alert("To install: open the browser menu (⋮) and tap \"Add to Home screen\".");
-        return;
-      }
+
+  btn.addEventListener('click', async ()=>{
+    // Native prompt ready → use it.
+    if(deferredPrompt){
       deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+      try{ await deferredPrompt.userChoice; }catch(_){}
       deferredPrompt = null;
-      if(outcome === 'accepted' && btn) btn.style.display = 'none';
-    });
-  }
-  // Hide the button if already running as an installed app
+      return;
+    }
+    // Otherwise show platform-specific manual steps.
+    var ua = navigator.userAgent || "";
+    if(/iPhone|iPad|iPod/i.test(ua)){
+      alert("To install on iPhone:\n\n1. Tap the Share button at the bottom of Safari\n2. Scroll down, tap \u201cAdd to Home Screen\u201d\n3. Tap Add");
+    } else {
+      alert("To install:\n\n1. Tap the browser menu (\u22ee, top-right)\n2. Tap \u201cAdd to Home screen\u201d or \u201cInstall app\u201d\n3. Confirm");
+    }
+  });
+
+  // If already opened as an installed app, hide the button.
   if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone){
-    if(btn) btn.style.display = 'none';
+    btn.style.display = 'none';
   }
-  // Hide after successful install
-  window.addEventListener('appinstalled', ()=>{ if(btn) btn.style.display='none'; });
+  window.addEventListener('appinstalled', ()=>{ btn.style.display='none'; });
 })();
 </script>
 </body>
