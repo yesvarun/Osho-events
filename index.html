@@ -1250,7 +1250,7 @@ async function loadData(){
       } else if(hlist && typeof hlist === 'object'){
         // New format: { key: "ISO timestamp" } → featured rises to top for 2 DAYS,
         // then the magenta styling stays but it falls back into normal date order.
-        const TWO_DAYS = 2*24*60*60*1000;
+        const TWO_DAYS = 2*72*60*60*1000;
         HIGHLIGHTED = new Set();
         HIGHLIGHTED_RECENT = new Set();
         for(const k in hlist){
@@ -1346,8 +1346,8 @@ function normalise(events){
     if(aHL && !bHL) return -1;                         // featured rises up (2 days)
     if(bHL && !aHL) return 1;
     // New finds (discovered in last 3 HOURS) rise above normal date order.
-    const aNew = firstSeenWithin(a.first_seen, 24*60*60*1000);
-    const bNew = firstSeenWithin(b.first_seen, 24*60*60*1000);
+    const aNew = firstSeenWithin(a.first_seen, 72*60*60*1000);
+    const bNew = firstSeenWithin(b.first_seen, 72*60*60*1000);
     if(aNew && !bNew) return -1;
     if(bNew && !aNew) return 1;
     return a._start - b._start;                        // normal: by start date
@@ -1373,7 +1373,7 @@ function currentList(){
     // When the "✨ New" filter is ON, show ALL newly-found camps regardless of
     // region/state/view — "what's new" matters more than location here.
     if(ui.newOnly){
-      if(!firstSeenWithin(e.first_seen, 24*60*60*1000)) return false;
+      if(!firstSeenWithin(e.first_seen, 72*60*60*1000)) return false;
     } else {
       if(ui.view==="india" && e.country!=="India") return false;
       if(ui.view==="india" && ui.state && e.state!==ui.state) return false;
@@ -1582,7 +1582,7 @@ function card(e){
   const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
   // "✨ New" badge: camps the scraper discovered in the last 3 HOURS (first_seen stamp).
-  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 24*60*60*1000);
+  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 72*60*60*1000);
   const newBadge = isNewFind ? `<span class="new-badge">✨ New</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
