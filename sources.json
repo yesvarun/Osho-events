@@ -1,0 +1,19 @@
+{
+  "_README": "Paste Osho page/profile URLs below. Every scheduled run reads this file and scrapes them. Add as many as you want. Keep the quotes and commas correct. Remove the example lines once you add your own.",
+
+  "instagram_profiles": [
+    "https://www.instagram.com/EXAMPLE_paste_real_handle_here/"
+  ],
+
+  "facebook_pages": [
+    "https://www.facebook.com/EXAMPLE_paste_real_page_here/"
+  ],
+
+  "facebook_groups": [
+    "https://www.facebook.com/groups/EXAMPLE_public_group_id/"
+  ],
+
+  "instagram_hashtags": [
+    "oshopune"
+  ]
+}
