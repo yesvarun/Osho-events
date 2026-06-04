@@ -1087,9 +1087,11 @@ function toggleRadio(){
 /* ============================================================
    CONFIG — connected to your live scraped feed.
    ============================================================ */
-const DATA_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/events.json";
-const SUBMITTED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/submitted.json";
-const DELETED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/deleted.json";
+const DATA_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/events.json";
+// Fallback CDN if GitHub raw fails from the Netlify domain (CORS / rate-limit / network).
+const DATA_URL_FALLBACK = "https://cdn.jsdelivr.net/gh/yesvarun/Osho-events@main/events.json";
+const SUBMITTED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/submitted.json";
+const DELETED_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/deleted.json";
 let SHARED_DELETED = new Set();   // blocklist fetched from GitHub, applied for EVERYONE
 /* OPTIONAL: paste your support/donation link here (Ko-fi, Buy Me a Coffee, UPI page, etc.).
    Leave "" and the "Help keep it free" line is hidden automatically. */
@@ -1192,16 +1194,25 @@ const INTEREST_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/m
 async function loadData(){
   setLoading();
   let raw = SAMPLE_DATA; usingSample = true;
-  if(DATA_URL){
+  // Try GitHub raw first, then jsDelivr CDN, then fall back to sample. This makes the
+  // LIVE (Netlify) site reliably load the real events.json even if one host hiccups.
+  const _bust = "t=" + Date.now();
+  const _tryUrls = [
+    DATA_URL + (DATA_URL.includes("?") ? "&" : "?") + _bust,
+    DATA_URL_FALLBACK + (DATA_URL_FALLBACK.includes("?") ? "&" : "?") + _bust,
+  ];
+  for(const url of _tryUrls){
     try{
-      // cache-buster (?t=…) forces GitHub's CDN to serve the freshest file, not a stale cached copy
-      const url = DATA_URL + (DATA_URL.includes("?") ? "&" : "?") + "t=" + Date.now();
-      const res = await fetch(url,{cache:"no-store"});
+      const res = await fetch(url, {cache:"no-store"});
       if(!res.ok) throw new Error("HTTP "+res.status);
       const j = await res.json();
-      if(j && Array.isArray(j.events) && j.events.length){ raw = j; usingSample = false; }
-    }catch(err){ console.warn("Live feed unavailable, using sample:",err); }
+      if(j && Array.isArray(j.events) && j.events.length){
+        raw = j; usingSample = false;
+        break;                    // got real data — stop trying
+      }
+    }catch(err){ console.warn("Feed source failed ("+url.split("?")[0]+"):", err); }
   }
+  if(usingSample) console.warn("All live sources failed — showing sample data.");
   FEED_EVENTS = (raw.events || []).map(e=>({...e, _sample: usingSample, _built: raw.generated_at}));
 
   // Also load community-submitted camps (submitted.json) so EVERYONE sees uploads.
