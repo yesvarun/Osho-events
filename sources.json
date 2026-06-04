@@ -1,19 +1,16 @@
 {
-  "_README": "Paste Osho page/profile URLs below. Every scheduled run reads this file and scrapes them. Add as many as you want. Keep the quotes and commas correct. Remove the example lines once you add your own.",
-
+  "_README": "Pasted from Source Collector. Replace the whole sources.json with this. Pages/profiles/groups/hashtags are scraped every run.",
   "instagram_profiles": [
-    "https://www.instagram.com/EXAMPLE_paste_real_handle_here/"
+    "https://www.instagram.com/oshobliss_experiences/",
+    "https://www.instagram.com/shashikant_sadaiv/",
+    "https://www.instagram.com/oshohimalayas/",
+    "https://www.instagram.com/oshomeditationcentrebathinda/",
+    "https://www.instagram.com/oshomananoffice/",
+    "https://www.instagram.com/mandakinimeditationcentre/",
+    "https://www.instagram.com/zorbathebuddhaindia/",
+    "https://www.instagram.com/osholoverskerala/"
   ],
-
-  "facebook_pages": [
-    "https://www.facebook.com/EXAMPLE_paste_real_page_here/"
-  ],
-
-  "facebook_groups": [
-    "https://www.facebook.com/groups/EXAMPLE_public_group_id/"
-  ],
-
-  "instagram_hashtags": [
-    "oshopune"
-  ]
+  "facebook_pages": [],
+  "facebook_groups": [],
+  "instagram_hashtags": []
 }
