@@ -354,6 +354,9 @@
         <span class="pill"><span>Auto-refresh hourly</span> · <button id="refreshBtn">refresh now</button></span>
         <button id="ownerLockBtn" title="Owner tools (locked)" onclick="toggleOwnerMode()"
           style="all:unset;cursor:pointer;font-size:16px;padding:4px 8px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line);line-height:1">🔒</button>
+        <a id="fsBtn" href="flyer-splitter.html" target="_blank" rel="noopener"
+          title="Flyer Splitter — split one flyer that lists many camps into separate cards"
+          style="all:unset;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.6px;padding:5px 11px;border-radius:999px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;line-height:1;box-shadow:0 2px 5px rgba(214,36,159,.35)">FS</a>
       </div>
     </div>
     <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
@@ -1385,6 +1388,72 @@ function normalise(events){
   });
 }
 function parseDate(s){ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; }
+
+/* ---- Forgiving flyer-date handling ----
+   Flyers write dates in many ways, and sometimes the YEAR sits far away from the
+   day/month (a corner, a header). _findYear() scans the whole flyer text for a year;
+   _normDate() turns almost any single date into ISO YYYY-MM-DD, borrowing that year
+   when the date itself has none. */
+const _MONTHS={jan:1,january:1,feb:2,february:2,mar:3,march:3,apr:4,april:4,may:5,
+  jun:6,june:6,jul:7,july:7,aug:8,august:8,sep:9,sept:9,september:9,oct:10,october:10,
+  nov:11,november:11,dec:12,december:12};
+function _deva(s){ // convert Devanagari/Arabic-Indic digits to plain ones
+  return String(s||"").replace(/[०-९]/g,d=>"०१२३४५६७८९".indexOf(d))
+                      .replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
+}
+function _findYear(text){
+  const m=_deva(text).match(/\b(20\d{2})\b/);   // any 20xx anywhere on the flyer
+  return m?+m[1]:null;
+}
+function _iso(y,mo,d){
+  if(!y||!mo||!d) return null;
+  if(mo<1||mo>12||d<1||d>31) return null;
+  return y+"-"+String(mo).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+}
+function _inferYear(mo,d,hint){
+  if(hint) return hint;
+  const now=new Date(); const y=now.getFullYear();
+  // pick the year (this or next) that keeps the date today-or-later
+  const cand=new Date(y,mo-1,d); cand.setHours(0,0,0,0);
+  const t0=new Date(); t0.setHours(0,0,0,0);
+  return cand<t0 ? y+1 : y;
+}
+function _normDate(raw,yearHint){
+  if(!raw) return null;
+  let s=_deva(String(raw)).trim().toLowerCase()
+        .replace(/(\d+)(st|nd|rd|th)/g,"$1")      // 5th -> 5
+        .replace(/[,.]/g," ").replace(/\s+/g," ").trim();
+  let m;
+  // already ISO
+  if((m=s.match(/\b(20\d{2})[-/](\d{1,2})[-/](\d{1,2})\b/))) return _iso(+m[1],+m[2],+m[3]);
+  // 5 June 2025  /  5 jun  (day month [year])
+  if((m=s.match(/\b(\d{1,2})\s+([a-z]+)(?:\s+(20\d{2}))?\b/)) && _MONTHS[m[2]]){
+    const mo=_MONTHS[m[2]], d=+m[1]; return _iso(_inferYear(mo,d,m[3]?+m[3]:yearHint),mo,d);
+  }
+  // June 5 2025  /  jun 5  (month day [year])
+  if((m=s.match(/\b([a-z]+)\s+(\d{1,2})(?:\s+(20\d{2}))?\b/)) && _MONTHS[m[1]]){
+    const mo=_MONTHS[m[1]], d=+m[2]; return _iso(_inferYear(mo,d,m[3]?+m[3]:yearHint),mo,d);
+  }
+  // 05/06/2025 or 05-06-25 (day-first, India)
+  if((m=s.match(/\b(\d{1,2})[-/](\d{1,2})[-/](\d{2,4})\b/))){
+    let y=+m[3]; if(y<100) y+=2000; return _iso(y,+m[2],+m[1]);
+  }
+  // 05/06  (day/month, no year)
+  if((m=s.match(/\b(\d{1,2})[-/](\d{1,2})\b/))){
+    const d=+m[1], mo=+m[2]; return _iso(_inferYear(mo,d,yearHint),mo,d);
+  }
+  return null;
+}
+/* Normalise an extracted event's dates in place, borrowing a year found anywhere
+   on the flyer when the date string itself has none. */
+function fixEventDates(ev){
+  if(!ev) return ev;
+  const hint=_findYear([ev.full_text,ev.description,ev.title,ev.start_date,ev.end_date,ev.venue].join(" "));
+  const ns=_normDate(ev.start_date,hint); if(ns) ev.start_date=ns;
+  const ne=_normDate(ev.end_date,hint);   if(ne) ev.end_date=ne;
+  if(ev.start_date && !ev.end_date) ev.end_date=ev.start_date;
+  return ev;
+}
 // Robustly parse the scraper's first_seen timestamp and check if it's within `ms` of now.
 function firstSeenWithin(ts, ms){
   if(!ts) return false;
@@ -1896,6 +1965,7 @@ flyerInput.addEventListener("change", async (e)=>{
         body: JSON.stringify({ image_base64: b64, media_type: file.type || "image/jpeg" })
       });
       ev = await exResp.json();
+      fixEventDates(ev);   // accept any date format + year written elsewhere on the flyer
     }catch(_){ ev = null; }
 
     // ---- 4. Decide what to do with the result ----
@@ -1964,6 +2034,7 @@ flyerInput.addEventListener("change", async (e)=>{
    Returns true if added, or a reason string if not. */
 function addCampFromExtraction(ev, opts){
   opts = opts || {};
+  fixEventDates(ev);   // accept any date format + year written elsewhere
   if(!(ev && ev.is_event && ev.start_date)) return "no-date";
   const bad = moderateText(ev.title, ev.description, ev.venue, ev.organizer, ev.city);
   if(bad) return "blocked-word";
@@ -2754,8 +2825,15 @@ if ("serviceWorker" in navigator) {
   .nfx-prev{left:-14px} .nfx-next{right:-14px}
   .nfx-hint{margin-top:12px;text-align:center;color:#fff;opacity:.8;font-size:11.5px;font-weight:600}
   /* India breathing map */
-  .now-map-btn{display:block;margin:8px auto 2px;all:unset;cursor:pointer;font-size:12.5px;font-weight:700;
-    color:#b32418;background:var(--mag-soft);padding:9px 18px;border-radius:999px;text-align:center}
+  .now-map-btn{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;margin:6px auto 2px;-webkit-tap-highlight-color:transparent}
+  .nmb-knob{width:30px;height:30px;border-radius:50%;display:block;
+    background:radial-gradient(circle at 36% 28%,#ffe1ef 0%,#f48fbf 52%,#d24f93 100%);
+    border:1px solid rgba(170,45,110,.45);
+    box-shadow:0 3px 0 #a83a72,0 6px 9px rgba(150,30,90,.35),inset 0 1px 2px rgba(255,255,255,.8),inset 0 -3px 5px rgba(150,40,95,.4);
+    transition:transform .09s ease,box-shadow .09s ease}
+  .now-map-btn:active .nmb-knob{transform:translateY(3px);
+    box-shadow:0 1px 0 #a83a72,0 2px 4px rgba(150,30,90,.3),inset 0 1px 2px rgba(255,255,255,.65),inset 0 -2px 4px rgba(150,40,95,.45)}
+  .nmb-cap{font-size:10.5px;font-weight:700;color:#c0398b;letter-spacing:.2px}
   .imap-overlay{position:fixed;inset:0;z-index:300;background:radial-gradient(120% 90% at 50% 0%,rgba(60,20,55,.82),rgba(20,8,18,.9));
     backdrop-filter:blur(5px);display:none;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
   .imap-overlay.show{display:flex}
@@ -2872,7 +2950,7 @@ if ("serviceWorker" in navigator) {
     "karnataka":[76.5,14.5],"kerala":[76.5,10.3],"tamil nadu":[78.5,11.0],"andhra pradesh":[79.5,15.5],"telangana":[79.0,17.8],
     "goa":[74.0,15.4],"assam":[92.5,26.2],"sikkim":[88.5,27.4]
   };
-  const BORDER=[[74,34.5],[75.2,35.4],[77,35.5],[78.5,34.6],[79.3,33.2],[78.9,32],[79,31],[80.2,30.6],[81.2,30.1],[82.4,29.6],[83.6,29.1],[85,28.6],[86.4,28.1],[87.6,27.9],[88.2,27.9],[88.9,28],[89.7,28.1],[90.6,28],[91.7,27.5],[92.7,27.8],[94,28.4],[95.4,29],[96.6,29.4],[97.4,28.3],[96.9,27],[96.1,26.5],[95.2,26],[94.5,25],[94.2,24],[93.4,23],[93.2,22.2],[92.3,23.4],[92.2,24.3],[91.5,24],[91.1,23.7],[91.4,24.6],[90.6,25],[89.8,25.3],[89,26],[88.4,26.5],[88.1,26.6],[88,25.4],[88.2,24.2],[88.7,23.3],[88.9,21.7],[87.2,21.6],[86.5,20.8],[85.1,19.7],[83.9,18.8],[83.2,17.7],[82.2,16.9],[81.2,16.3],[80.3,15.8],[80.2,14.5],[80.2,13.4],[79.9,11.9],[79.3,10.8],[78.8,9.6],[78.1,8.9],[77.5,8.1],[76.5,8.9],[75.9,10.2],[75.2,11.7],[74.7,13],[74.3,14.4],[73.8,15.7],[73.3,17],[72.9,18.5],[72.8,19.6],[72.9,20.6],[72.7,21.4],[71.5,20.9],[70.4,20.9],[69.6,22],[68.5,22.4],[68.4,23.6],[69.8,23.9],[71,24.3],[72.2,24.6],[73,26.2],[73.6,27.8],[74.6,29],[74.1,30.4],[74.6,31.5],[75.4,32.3],[74.2,32.9],[74,34.5]];
+  const BORDER=[[74.55,37.05],[75.4,37],[76.2,36.55],[76.9,36.1],[77.8,35.75],[78.6,35.55],[79.4,35.45],[80.1,35.35],[80.35,34.8],[80.05,34.3],[79.45,34],[79.3,33.05],[79.05,32.1],[78.75,31.35],[79.2,31.05],[79.85,30.75],[80.45,30.4],[81.05,30.2],[82,29.75],[83,29.3],[84.05,28.9],[85.05,28.42],[86.05,28.1],[87.05,27.92],[88,27.9],[88.1,27.55],[88.45,27.85],[88.92,28.02],[89.65,28.1],[90.55,28.02],[91.6,27.5],[92.4,27.8],[93.25,28.6],[94.25,29.25],[95.35,29.05],[96.4,29.3],[97.4,28.3],[96.95,27.2],[96.1,26.6],[95.2,26.6],[94.55,25.45],[94.25,24.45],[93.4,23.7],[93.2,22.3],[92.45,22.95],[92.15,23.05],[91.65,22.95],[91.3,23.55],[91.35,24.05],[90.6,25.2],[89.8,25.3],[89,26.05],[88.45,26.45],[88.08,26.3],[88,25.2],[88.2,24.2],[88.7,24],[88.6,23.05],[88.9,22.2],[88.15,21.7],[87.4,21.5],[86.9,21.2],[86.5,20.8],[85.9,20.3],[85.1,19.7],[84.4,19],[83.7,18.3],[83.2,17.7],[82.3,17],[81.2,16.3],[80.7,15.9],[80.2,15.1],[80.1,14.4],[80.3,13.5],[79.9,12.5],[79.8,11.9],[79.5,11.2],[79.3,10.6],[78.9,9.6],[78.4,9.3],[78.1,8.8],[77.53,8.08],[77.1,8.4],[76.7,8.9],[76.5,9.5],[76.2,10],[75.9,10.8],[75.7,11.6],[75.2,12.3],[74.8,12.9],[74.5,13.7],[74.3,14.5],[74.1,15.3],[73.9,15.5],[73.5,16.2],[73.3,17],[73,17.9],[72.9,18.6],[72.8,19.4],[72.7,20.2],[72.9,20.7],[72.6,21.3],[72.2,21.7],[71.5,20.9],[70.6,20.8],[69.9,21.5],[69.6,22.3],[69.9,22.8],[70.5,22.6],[70,23],[69,22.8],[68.5,23],[68.4,23.6],[68.75,24],[69.6,24.3],[70.6,24.4],[71,24.7],[70.7,27.7],[72.3,28.7],[73,29.2],[73.9,29.9],[74.5,30.4],[74.1,30.9],[74.6,31.5],[75,32],[74.3,32.5],[74,32.9],[73.95,33.3],[73.75,33.75],[73.6,34.1],[73.45,34.55],[73.25,35],[73.2,35.45],[73.8,35.9],[74.3,36.3],[74.45,36.75],[74.55,37.05]];
   const VW=460, VH=520;
   // Real India extent (from the labelled map): 68°7'E–97°25'E, 8°4'N–37°6'N, with a little margin.
   const LNG0=67.6, LNG1=98.0, LAT0=37.6, LAT1=7.4;
@@ -3005,7 +3083,7 @@ if ("serviceWorker" in navigator) {
       fan.hidden=false;
       fan.classList.toggle("open", nfSpread);
       fan.innerHTML="<div class='nf-track'>"+cover+tiles+"</div>"
-        +"<button class='now-map-btn' id='nowMapBtn'>🗺️ Map of camps</button>";
+        +"<button class='now-map-btn' id='nowMapBtn'><span class='nmb-knob'></span><span class='nmb-cap'>Map of camps</span></button>";
     }catch(_){}
   };
   document.addEventListener("click", function(e){
