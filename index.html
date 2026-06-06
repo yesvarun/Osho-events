@@ -2634,7 +2634,7 @@ if ("serviceWorker" in navigator) {
   .cs-flyer{width:100%;max-height:240px;object-fit:cover;border-radius:14px;margin-bottom:14px}
   .cs-h{font-weight:800;font-size:18px;padding-right:30px;line-height:1.3;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .cs-meta-line{display:flex;gap:8px;align-items:flex-start;color:var(--ink-2);font-size:13.5px;margin:6px 0}
-  .cs-desc{font-family:"Fraunces",Georgia,serif;font-size:15.5px;line-height:1.75;color:var(--ink);
+  .cs-desc{font-family:"Fraunces",Georgia,serif;font-size:15.5px;line-height:1.75;color:var(--ink);white-space:pre-wrap;
     background:var(--mag-soft);padding:15px 17px;border-radius:14px;margin:14px 0}
   .cs-soon{font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--maroon);
     background:var(--mag-soft);padding:3px 9px;border-radius:999px}
@@ -2674,15 +2674,23 @@ if ("serviceWorker" in navigator) {
   // ---- 📖 Details: the flyer / post text, presented calmly ----
   window.openCampDetails=function(id){
     const e=ev(id);
-    const flyer = e.flyer_url ? "<img class='cs-flyer' src='"+esc(e.flyer_url)+"' onerror=\"this.style.display='none'\">" : "";
-    const place=[e.venue,e.city,e.country].filter(Boolean).map(esc).join(", ");
+    const fly = e.flyer_url ? esc(e.flyer_url) : "";
+    const flyer = fly
+      ? "<a href='"+fly+"' target='_blank' rel='noopener' title='Tap to open the full flyer'><img class='cs-flyer' src='"+fly+"' onerror=\"this.style.display='none'\"></a>"
+      : "";
+    const place=[e.venue,e.city,e.state,e.country].filter(Boolean).map(esc).join(", ");
     const range=formatRange(e.start_date,e.end_date);
     let h=flyer+"<div class='cs-h'>"+esc(e.title||"Osho Camp")+"</div>";
     if(range)        h+="<div class='cs-meta-line'>🗓️ <span>"+range+"</span></div>";
+    if(e.type)       h+="<div class='cs-meta-line'>🏷️ <span>"+esc(e.type)+"</span></div>";
     if(place)        h+="<div class='cs-meta-line'>📍 <span>"+place+"</span></div>";
-    if(e.organizer)  h+="<div class='cs-meta-line'>🧘 <span>"+esc(e.organizer)+"</span></div>";
-    if(e.description)h+="<div class='cs-desc'>"+esc(e.description)+"</div>";
-    if(e.source_url) h+="<a class='cs-link btn' style='background:var(--mag-soft);color:var(--maroon)' href='"+esc(e.source_url)+"' target='_blank' rel='noopener'>↗ View original post</a>";
+    if(e.organizer)  h+="<div class='cs-meta-line'>🧘 <span>Facilitator / organiser: "+esc(e.organizer)+"</span></div>";
+    if(e.phone)      h+="<div class='cs-meta-line'>📞 <span><a href='tel:"+esc(String(e.phone).replace(/[^+\\d]/g,''))+"' style='color:var(--maroon);font-weight:700'>"+esc(e.phone)+"</a></span></div>";
+    const fullText = e.full_text || e.details || e.long_description || e.body || e.description || "";
+    if(fullText)     h+="<div class='cs-desc'>"+esc(fullText)+"</div>";
+    h+="<div class='cs-note'>The flyer often holds more than we can list here — tap the image above to open it full-size, or read the complete post below.</div>";
+    if(fly)          h+="<a class='cs-link btn' style='background:var(--mag-soft);color:var(--maroon)' href='"+fly+"' target='_blank' rel='noopener'>🖼️ Open full flyer</a> ";
+    if(e.source_url) h+="<a class='cs-link btn' style='background:linear-gradient(135deg,var(--maroon),var(--gold));color:#fff' href='"+esc(e.source_url)+"' target='_blank' rel='noopener'>↗ Read full post</a>";
     openSheet(h);
   };
 
