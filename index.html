@@ -1474,8 +1474,7 @@ function card(e){
   // title + place keywords; if nothing matches, pick from a pool by a hash of the title
   // so different camps get different images (not all the same).
   const t = ((e.title||"") + " " + (e.type||"") + " " + (e.city||"") + " " + (e.state||"") + " " + (e.organizer||"")).toLowerCase();
-  // A pool of distinct, freely-usable Unsplash meditation/spiritual/nature images.
-  // Portrait-oriented, no silhouettes — bright, colourful, calming.
+  // A wider pool of distinct, freely-usable Unsplash meditation/spiritual/nature images.
   const POOL = [
     "photo-1506126613408-eca07ce68773", // lotus / calm
     "photo-1464822759023-fed622ff2c3b", // mountains
@@ -1491,24 +1490,34 @@ function card(e){
     "photo-1469474968028-56623f02e42e", // golden landscape
     "photo-1497449493050-aad1e7cad165", // incense / calm
     "photo-1604881991720-f91add269bed", // meditation garden
+    "photo-1470071459604-3b5ec3a7fe05", // misty forest
+    "photo-1441974231531-c6227db76b6e", // sunlit forest
+    "photo-1465101162946-4377e57745c3", // mountains + stars
+    "photo-1426604966848-d7adac402bff", // green valley
+    "photo-1472214103451-9374bd1c798e", // rolling hills
+    "photo-1501785888041-af3ef285b470", // lake & mountains
+    "photo-1500534314209-a25ddb2bd429", // calm water
+    "photo-1518173946687-a4c8892bbd9f", // soft dawn
+    "photo-1444703686981-a3abbc4d4fe3", // sky / clouds
+    "photo-1475483768296-6163e08872a1", // sea & rocks (calm)
+    "photo-1490750967868-88aa4486c946", // flowers / spring
+    "photo-1508672019048-805c876b67e2", // green leaves light
   ];
-  // Portrait crop (taller than wide) — fits the card and avoids letterboxing.
   const U = id => `https://images.unsplash.com/${id}?w=600&h=900&q=70&auto=format&fit=crop`;
+  // Stable hash from the camp's title+city, so each distinct camp gets its own image.
+  let h = 0; const hs = (e.title||"") + (e.city||"");
+  for (let i=0;i<hs.length;i++){ h = (h*31 + hs.charCodeAt(i)) >>> 0; }
+  const pick = arr => U(arr[h % arr.length]);
+  // Themed SUB-POOLS — multiple options per theme so camps in the same theme still differ.
   let fb;
-  if      (/festival|celebrat|holi|sufi|dance|music|navratri/.test(t)) fb = U("photo-1518609878373-06d740f60d8b");
-  else if (/tantra|love|heart|relation|couple|intimacy/.test(t))      fb = U("photo-1604881991720-f91add269bed");
-  else if (/silence|vipassana|zen|mindful|silent|no-mind|nomind/.test(t)) fb = U("photo-1506126613408-eca07ce68773");
-  else if (/himalaya|mountain|dharamshala|manali|nargol|nature|forest|river/.test(t)) fb = U("photo-1464822759023-fed622ff2c3b");
-  else if (/tarot|mystic|rose|born again|rebirth|hypnosis/.test(t))    fb = U("photo-1540206395-68808572332f");
-  else if (/breath|prana|chakra|kundalini|energy/.test(t))            fb = U("photo-1528319725582-ddc096101511");
-  else if (/book|read|study|wisdom|constellation/.test(t))            fb = U("photo-1532798442725-41036acc7489");
-  else {
-    // No keyword match: pick from the pool by a stable hash of the title, so each
-    // distinct camp gets its own (consistent) image instead of all sharing one.
-    let h = 0; const s = (e.title||"") + (e.city||"");
-    for (let i=0;i<s.length;i++){ h = (h*31 + s.charCodeAt(i)) >>> 0; }
-    fb = U(POOL[h % POOL.length]);
-  }
+  if      (/festival|celebrat|holi|sufi|dance|music|navratri/.test(t)) fb = pick(["photo-1518609878373-06d740f60d8b","photo-1490750967868-88aa4486c946","photo-1469474968028-56623f02e42e","photo-1444703686981-a3abbc4d4fe3"]);
+  else if (/tantra|love|heart|relation|couple|intimacy/.test(t))      fb = pick(["photo-1604881991720-f91add269bed","photo-1490750967868-88aa4486c946","photo-1508672019048-805c876b67e2"]);
+  else if (/silence|vipassana|zen|mindful|silent|no-mind|nomind/.test(t)) fb = pick(["photo-1506126613408-eca07ce68773","photo-1470071459604-3b5ec3a7fe05","photo-1500534314209-a25ddb2bd429","photo-1518173946687-a4c8892bbd9f"]);
+  else if (/himalaya|mountain|dharamshala|manali|nargol|nature|forest|river/.test(t)) fb = pick(["photo-1464822759023-fed622ff2c3b","photo-1500964757637-c85e8a162699","photo-1441974231531-c6227db76b6e","photo-1472214103451-9374bd1c798e","photo-1501785888041-af3ef285b470","photo-1426604966848-d7adac402bff"]);
+  else if (/tarot|mystic|rose|born again|rebirth|hypnosis/.test(t))    fb = pick(["photo-1540206395-68808572332f","photo-1519681393784-d120267933ba","photo-1465101162946-4377e57745c3"]);
+  else if (/breath|prana|chakra|kundalini|energy/.test(t))            fb = pick(["photo-1528319725582-ddc096101511","photo-1499209974431-9daddcb0d909","photo-1447752875215-b2761acb3c5d"]);
+  else if (/book|read|study|wisdom|constellation/.test(t))            fb = pick(["photo-1532798442725-41036acc7489","photo-1497449493050-aad1e7cad165"]);
+  else fb = pick(POOL);   // no theme match → full pool, hashed
   const real = e.flyer_url ? esc(e.flyer_url) : "";
   // Repo-hosted portrait defaults (always load — served from your own site, never fail).
   // Add these portrait images to your repo root: card-default-1.jpg … card-default-5.jpg
@@ -2737,6 +2746,36 @@ if ("serviceWorker" in navigator) {
   .nfx-overlay.show{display:flex}
   .nfx-wrap{max-width:360px;width:100%;position:relative}
   .nfx-wrap .grid{margin:0}
+  .nfx-count{position:absolute;top:-14px;left:0;z-index:5;font-size:12px;font-weight:800;color:#fff;
+    background:rgba(0,0,0,.45);padding:3px 10px;border-radius:999px;backdrop-filter:blur(2px)}
+  .nfx-nav{position:absolute;top:42%;z-index:6;all:unset;cursor:pointer;width:42px;height:42px;border-radius:50%;
+    background:rgba(255,255,255,.92);color:#b32418;font-size:26px;font-weight:700;text-align:center;line-height:42px;
+    box-shadow:0 4px 14px rgba(0,0,0,.35)}
+  .nfx-prev{left:-14px} .nfx-next{right:-14px}
+  .nfx-hint{margin-top:12px;text-align:center;color:#fff;opacity:.8;font-size:11.5px;font-weight:600}
+  /* India breathing map */
+  .now-map-btn{display:block;margin:8px auto 2px;all:unset;cursor:pointer;font-size:12.5px;font-weight:700;
+    color:#b32418;background:var(--mag-soft);padding:9px 18px;border-radius:999px;text-align:center}
+  .imap-overlay{position:fixed;inset:0;z-index:300;background:radial-gradient(120% 90% at 50% 0%,rgba(60,20,55,.82),rgba(20,8,18,.9));
+    backdrop-filter:blur(5px);display:none;align-items:flex-start;justify-content:center;padding:22px 14px;overflow-y:auto}
+  .imap-overlay.show{display:flex}
+  .imap-card{max-width:420px;width:100%;border-radius:26px;padding:18px 16px 20px;position:relative;
+    background:radial-gradient(130% 80% at 50% 0%,#fbe0f1,#f3e7dd 60%,#efe2d6);
+    box-shadow:0 26px 64px -16px rgba(60,20,55,.6);border:1px solid rgba(176,106,160,.25)}
+  .imap-close{position:absolute;top:10px;right:14px;all:unset;cursor:pointer;font-size:19px;color:#a98;z-index:3}
+  .imap-om{text-align:center;font-size:26px;line-height:1;margin:2px 0 2px;opacity:.9}
+  .imap-h{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:19px;color:#6b2a5e;text-align:center;margin:0}
+  .imap-sub{text-align:center;font-size:12px;color:#9a6f8e;margin:4px 0 8px;letter-spacing:.02em}
+  .imap-svgwrap{position:relative;width:100%}
+  .imap-svg{display:block;width:100%;height:auto;filter:drop-shadow(0 8px 20px rgba(120,50,100,.18))}
+  .imap-pin{position:absolute;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;padding:0;border-radius:50%;
+    background:radial-gradient(circle at 40% 35%,#ff7ac2,#d6249f 70%);border:1.5px solid #fff;cursor:pointer;
+    box-shadow:0 0 6px rgba(214,36,159,.7);animation:imapBreath 2.6s ease-in-out infinite}
+  @keyframes imapBreath{
+    0%{box-shadow:0 0 0 0 rgba(214,36,159,.5);transform:scale(.92)}
+    50%{box-shadow:0 0 0 12px rgba(214,36,159,0);transform:scale(1.18)}
+    100%{box-shadow:0 0 0 0 rgba(214,36,159,0);transform:scale(.92)}}
+  .imap-note{text-align:center;font-size:11.5px;color:#9a6f8e;margin-top:12px}
   .nfx-close{position:absolute;top:-12px;right:-4px;z-index:5;all:unset;cursor:pointer;width:34px;height:34px;
     border-radius:50%;background:#fff;color:#333;text-align:center;line-height:34px;font-size:16px;
     box-shadow:0 4px 12px rgba(0,0,0,.35)}
@@ -2802,19 +2841,143 @@ if ("serviceWorker" in navigator) {
       setTimeout(()=>{try{c.close();}catch(_){}} ,420);
     }catch(_){}
   }
-  function openFullCard(id){
-    const list = (typeof window.getAllEvents==="function") ? window.getAllEvents()
-               : (typeof ALL_EVENTS!=="undefined" ? ALL_EVENTS : []);
-    const e=(list||[]).find(x=>String(x.id)===String(id));
+  // ---- India breathing map of happening-now camps ----
+  const CITY_GEO={
+    "delhi":[77.21,28.61],"new delhi":[77.21,28.61],"gurgaon":[77.03,28.46],"gurugram":[77.03,28.46],"noida":[77.39,28.54],
+    "pune":[73.86,18.52],"mumbai":[72.88,19.08],"navi mumbai":[73.01,19.03],"thane":[72.97,19.22],"nashik":[73.79,20.0],
+    "nagpur":[79.09,21.15],"aurangabad":[75.34,19.88],"kolhapur":[74.24,16.70],"wardha":[78.60,20.74],
+    "jaipur":[75.79,26.91],"udaipur":[73.71,24.58],"jodhpur":[73.02,26.24],"ajmer":[74.64,26.45],"pushkar":[74.55,26.49],
+    "kota":[75.84,25.21],"bikaner":[73.31,28.02],"mount abu":[72.71,24.59],"abu":[72.71,24.59],
+    "ahmedabad":[72.57,23.03],"surat":[72.83,21.17],"vadodara":[73.18,22.31],"baroda":[73.18,22.31],"rajkot":[70.80,22.30],
+    "anand":[72.96,22.56],"mehsana":[72.40,23.59],"junagadh":[70.46,21.52],"nargol":[72.73,20.27],"vapi":[72.90,20.37],"silvassa":[73.01,20.27],
+    "bhopal":[77.41,23.26],"indore":[75.86,22.72],"jabalpur":[79.95,23.18],"ujjain":[75.78,23.18],"gwalior":[78.18,26.22],"damoh":[79.44,23.83],
+    "raipur":[81.63,21.25],"bilaspur":[82.15,22.08],
+    "lucknow":[80.95,26.85],"kanpur":[80.33,26.45],"varanasi":[82.99,25.32],"agra":[78.01,27.18],"prayagraj":[81.85,25.44],"allahabad":[81.85,25.44],
+    "kolkata":[88.36,22.57],"patna":[85.14,25.59],"ranchi":[85.31,23.34],"guwahati":[91.74,26.14],"bhubaneswar":[85.82,20.30],"cuttack":[85.88,20.46],
+    "bengaluru":[77.59,12.97],"bangalore":[77.59,12.97],"mysore":[76.64,12.30],"mysuru":[76.64,12.30],"mangalore":[74.86,12.91],
+    "chennai":[80.27,13.08],"coimbatore":[76.96,11.02],"madurai":[78.12,9.92],"pondicherry":[79.81,11.93],"puducherry":[79.81,11.93],"tiruvannamalai":[79.07,12.23],
+    "hyderabad":[78.49,17.38],"vijayawada":[80.65,16.51],"visakhapatnam":[83.22,17.69],"tirupati":[79.42,13.63],
+    "kochi":[76.27,9.93],"cochin":[76.27,9.93],"thiruvananthapuram":[76.95,8.52],"trivandrum":[76.95,8.52],"kozhikode":[75.78,11.25],
+    "goa":[73.83,15.50],"panaji":[73.83,15.50],"chandigarh":[76.78,30.73],"amritsar":[74.87,31.63],"ludhiana":[75.86,30.90],
+    "bathinda":[74.95,30.21],"patiala":[76.40,30.34],"jalandhar":[75.58,31.33],"rampura phul":[75.24,30.27],
+    "shimla":[77.17,31.10],"manali":[77.19,32.24],"dharamshala":[76.32,32.22],"dharamsala":[76.32,32.22],"kullu":[77.11,31.96],
+    "rishikesh":[78.27,30.10],"haridwar":[78.16,29.95],"dehradun":[78.03,30.32],"mussoorie":[78.06,30.46],"nainital":[79.46,29.38],
+    "srinagar":[74.80,34.08],"jammu":[74.86,32.73],"darjeeling":[88.26,27.04],"gangtok":[88.61,27.33],"shillong":[91.88,25.58]
+  };
+  const STATE_GEO={
+    "punjab":[75.34,31.0],"haryana":[76.2,29.2],"delhi":[77.21,28.61],"rajasthan":[74.2,26.5],"gujarat":[71.8,22.7],
+    "maharashtra":[75.7,19.4],"madhya pradesh":[78.0,23.5],"chhattisgarh":[82.0,21.3],"uttar pradesh":[80.9,27.0],
+    "uttarakhand":[79.0,30.0],"himachal pradesh":[77.2,31.8],"jammu and kashmir":[75.3,33.5],"jammu & kashmir":[75.3,33.5],
+    "bihar":[85.5,25.8],"jharkhand":[85.3,23.6],"west bengal":[88.0,23.5],"odisha":[84.5,20.5],"orissa":[84.5,20.5],
+    "karnataka":[76.5,14.5],"kerala":[76.5,10.3],"tamil nadu":[78.5,11.0],"andhra pradesh":[79.5,15.5],"telangana":[79.0,17.8],
+    "goa":[74.0,15.4],"assam":[92.5,26.2],"sikkim":[88.5,27.4]
+  };
+  const BORDER=[[74,34.5],[75.2,35.4],[77,35.5],[78.5,34.6],[79.3,33.2],[78.9,32],[79,31],[80.2,30.6],[81.2,30.1],[82.4,29.6],[83.6,29.1],[85,28.6],[86.4,28.1],[87.6,27.9],[88.2,27.9],[88.9,28],[89.7,28.1],[90.6,28],[91.7,27.5],[92.7,27.8],[94,28.4],[95.4,29],[96.6,29.4],[97.4,28.3],[96.9,27],[96.1,26.5],[95.2,26],[94.5,25],[94.2,24],[93.4,23],[93.2,22.2],[92.3,23.4],[92.2,24.3],[91.5,24],[91.1,23.7],[91.4,24.6],[90.6,25],[89.8,25.3],[89,26],[88.4,26.5],[88.1,26.6],[88,25.4],[88.2,24.2],[88.7,23.3],[88.9,21.7],[87.2,21.6],[86.5,20.8],[85.1,19.7],[83.9,18.8],[83.2,17.7],[82.2,16.9],[81.2,16.3],[80.3,15.8],[80.2,14.5],[80.2,13.4],[79.9,11.9],[79.3,10.8],[78.8,9.6],[78.1,8.9],[77.5,8.1],[76.5,8.9],[75.9,10.2],[75.2,11.7],[74.7,13],[74.3,14.4],[73.8,15.7],[73.3,17],[72.9,18.5],[72.8,19.6],[72.9,20.6],[72.7,21.4],[71.5,20.9],[70.4,20.9],[69.6,22],[68.5,22.4],[68.4,23.6],[69.8,23.9],[71,24.3],[72.2,24.6],[73,26.2],[73.6,27.8],[74.6,29],[74.1,30.4],[74.6,31.5],[75.4,32.3],[74.2,32.9],[74,34.5]];
+  const VW=460, VH=520;
+  // Real India extent (from the labelled map): 68°7'E–97°25'E, 8°4'N–37°6'N, with a little margin.
+  const LNG0=67.6, LNG1=98.0, LAT0=37.6, LAT1=7.4;
+  const proj=(lng,lat)=>[ (lng-LNG0)/(LNG1-LNG0)*VW, (LAT0-lat)/(LAT0-LAT1)*VH ];
+  function geoFor(e){
+    const c=(e.city||"").toLowerCase().trim().replace(/\s+/g," ");
+    if(CITY_GEO[c]) return CITY_GEO[c];
+    for(const k in CITY_GEO){ if(c && (c===k || c.indexOf(k+" ")===0)) return CITY_GEO[k]; }
+    const st=(e.state||"").toLowerCase().trim();
+    if(STATE_GEO[st]) return STATE_GEO[st];
+    return null;
+  }
+  function isIndia(e){ const co=(e.country||"").toLowerCase(); return co===""||co==="india"||co==="bharat"; }
+  function openIndiaMap(list){
+    let ov=document.getElementById("indiaMapOverlay");
+    if(!ov){ ov=document.createElement("div"); ov.id="indiaMapOverlay"; ov.className="imap-overlay";
+      ov.addEventListener("click", e2=>{ if(e2.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov); }
+    let placed=0, elsewhere=0; const pins=[];
+    list.forEach((e,i)=>{
+      if(!isIndia(e)){ elsewhere++; return; }
+      const g=geoFor(e); if(!g){ elsewhere++; return; }
+      const [x,y]=proj(g[0],g[1]);
+      const jx=((i%3)-1)*6, jy=(((i>>1)%3)-1)*6;
+      const lp=((x+jx)/VW*100).toFixed(2), tp=((y+jy)/VH*100).toFixed(2);
+      pins.push("<button class='imap-pin' style='left:"+lp+"%;top:"+tp+"%' data-id='"+esc(String(e.id))+"' title='"+esc(e.title||"")+"'></button>");
+      placed++;
+    });
+    const poly=BORDER.map(([lng,lat])=>proj(lng,lat).map(n=>n.toFixed(1)).join(",")).join(" ");
+    const ln=(a,b)=>{const p=proj(a[0],a[1]),q=proj(b[0],b[1]);return [p[0].toFixed(1),p[1].toFixed(1),q[0].toFixed(1),q[1].toFixed(1)];};
+    const trop=ln([LNG0,23.5],[LNG1,23.5]);          // Tropic of Cancer
+    const merid=ln([82.5,LAT1],[82.5,LAT0]);          // 82°30' Standard Meridian
+    ov.innerHTML=
+      "<div class='imap-card'>"
+      +"<button class='imap-close' onclick=\"document.getElementById('indiaMapOverlay').classList.remove('show')\">✕</button>"
+      +"<div class='imap-om'>🪷</div>"
+      +"<div class='imap-h'>Camps glowing across India</div>"
+      +"<div class='imap-sub'>"+placed+" happening now"+(elsewhere?" · "+elsewhere+" beyond India":"")+"</div>"
+      +"<div class='imap-svgwrap'>"
+        +"<svg class='imap-svg' viewBox='0 0 "+VW+" "+VH+"' preserveAspectRatio='xMidYMid meet'>"
+          +"<defs>"
+            +"<radialGradient id='imapLand' cx='42%' cy='30%' r='80%'>"
+              +"<stop offset='0' stop-color='#fff6ea'/><stop offset='.55' stop-color='#f6e3cf'/><stop offset='1' stop-color='#ecceb4'/>"
+            +"</radialGradient>"
+            +"<filter id='imapGlow' x='-20%' y='-20%' width='140%' height='140%'>"
+              +"<feDropShadow dx='0' dy='0' stdDeviation='7' flood-color='#c98bba' flood-opacity='.55'/>"
+            +"</filter>"
+          +"</defs>"
+          +"<polygon points='"+poly+"' fill='url(#imapLand)' stroke='#b06aa0' stroke-width='1.6' stroke-linejoin='round' filter='url(#imapGlow)'/>"
+          +"<line x1='"+trop[0]+"' y1='"+trop[1]+"' x2='"+trop[2]+"' y2='"+trop[3]+"' stroke='#b06aa0' stroke-width='1' stroke-dasharray='4 5' opacity='.5'/>"
+          +"<line x1='"+merid[0]+"' y1='"+merid[1]+"' x2='"+merid[2]+"' y2='"+merid[3]+"' stroke='#b06aa0' stroke-width='1' stroke-dasharray='4 5' opacity='.4'/>"
+        +"</svg>"
+        +pins.join("")
+      +"</div>"
+      +"<div class='imap-note'>Tap a glowing lotus to open that camp.</div>"
+      +"</div>";
+    ov.classList.add("show");
+  }
+  function nfOngoing(){
+    const d=new Date(); d.setHours(0,0,0,0); const t=d.getTime();
+    return (typeof ALL_EVENTS!=="undefined"?ALL_EVENTS:[])
+      .filter(e=>e._start && e._start.getTime()<=t && (e._end||e._start).getTime()>=t)
+      .sort((a,b)=>(a._end||a._start)-(b._end||b._start));
+  }
+  let nfOrder=[], nfIdx=0;
+  function renderFullAt(i){
+    if(!nfOrder.length) return;
+    nfIdx=(i+nfOrder.length)%nfOrder.length;               // wrap around
+    const e=nfOrder[nfIdx];
     const mk = window.renderCampCard || (typeof card==="function"?card:null);
-    if(!(e && mk)){ if(typeof openCampDetails==="function") openCampDetails(id); return; }
     let ov=document.getElementById("nfxOverlay");
     if(!ov){ ov=document.createElement("div"); ov.id="nfxOverlay"; ov.className="nfx-overlay";
       ov.addEventListener("click", e2=>{ if(e2.target===ov) ov.classList.remove("show"); });
       document.body.appendChild(ov); }
-    ov.innerHTML="<div class='nfx-wrap'><button class='nfx-close' onclick=\"document.getElementById('nfxOverlay').classList.remove('show')\">✕</button>"
-      +"<div class='grid'>"+mk(e)+"</div></div>";
+    if(!(e && mk)){ if(typeof openCampDetails==="function") openCampDetails(e&&e.id); return; }
+    const pos=(nfIdx+1)+" / "+nfOrder.length;
+    ov.innerHTML=
+      "<div class='nfx-wrap'>"
+      +"<button class='nfx-close' onclick=\"document.getElementById('nfxOverlay').classList.remove('show')\">✕</button>"
+      +"<div class='nfx-count'>"+pos+"</div>"
+      +"<button class='nfx-nav nfx-prev' aria-label='Previous'>‹</button>"
+      +"<div class='nfx-cardwrap'><div class='grid'>"+mk(e)+"</div></div>"
+      +"<button class='nfx-nav nfx-next' aria-label='Next'>›</button>"
+      +"<div class='nfx-hint'>swipe or tap ‹ › for more happening-now camps</div>"
+      +"</div>";
     ov.classList.add("show");
+    const wrap=ov.querySelector(".nfx-cardwrap");
+    ov.querySelector(".nfx-prev").onclick=()=>{ nfTone(300); renderFullAt(nfIdx-1); };
+    ov.querySelector(".nfx-next").onclick=()=>{ nfTone(340); renderFullAt(nfIdx+1); };
+    // swipe
+    let x0=null;
+    wrap.addEventListener("touchstart", ev=>{ x0=ev.touches[0].clientX; }, {passive:true});
+    wrap.addEventListener("touchend", ev=>{
+      if(x0===null) return; const dx=ev.changedTouches[0].clientX-x0; x0=null;
+      if(Math.abs(dx)>50){ if(dx<0){ nfTone(340); renderFullAt(nfIdx+1); } else { nfTone(300); renderFullAt(nfIdx-1); } }
+    }, {passive:true});
+  }
+  function openFullCard(id){
+    nfOrder=nfOngoing();
+    const i=nfOrder.findIndex(x=>String(x.id)===String(id));
+    if(i<0){                                                // not in ongoing list — show single
+      const e=(typeof ALL_EVENTS!=="undefined"?ALL_EVENTS:[]).find(x=>String(x.id)===String(id));
+      nfOrder=e?[e]:[]; renderFullAt(0); return;
+    }
+    renderFullAt(i);
   }
   window.buildNowFan=function(){
     try{
@@ -2841,10 +3004,20 @@ if ("serviceWorker" in navigator) {
         +"</div></div>";
       fan.hidden=false;
       fan.classList.toggle("open", nfSpread);
-      fan.innerHTML="<div class='nf-track'>"+cover+tiles+"</div>";
+      fan.innerHTML="<div class='nf-track'>"+cover+tiles+"</div>"
+        +"<button class='now-map-btn' id='nowMapBtn'>🗺️ Map of camps</button>";
     }catch(_){}
   };
   document.addEventListener("click", function(e){
+    const mapBtn=e.target.closest("#nowMapBtn");
+    if(mapBtn){ nfTone(360); openIndiaMap(nfOngoing()); return; }
+    const pin=e.target.closest(".imap-pin");
+    if(pin){
+      nfTone(330);
+      const om=document.getElementById("indiaMapOverlay"); if(om) om.classList.remove("show");
+      openFullCard(pin.getAttribute("data-id"));
+      return;
+    }
     const cover=e.target.closest("#nowFan .nf-cover");
     if(cover){
       const fan=document.getElementById("nowFan");
