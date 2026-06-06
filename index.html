@@ -1702,6 +1702,10 @@ function card(e){
   const mapBtn = placeParts.length
     ? `<a class="btn map" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(placeParts.join(", "))}" target="_blank" rel="noopener">🧭 Directions</a>`
     : "";
+  // Location pin: show the venue on OUR India map (the breathing-lotus map).
+  const locBtn = placeParts.length
+    ? `<button class="btn map" type="button" onclick="openVenueMap('${esc(String(e.id))}')">📍 Map</button>`
+    : "";
   const isFlyerUpload = e.source_platform === "Flyer upload" || (!e.source_url && e.flyer_url);
   const isRealPost = !isFlyerUpload && e.source_url && e.source_url!=="#" && /\/[^/]+\/[^/]/.test(e.source_url.replace(/^https?:\/\//,""));
   const srcBtn = isRealPost ? `<a class="btn src" href="${esc(e.source_url)}" target="_blank" rel="noopener">View ↗</a>` : "";
@@ -1794,7 +1798,7 @@ function card(e){
       ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
-      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}${detailsBtn}${chatBtn}${pgBtn}</div>
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${locBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}${detailsBtn}${chatBtn}${pgBtn}</div>
       ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
@@ -2888,6 +2892,17 @@ if ("serviceWorker" in navigator) {
     50%{box-shadow:0 0 0 12px rgba(214,36,159,0);transform:scale(1.18)}
     100%{box-shadow:0 0 0 0 rgba(214,36,159,0);transform:scale(.92)}}
   .imap-note{text-align:center;font-size:11.5px;color:#9a6f8e;margin-top:12px}
+  /* place-name labels beside each pin */
+  .imap-lbl{position:absolute;transform:translate(-50%,7px);font-size:8.5px;font-weight:800;
+    color:#5a2150;white-space:nowrap;pointer-events:none;letter-spacing:.02em;
+    text-shadow:0 1px 2px rgba(255,255,255,.95),0 0 3px rgba(255,255,255,.9)}
+  /* the phone's own location */
+  .imap-me{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#9fdcff,#2b8fe0 72%);border:2px solid #fff;
+    box-shadow:0 0 0 4px rgba(43,143,224,.25),0 2px 6px rgba(0,0,0,.3);
+    animation:imapMe 2.4s ease-in-out infinite}
+  @keyframes imapMe{0%{box-shadow:0 0 0 0 rgba(43,143,224,.45)}70%{box-shadow:0 0 0 11px rgba(43,143,224,0)}100%{box-shadow:0 0 0 0 rgba(43,143,224,0)}}
+  .imap-me-lbl{color:#1c5fa0;text-shadow:0 1px 2px rgba(255,255,255,.95)}
   .nfx-close{position:absolute;top:-12px;right:-4px;z-index:5;all:unset;cursor:pointer;width:34px;height:34px;
     border-radius:50%;background:#fff;color:#333;text-align:center;line-height:34px;font-size:16px;
     box-shadow:0 4px 12px rgba(0,0,0,.35)}
@@ -2998,7 +3013,8 @@ if ("serviceWorker" in navigator) {
     return null;
   }
   function isIndia(e){ const co=(e.country||"").toLowerCase(); return co===""||co==="india"||co==="bharat"; }
-  function openIndiaMap(list){
+  function openIndiaMap(list, opts){
+    opts=opts||{};
     let ov=document.getElementById("indiaMapOverlay");
     if(!ov){ ov=document.createElement("div"); ov.id="indiaMapOverlay"; ov.className="imap-overlay";
       ov.addEventListener("click", e2=>{ if(e2.target===ov) ov.classList.remove("show"); });
@@ -3011,6 +3027,8 @@ if ("serviceWorker" in navigator) {
       const jx=((i%3)-1)*6, jy=(((i>>1)%3)-1)*6;
       const lp=((x+jx)/VW*100).toFixed(2), tp=((y+jy)/VH*100).toFixed(2);
       pins.push("<button class='imap-pin' style='left:"+lp+"%;top:"+tp+"%' data-id='"+esc(String(e.id))+"' title='"+esc(e.title||"")+"'></button>");
+      const lbl=esc(e.city||e.venue||e.state||"");
+      if(lbl) pins.push("<span class='imap-lbl' style='left:"+lp+"%;top:"+tp+"%'>"+lbl+"</span>");
       placed++;
     });
     const poly=BORDER.map(([lng,lat])=>proj(lng,lat).map(n=>n.toFixed(1)).join(",")).join(" ");
@@ -3022,7 +3040,7 @@ if ("serviceWorker" in navigator) {
       +"<button class='imap-close' onclick=\"document.getElementById('indiaMapOverlay').classList.remove('show')\">✕</button>"
       +"<div class='imap-om'>🪷</div>"
       +"<div class='imap-h'>Camps glowing across India</div>"
-      +"<div class='imap-sub'>"+placed+" happening now"+(elsewhere?" · "+elsewhere+" beyond India":"")+"</div>"
+      +"<div class='imap-sub'>"+(opts.subtitle?esc(opts.subtitle):(placed+" happening now"+(elsewhere?" · "+elsewhere+" beyond India":"")))+"</div>"
       +"<div class='imap-svgwrap'>"
         +"<svg class='imap-svg' viewBox='0 0 "+VW+" "+VH+"' preserveAspectRatio='xMidYMid meet'>"
           +"<defs>"
@@ -3039,9 +3057,26 @@ if ("serviceWorker" in navigator) {
         +"</svg>"
         +pins.join("")
       +"</div>"
-      +"<div class='imap-note'>Tap a glowing lotus to open that camp.</div>"
+      +"<div class='imap-note'>"+(opts.note?esc(opts.note):"Tap a glowing lotus to open that camp.")+"</div>"
       +"</div>";
     ov.classList.add("show");
+    addMyLocation(ov);
+  }
+  // Plot the phone's current position (blue dot) if the browser allows it.
+  function addMyLocation(ov){
+    if(!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(function(pos){
+      const lng=pos.coords.longitude, lat=pos.coords.latitude;
+      if(lng<LNG0||lng>LNG1||lat<LAT1||lat>LAT0) return;   // outside the India view
+      const wrap=ov.querySelector(".imap-svgwrap"); if(!wrap) return;
+      const [x,y]=proj(lng,lat);
+      const lp=(x/VW*100).toFixed(2), tp=(y/VH*100).toFixed(2);
+      const me=document.createElement("span"); me.className="imap-me"; me.style.left=lp+"%"; me.style.top=tp+"%";
+      const lbl=document.createElement("span"); lbl.className="imap-lbl imap-me-lbl";
+      lbl.style.left=lp+"%"; lbl.style.top=tp+"%"; lbl.textContent="You are here";
+      wrap.appendChild(me); wrap.appendChild(lbl);
+    }, function(){ /* denied or unavailable — quietly skip */ },
+       {enableHighAccuracy:false, timeout:8000, maximumAge:600000});
   }
   function nfOngoing(){
     const d=new Date(); d.setHours(0,0,0,0); const t=d.getTime();
@@ -3091,6 +3126,20 @@ if ("serviceWorker" in navigator) {
     }
     renderFullAt(i);
   }
+  // Open OUR India map focused on a single camp's venue (card "📍 Map" button).
+  window.openVenueMap=function(id){
+    const e=(typeof ALL_EVENTS!=="undefined"?ALL_EVENTS:[]).find(x=>String(x.id)===String(id));
+    if(!e) return;
+    if(isIndia(e) && geoFor(e)){
+      nfTone(360);
+      const place=[e.venue,e.city,e.state].filter(Boolean).join(", ")||"India";
+      openIndiaMap([e], {subtitle:place, note:"Tap the glowing lotus to open this camp."});
+    } else {
+      // Our map shows India only — for camps abroad (or an unknown town) open a map search.
+      const q=[e.venue,e.city,e.country].filter(Boolean).join(", ");
+      if(q) window.open("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q),"_blank");
+    }
+  };
   window.buildNowFan=function(){
     try{
       const fan=document.getElementById("nowFan"); if(!fan) return;
