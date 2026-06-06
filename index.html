@@ -429,6 +429,10 @@
     </div>
   </div>
 
+  <div id="nowFan" class="now-fan" hidden></div>
+
+  <h2 id="upcomingHead" class="upcoming-head">Upcoming Camps</h2>
+
   <main id="results"></main>
 
   <footer>
@@ -1397,6 +1401,9 @@ function firstSeenWithin(ts, ms){
    ============================================================ */
 function currentList(){
   return ALL_EVENTS.filter(e=>{
+    // Happening-now camps live in the fan at the top, so drop them from the normal list.
+    const _t=(()=>{ const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
+    if(e._start && e._start.getTime()<=_t && (e._end||e._start).getTime()>=_t) return false;
     // When the "✨ New" filter is ON, show ALL newly-found camps regardless of
     // region/state/view — "what's new" matters more than location here.
     if(ui.newOnly){
@@ -1457,6 +1464,7 @@ function render(){
     const rest = list.filter(e=> !freshIds.has(e.id));
     root.innerHTML = freshStrip + `<div class="grid">${cardsWithCTA(rest)}</div>`;
   }
+  if(typeof buildNowFan==="function") buildNowFan();
 }
 function cardsWithCTA(items){
   return items.map(card).join("");
@@ -1654,11 +1662,19 @@ function card(e){
   const remindBtn = e.start_date
     ? `<button class="btn remind-btn${remSet?' done':''}" onclick="setCampReminder(this)" data-start="${calStart}" data-end="${calEnd}" data-title="${calTitle}" data-key="${campKeyAttr}">${remSet?'🔔 Reminder set ✓':'🔔 Remind me'}</button>`
     : "";
+  const eid = String(e.id||"").replace(/[^a-zA-Z0-9_-]/g,"");
+  const detailsBtn = eid ? `<button class="btn details-btn" onclick="openCampDetails('${eid}')">📖 Details</button>` : "";
+  const chatBtn    = eid ? `<button class="btn chat-btn" onclick="openCampCircle('${eid}')">💬 Chat</button>` : "";
+  const pgBtn      = eid ? `<button class="btn pg-btn" onclick="openCampBooking('${eid}')">🎟️ PG</button>` : "";
+  // "Happening now" = the camp is currently running (started, not yet ended)
+  const _tn=(()=>{ const d=new Date(); d.setHours(0,0,0,0); return d.getTime(); })();
+  const ongoing = !!(e._start && e._start.getTime()<=_tn && (e._end||e._start).getTime()>=_tn);
+  const nowBadge = ongoing ? `<span class="now-badge">● Happening now</span>` : "";
 
-  return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}" data-campkey="${campKeyAttr}">
+  return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}${ongoing?' ongoing':''}" data-campkey="${campKeyAttr}">
     ${hlRibbon}${ownerTools}${petals}
     ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
-    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}${newBadge}
+    ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}${newBadge}${nowBadge}
     <div class="body">
       ${stamp}
       <span class="dateline">${dateRange(e)} ${countdownTag(e)}</span>
@@ -1666,11 +1682,13 @@ function card(e){
       ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
-      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}</div>
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}${detailsBtn}${chatBtn}${pgBtn}</div>
       ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
 }
+window.renderCampCard = card;                 // expose the full-card renderer for the Happening-now overlay
+window.getAllEvents = ()=>ALL_EVENTS;
 
 /* ============================================================
    HELPERS
@@ -2600,6 +2618,238 @@ if ("serviceWorker" in navigator) {
     const td=document.getElementById("todayDate");
     if(td) td.textContent="📅 Today · "+new Date().toLocaleDateString([],{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   });
+})();
+</script>
+
+<!-- ===== Details · Camp Circle (chat) · PG (booking) ===== -->
+<style>
+  .btn.details-btn{background:var(--mag-soft);color:var(--maroon)}
+  .btn.chat-btn{background:var(--mag-soft);color:var(--maroon)}
+  .btn.pg-btn{background:linear-gradient(135deg,var(--maroon),var(--gold));color:#fff}
+  .cs-overlay{position:fixed;inset:0;z-index:320;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);
+    display:none;align-items:center;justify-content:center;padding:18px}
+  .cs-overlay.show{display:flex}
+  .cs-modal{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);
+    box-shadow:var(--shadow-hi);max-width:420px;width:100%;max-height:86vh;overflow:auto;padding:20px 18px;position:relative}
+  .cs-flyer{width:100%;max-height:240px;object-fit:cover;border-radius:14px;margin-bottom:14px}
+  .cs-h{font-weight:800;font-size:18px;padding-right:30px;line-height:1.3;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .cs-meta-line{display:flex;gap:8px;align-items:flex-start;color:var(--ink-2);font-size:13.5px;margin:6px 0}
+  .cs-desc{font-family:"Fraunces",Georgia,serif;font-size:15.5px;line-height:1.75;color:var(--ink);
+    background:var(--mag-soft);padding:15px 17px;border-radius:14px;margin:14px 0}
+  .cs-soon{font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--maroon);
+    background:var(--mag-soft);padding:3px 9px;border-radius:999px}
+  .cs-note{font-size:13.5px;color:var(--ink-2);line-height:1.65;margin-top:12px}
+  .cs-pay{display:flex;gap:10px;margin-top:14px}
+  .cs-pay button{flex:1;all:unset;text-align:center;padding:13px;border-radius:13px;border:1px dashed var(--line);
+    color:var(--ink-2);cursor:not-allowed;font-weight:700;font-size:13.5px;background:transparent}
+  .cs-link{display:inline-flex;align-items:center;gap:6px;margin-top:14px;text-decoration:none}
+  .cs-chatprev{margin-top:14px;background:var(--mag-soft);border-radius:14px;padding:14px;min-height:80px;display:flex;align-items:center;justify-content:center}
+  .cs-bubble{font-family:"Fraunces",serif;font-style:italic;color:var(--ink-2);text-align:center;font-size:14px}
+  .cs-inprev{display:flex;gap:8px;margin-top:10px}
+  .cs-inprev input{flex:1;all:unset;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:11px 15px;color:var(--ink-2);font-size:14px}
+  .cs-inprev button{all:unset;background:var(--line);color:var(--ink-2);padding:11px 18px;border-radius:999px;font-weight:700;font-size:13.5px}
+</style>
+<script>
+(function(){
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const D=s=>{ if(!s) return null; const d=new Date(s+"T00:00:00"); return isNaN(d)?null:d; };
+  const fmt=d=>d.toLocaleDateString([],{weekday:"short",day:"numeric",month:"short"});
+  function formatRange(s,e){
+    const a=D(s); if(!a) return ""; const b=D(e)||a;
+    const yr=b.getFullYear();
+    const days=Math.round((b-a)/86400000)+1;
+    const dur = days>1 ? " · "+days+" days" : "";
+    return (a.getTime()===b.getTime() ? fmt(a)+", "+yr : fmt(a)+" – "+fmt(b)+", "+yr) + dur;
+  }
+  function ev(id){ try{ return (ALL_EVENTS||[]).find(e=>String(e.id)===String(id))||{}; }catch(_){ return {}; } }
+  function openSheet(inner){
+    let ov=document.getElementById("campSheet");
+    if(!ov){ ov=document.createElement("div"); ov.id="campSheet"; ov.className="cs-overlay";
+      ov.addEventListener("click",e=>{ if(e.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov); }
+    ov.innerHTML="<div class='cs-modal'><button class='cc-close' onclick=\"document.getElementById('campSheet').classList.remove('show')\">✕</button>"+inner+"</div>";
+    ov.classList.add("show");
+  }
+
+  // ---- 📖 Details: the flyer / post text, presented calmly ----
+  window.openCampDetails=function(id){
+    const e=ev(id);
+    const flyer = e.flyer_url ? "<img class='cs-flyer' src='"+esc(e.flyer_url)+"' onerror=\"this.style.display='none'\">" : "";
+    const place=[e.venue,e.city,e.country].filter(Boolean).map(esc).join(", ");
+    const range=formatRange(e.start_date,e.end_date);
+    let h=flyer+"<div class='cs-h'>"+esc(e.title||"Osho Camp")+"</div>";
+    if(range)        h+="<div class='cs-meta-line'>🗓️ <span>"+range+"</span></div>";
+    if(place)        h+="<div class='cs-meta-line'>📍 <span>"+place+"</span></div>";
+    if(e.organizer)  h+="<div class='cs-meta-line'>🧘 <span>"+esc(e.organizer)+"</span></div>";
+    if(e.description)h+="<div class='cs-desc'>"+esc(e.description)+"</div>";
+    if(e.source_url) h+="<a class='cs-link btn' style='background:var(--mag-soft);color:var(--maroon)' href='"+esc(e.source_url)+"' target='_blank' rel='noopener'>↗ View original post</a>";
+    openSheet(h);
+  };
+
+  // ---- 🎟️ PG: booking placeholder (real UPI/card needs the gateway backend) ----
+  window.openCampBooking=function(id){
+    const e=ev(id); const range=formatRange(e.start_date,e.end_date);
+    let h="<div class='cs-h'>Book this camp <span class='cs-soon'>setup in progress</span></div>";
+    if(e.title) h+="<div class='cs-meta-line'>"+esc(e.title)+"</div>";
+    if(range)   h+="<div class='cs-meta-line'>🗓️ <span>"+range+"</span></div>";
+    h+="<div class='cs-note'>Booking by <b>UPI</b> or <b>card</b> is being set up. Soon you'll be able to reserve your place in a few taps and receive a warm confirmation email with everything you need for the camp.</div>";
+    h+="<div class='cs-pay'><button>UPI · soon</button><button>Card · soon</button></div>";
+    if(e.source_url){
+      h+="<div class='cs-note'>Until then, you can reach the organiser directly to hold your place.</div>";
+      h+="<a class='btn' style='background:linear-gradient(135deg,var(--maroon),var(--gold));color:#fff;margin-top:10px;display:inline-flex' href='"+esc(e.source_url)+"' target='_blank' rel='noopener'>Contact / view post ↗</a>";
+    }
+    openSheet(h);
+  };
+
+  // ---- 💬 Camp Circle: chat entry-point (real chat + photo moderation needs backend) ----
+  window.openCampCircle=function(id){
+    const e=ev(id);
+    let h="<div class='cs-h'>Camp Circle <span class='cs-soon'>opening soon</span></div>";
+    if(e.title) h+="<div class='cs-meta-line'>"+esc(e.title)+"</div>";
+    h+="<div class='cs-note'>A gentle space to share photos and chat with fellow travellers heading to this camp is on the way. It opens to everyone first, with kind moderation so every picture and message stays decent and welcoming. Registration will follow a little later.</div>";
+    h+="<div class='cs-chatprev'><div class='cs-bubble'>🌸 Soon: be the first to greet others on this path…</div></div>";
+    h+="<div class='cs-pay'><button>📷 Share a photo · soon</button></div>";
+    h+="<div class='cs-inprev'><input disabled placeholder='Message the circle…'><button disabled>Send</button></div>";
+    openSheet(h);
+  };
+})();
+</script>
+
+<!-- Happening Now Camps: a pile of cards with a meditative cover on top; press the cover to spread -->
+<style>
+  .now-badge{position:absolute;top:10px;left:10px;z-index:4;background:#e0392b;color:#fff;
+    font-size:10.5px;font-weight:800;letter-spacing:.03em;padding:4px 9px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:5px;box-shadow:0 3px 10px -3px rgba(224,57,43,.7)}
+  .card.ongoing{outline:2px solid rgba(224,57,43,.30);outline-offset:-2px}
+  .upcoming-head{font-family:"Fraunces",Georgia,serif;font-size:clamp(18px,2.4vw,22px);font-weight:700;
+    color:var(--ink);margin:18px 2px 4px}
+  /* full-card overlay opened from a happening-now tile */
+  .nfx-overlay{position:fixed;inset:0;z-index:280;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);
+    display:none;align-items:flex-start;justify-content:center;padding:26px 16px;overflow-y:auto}
+  .nfx-overlay.show{display:flex}
+  .nfx-wrap{max-width:360px;width:100%;position:relative}
+  .nfx-wrap .grid{margin:0}
+  .nfx-close{position:absolute;top:-12px;right:-4px;z-index:5;all:unset;cursor:pointer;width:34px;height:34px;
+    border-radius:50%;background:#fff;color:#333;text-align:center;line-height:34px;font-size:16px;
+    box-shadow:0 4px 12px rgba(0,0,0,.35)}
+
+  .now-fan{margin:12px 0 6px;position:relative}
+  .nf-track{display:flex;align-items:flex-end;overflow-x:auto;padding:24px 24px 26px;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;transition:padding .3s ease}
+  .nf-track::-webkit-scrollbar{display:none}
+
+  /* camp tiles */
+  .nf-card{flex:0 0 auto;width:124px;height:166px;border-radius:16px;overflow:hidden;position:relative;
+    margin-left:-30px;background:var(--card);border:3px solid #fff;box-shadow:0 10px 22px -10px rgba(0,0,0,.5);
+    transform:rotate(var(--rot,0deg));transform-origin:bottom center;
+    transition:transform .3s ease, margin .3s ease;cursor:pointer}
+  .nf-card:first-child{margin-left:0}
+  .nf-card img{width:100%;height:100%;object-fit:cover;display:block}
+  .nf-card.noimg{background:linear-gradient(135deg,var(--maroon),var(--gold))}
+  .nf-cap{position:absolute;left:0;right:0;bottom:0;padding:20px 9px 9px;color:#fff;
+    background:linear-gradient(transparent,rgba(0,0,0,.85));transition:opacity .25s}
+  .nf-cap .t{font-size:11.5px;font-weight:700;line-height:1.25;max-height:30px;overflow:hidden}
+  .nf-cap .d{font-size:10px;opacity:.92;margin-top:3px}
+  .nf-card:active{transform:translateY(-14px) rotate(0deg) scale(1.05);z-index:6}
+
+  /* meditative cover (top of the pile) */
+  .nf-cover{flex:0 0 auto;width:138px;height:182px;border-radius:18px;position:relative;overflow:hidden;
+    cursor:pointer;border:3px solid #fff;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;
+    box-shadow:0 16px 32px -10px rgba(120,40,90,.6);transition:transform .3s ease;
+    background:radial-gradient(130% 120% at 50% 0%, #c66aa0 0%, #8a2f72 42%, #3a2150 100%)}
+  .nf-cover::after{content:"";position:absolute;inset:-25%;z-index:1;
+    background:radial-gradient(circle at 50% 26%, rgba(255,255,255,.28), transparent 58%)}
+  .nf-cover-in{position:relative;z-index:2;padding:14px}
+  .nf-om{font-size:30px;line-height:1;margin-bottom:8px}
+  .nf-ttl{font-family:"Fraunces",Georgia,serif;font-size:16px;font-weight:700;line-height:1.18}
+  .nf-cnt{font-size:10.5px;opacity:.85;margin-top:7px}
+  .nf-hint{margin-top:14px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    background:rgba(255,255,255,.2);padding:5px 11px;border-radius:999px;display:inline-block}
+
+  /* COLLAPSED (default) = a pile: cover on top, real card edges peeking behind it */
+  .now-fan:not(.open) .nf-track{justify-content:center;overflow:visible;padding:34px 24px 40px}
+  .now-fan:not(.open) .nf-cover{position:relative;z-index:6}
+  .now-fan:not(.open) .nf-card{position:absolute;left:50%;top:50%;pointer-events:none;width:122px;height:164px;
+    margin:0;transform:translate(-50%,-50%) translate(calc((var(--si,0) + 1) * 7px), calc((var(--si,0) + 1) * -5px)) rotate(calc((var(--si,0) + 1) * 3deg));
+    z-index:1}
+  .now-fan:not(.open) .nf-card .nf-cap{opacity:0}
+  .now-fan:not(.open) .nf-card:nth-child(n+6){display:none}   /* only a few edges in the pile */
+
+  /* SPREAD = scattered horizontal fan; cover becomes the first card ("press to stack") */
+  .now-fan.open .nf-track{justify-content:flex-start}
+  .now-fan.open .nf-cover{transform:rotate(-10deg)}
+</style>
+<script>
+(function(){
+  const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  let nfSpread=false;                       // default collapsed; resets to collapsed on every page load
+  function nfTone(freq){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+      const c=new AC(),o=c.createOscillator(),g=c.createGain();
+      o.type="sine"; o.frequency.value=freq||320; const t0=c.currentTime;
+      g.gain.setValueAtTime(0,t0); g.gain.linearRampToValueAtTime(.15,t0+.008);
+      g.gain.exponentialRampToValueAtTime(.0001,t0+.22);
+      o.connect(g); g.connect(c.destination); o.start(t0); o.stop(t0+.27);
+      setTimeout(()=>{try{c.close();}catch(_){}} ,420);
+    }catch(_){}
+  }
+  function openFullCard(id){
+    const list = (typeof window.getAllEvents==="function") ? window.getAllEvents()
+               : (typeof ALL_EVENTS!=="undefined" ? ALL_EVENTS : []);
+    const e=(list||[]).find(x=>String(x.id)===String(id));
+    const mk = window.renderCampCard || (typeof card==="function"?card:null);
+    if(!(e && mk)){ if(typeof openCampDetails==="function") openCampDetails(id); return; }
+    let ov=document.getElementById("nfxOverlay");
+    if(!ov){ ov=document.createElement("div"); ov.id="nfxOverlay"; ov.className="nfx-overlay";
+      ov.addEventListener("click", e2=>{ if(e2.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov); }
+    ov.innerHTML="<div class='nfx-wrap'><button class='nfx-close' onclick=\"document.getElementById('nfxOverlay').classList.remove('show')\">✕</button>"
+      +"<div class='grid'>"+mk(e)+"</div></div>";
+    ov.classList.add("show");
+  }
+  window.buildNowFan=function(){
+    try{
+      const fan=document.getElementById("nowFan"); if(!fan) return;
+      const d=new Date(); d.setHours(0,0,0,0); const t=d.getTime();
+      const on=(typeof ALL_EVENTS!=="undefined"?ALL_EVENTS:[])
+        .filter(e=>e._start && e._start.getTime()<=t && (e._end||e._start).getTime()>=t)
+        .sort((a,b)=>(a._end||a._start)-(b._end||b._start));
+      if(!on.length){ fan.hidden=true; fan.innerHTML=""; return; }
+      const tiles=on.map((e,i)=>{
+        const rot=((i%7)-3)*4;
+        const img=e.flyer_url?esc(e.flyer_url):"";
+        const ds=e._start?e._start.toLocaleDateString([],{day:"numeric",month:"short"}):"";
+        const de=(e._end && e._end.getTime()!==e._start.getTime())?"–"+e._end.toLocaleDateString([],{day:"numeric",month:"short"}):"";
+        return "<div class='nf-card"+(img?"":" noimg")+"' style='--rot:"+rot+"deg;--si:"+Math.min(i,8)+"' data-id='"+esc(String(e.id))+"'>"
+          +(img?"<img loading='lazy' referrerpolicy='no-referrer' src='"+img+"' alt='' onerror=\"this.style.display='none';this.parentElement.classList.add('noimg')\">":"")
+          +"<div class='nf-cap'><div class='t'>"+esc(e.title||"Camp")+"</div><div class='d'>"+esc(ds+de)+"</div></div></div>";
+      }).join("");
+      const cover="<div class='nf-cover'><div class='nf-cover-in'>"
+        +"<div class='nf-om'>\u{1FAB7}</div>"
+        +"<div class='nf-ttl'>Happening<br>Now Camps</div>"
+        +"<div class='nf-cnt'>"+on.length+" in session</div>"
+        +"<div class='nf-hint'>"+(nfSpread?"press to stack":"press to open")+"</div>"
+        +"</div></div>";
+      fan.hidden=false;
+      fan.classList.toggle("open", nfSpread);
+      fan.innerHTML="<div class='nf-track'>"+cover+tiles+"</div>";
+    }catch(_){}
+  };
+  document.addEventListener("click", function(e){
+    const cover=e.target.closest("#nowFan .nf-cover");
+    if(cover){
+      const fan=document.getElementById("nowFan");
+      nfSpread=!fan.classList.contains("open");
+      fan.classList.toggle("open", nfSpread);
+      const h=cover.querySelector(".nf-hint"); if(h) h.textContent=nfSpread?"press to stack":"press to open";
+      nfTone(nfSpread?360:260);
+      return;
+    }
+    const t=e.target.closest("#nowFan .nf-card"); if(!t) return;
+    nfTone(320);
+    openFullCard(t.getAttribute("data-id"));
+  }, false);
 })();
 </script>
 </body>
