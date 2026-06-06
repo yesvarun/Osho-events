@@ -6271,5 +6271,516 @@
   "focus_y_pct": 50.0,
   "object_fit": "center",
   "note": "Image appears completely black or failed to load"
+ },
+ "2340356db2ceee1f": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Face centered with text overlay below, balanced composition"
+ },
+ "443a35a9e5b5f633": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Portrait with face in upper-middle, lush green background complements"
+ },
+ "a313638019c17d59": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group event photo, multiple people, dynamic composition"
+ },
+ "1101b3f427ba6303": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Person kneeling with decorative floor element, balanced composition"
+ },
+ "8227d441f8afa0b0": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Face centered with meditative pose, balanced composition"
+ },
+ "b4f8909026ef38c0": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Person speaking at event, face in upper third, full-body framing needed"
+ },
+ "68d79f6ac539db99": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two people embracing, faces centered, event card friendly"
+ },
+ "fc4fc8f15c7c877a": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Text-heavy poster with Buddha statue. Center composition optimal."
+ },
+ "ad323bb0b2ad7fee": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Reclining pose, face mid-frame, body spans full image"
+ },
+ "2d33b27f7367a72a": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Upper body framing with gesture emphasis, balanced composition"
+ },
+ "3d7d7de646a9d5c9": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third; include text and hand detail below"
+ },
+ "1af479b8b0e791af": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group event, multiple people, center composition balances activity"
+ },
+ "48db2405af48bb8f": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Group meditation scene, balanced composition needed"
+ },
+ "5692bb553e0cf68e": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Landscape sunset composition, sunset/text centered for event card"
+ },
+ "146b561e2ac969d9": {
+  "has_person": true,
+  "face_y_pct": 65,
+  "focus_y_pct": 55.0,
+  "object_fit": "center",
+  "note": "Group of 5 people, faces clustered mid-lower frame"
+ },
+ "1feaece03b82a933": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Portrait of Osho with beard, positioned upper-right area"
+ },
+ "4dacb51fbd8dfc1d": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Drummer foreground, group activity, center composition works best"
+ },
+ "bcfb1984b5b86e0d": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Sage portrait positioned right; crop captures head and shoulders"
+ },
+ "591270903dd5d45d": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Mountain landscape, focus on valley and peaks"
+ },
+ "26afff1d4bcaf8c7": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Landscape sunset scene, text centered, trees and horizon balanced"
+ },
+ "e362afd7e5a3fcc4": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Sunset landscape with text overlay, sunset is focal point"
+ },
+ "ad1215244190b11b": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Plant shadow composition, text-focused design element"
+ },
+ "6f67369f1d0a5e3f": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Buddha statue full-body, balanced composition with sky"
+ },
+ "29b49d0b318e5923": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Dynamic spinning dancer, capture movement and event details"
+ },
+ "9a5e07467cb03ae7": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Upper body portrait with generous headroom for text overlay"
+ },
+ "97450923c2ad6908": {
+  "has_person": true,
+  "face_y_pct": 65,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Group event, central person lying down, balanced composition needed"
+ },
+ "b4164555f625c706": {
+  "has_person": true,
+  "face_y_pct": 75,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Person seated at table with tarot cards displayed above"
+ },
+ "0fcb0c830179216d": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group event, distribute vertically for multiple subjects"
+ },
+ "a9159073d3d96e31": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Headshot portrait, face positioned upper-middle, preserve Himalayas backdrop"
+ },
+ "3a07e61442669ec4": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Upper body portrait with scenic mountain backdrop"
+ },
+ "a1eaa6b2ebdd3ee7": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body portrait with face in upper third, scenic background"
+ },
+ "3d06cdd746d1f3b1": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Person positioned left-center; balanced composition with text below."
+ },
+ "4be3b028b4d57f2a": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Lighthouse centered, dramatic sunset backdrop, balanced composition"
+ },
+ "fc61928190566992": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 30.0,
+  "object_fit": "top",
+  "note": "Headshot portrait, face positioned upper third"
+ },
+ "e29d1306c86c6673": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body seated portrait, face mid-frame, balanced composition"
+ },
+ "c0db534098056d83": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Full-body seated portrait, balanced composition with face and torso"
+ },
+ "47e25481f6a25535": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Full-body seated pose, balanced composition needed"
+ },
+ "7c9232c90a15f586": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Seated pose, face mid-frame, include upper body context"
+ },
+ "7afcb69addb4bb68": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Group of three people, balanced composition needs centered crop"
+ },
+ "e90aa2ce789f9d0d": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Portrait with text below; center crop balances person and content"
+ },
+ "153ccf2672bdcccc": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 38.0,
+  "object_fit": "top",
+  "note": "Headshot with face in upper third, text overlay below"
+ },
+ "d18994ecc6b09773": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Event venue with decorations, potted flowers, centered composition"
+ },
+ "3f307937d25c5a53": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group meditation pose, center composition shows all participants equally"
+ },
+ "218792f9b27580de": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Bearded man portrait, significant text below requires lower crop focus"
+ },
+ "ae470beab36c9fe1": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Osho portrait right side, centered composition balances text left"
+ },
+ "9cdd89cea3501bd3": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Large group photo, Buddha statue center, balanced composition"
+ },
+ "07c6b48bc9c97703": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group circle activity, center composition balances all participants"
+ },
+ "894509b59579ef91": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 30.0,
+  "object_fit": "top",
+  "note": "Headshot portrait, face positioned upper-third of frame"
+ },
+ "5c5b2c156f4e5972": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body portrait, face in upper-mid frame, balanced composition"
+ },
+ "b10a5a3047ff35ad": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Large group photo, faces distributed across middle section"
+ },
+ "55aa9d558dc8ea0b": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body pose on beach, face in upper third"
+ },
+ "169e0c3c9bf6570d": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Architectural structure centered, text overlay positioned mid-frame"
+ },
+ "442cb840c0e278c3": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third, text overlay below requires headroom"
+ },
+ "9c814a77708c6bb7": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Buddha statue centered, text overlay requires balanced composition"
+ },
+ "e8f33ee3fcdb0834": {
+  "has_person": true,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Hand with balloons is main focus, sky composition balanced"
+ },
+ "3064ef015ac81f6f": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Large group photo, faces distributed vertically, center crop balances composition"
+ },
+ "b3ccb2961700fe26": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body event photo, woman centered with group context"
+ },
+ "1ec5e529502d36f4": {
+  "has_person": true,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Lower body focus, text overlay placement, natural composition"
+ },
+ "96525821dea9f915": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Architectural structure is main subject, center composition optimal"
+ },
+ "793cb8869095ae1b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Face positioned in upper-mid frame, centered composition optimal"
+ },
+ "9df7b19b03c4691b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Two people full-body, scenic mountain backdrop important"
+ },
+ "3eef0d54825a765f": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 30.0,
+  "object_fit": "top",
+  "note": "Headshot positioned upper portion, center horizontally"
+ },
+ "37e11fecb99dc43a": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Two people shown, heads in upper third, text overlay centered"
+ },
+ "5975e2d2a83ec6a7": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Stones and text centered, colorful gradient background"
+ },
+ "282be14dab9adb35": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body seated pose, face upper-mid frame"
+ },
+ "e8bda0aa380012af": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Facilitator portrait mid-card, balance text and imagery"
+ },
+ "e0671180c256885e": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Three faces arranged horizontally, center composition needed"
+ },
+ "9de90cbf146457a1": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Woman's face dominates upper portion, preserve text below"
+ },
+ "bf3a0b6010aa7df8": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Image appears completely black or failed to load"
+ },
+ "3513b436e7671bc7": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Group gathering with faces distributed mid-frame"
+ },
+ "87352af0548487ae": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Rose imagery centered, text balanced top and bottom"
+ },
+ "b451b3f9ba45ed0a": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Headshot with long hair, face positioned upper-middle"
+ },
+ "0771daf1e09cbe36": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Face framed by cork leaf, quote centered for event card"
  }
 }
