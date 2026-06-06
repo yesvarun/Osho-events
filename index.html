@@ -354,7 +354,7 @@
         <span class="pill"><span>Auto-refresh hourly</span> · <button id="refreshBtn">refresh now</button></span>
         <button id="ownerLockBtn" title="Owner tools (locked)" onclick="toggleOwnerMode()"
           style="all:unset;cursor:pointer;font-size:16px;padding:4px 8px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line);line-height:1">🔒</button>
-        <a id="fsBtn" href="flyer-splitter.html" target="_blank" rel="noopener"
+        <a id="fsBtn" href="flyer-splitter.html"
           title="Flyer Splitter — split one flyer that lists many camps into separate cards"
           style="all:unset;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.6px;padding:5px 11px;border-radius:999px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;line-height:1;box-shadow:0 2px 5px rgba(214,36,159,.35)">FS</a>
       </div>
@@ -1444,14 +1444,48 @@ function _normDate(raw,yearHint){
   }
   return null;
 }
-/* Normalise an extracted event's dates in place, borrowing a year found anywhere
-   on the flyer when the date string itself has none. */
+function _isISO(s){ return /^\d{4}-\d{2}-\d{2}$/.test(s||""); }
+/* Hunt for a date (or a date range) anywhere in a block of flyer text. */
+function _scanDates(text,hint){
+  let s=_deva(text||"").toLowerCase()
+        .replace(/(\d+)(st|nd|rd|th)/g,"$1")
+        .replace(/[–—]/g,"-").replace(/\bto\b/g,"-")
+        .replace(/[,.]/g," ").replace(/\s+/g," ");
+  let m;
+  // D - D Month [Year]   e.g. "5 - 9 june 2025"
+  if((m=s.match(/\b(\d{1,2})\s*-\s*(\d{1,2})\s+([a-z]+)(?:\s+(20\d{2}))?/)) && _MONTHS[m[3]]){
+    const mo=_MONTHS[m[3]], y=_inferYear(mo,+m[1],m[4]?+m[4]:hint);
+    return {start:_iso(y,mo,+m[1]), end:_iso(y,mo,+m[2])};
+  }
+  // Month D - D [Year]   e.g. "june 5 - 9 2025"
+  if((m=s.match(/\b([a-z]+)\s+(\d{1,2})\s*-\s*(\d{1,2})(?:\s+(20\d{2}))?/)) && _MONTHS[m[1]]){
+    const mo=_MONTHS[m[1]], y=_inferYear(mo,+m[2],m[4]?+m[4]:hint);
+    return {start:_iso(y,mo,+m[2]), end:_iso(y,mo,+m[3])};
+  }
+  // D Month - D Month [Year]   e.g. "30 june - 4 july 2025"
+  if((m=s.match(/\b(\d{1,2})\s+([a-z]+)\s*-\s*(\d{1,2})\s+([a-z]+)(?:\s+(20\d{2}))?/)) && _MONTHS[m[2]] && _MONTHS[m[4]]){
+    const mo1=_MONTHS[m[2]], mo2=_MONTHS[m[4]], y=_inferYear(mo1,+m[1],m[5]?+m[5]:hint);
+    return {start:_iso(y,mo1,+m[1]), end:_iso(y,mo2,+m[3])};
+  }
+  // single date — try each shape in turn
+  const pats=[/\b20\d{2}[-/]\d{1,2}[-/]\d{1,2}\b/,/\b\d{1,2}\s+[a-z]+(?:\s+20\d{2})?\b/,
+              /\b[a-z]+\s+\d{1,2}(?:\s+20\d{2})?\b/,/\b\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\b/];
+  for(const p of pats){ const mm=s.match(p); if(mm){ const d=_normDate(mm[0],hint); if(d) return {start:d,end:d}; } }
+  return null;
+}
+/* Normalise an extracted event's dates in place. Borrows a year found anywhere on
+   the flyer, and — if the date field itself is empty/garbled — pulls the date out
+   of the title / description / full flyer text. */
 function fixEventDates(ev){
   if(!ev) return ev;
   const hint=_findYear([ev.full_text,ev.description,ev.title,ev.start_date,ev.end_date,ev.venue].join(" "));
   const ns=_normDate(ev.start_date,hint); if(ns) ev.start_date=ns;
   const ne=_normDate(ev.end_date,hint);   if(ne) ev.end_date=ne;
-  if(ev.start_date && !ev.end_date) ev.end_date=ev.start_date;
+  if(!_isISO(ev.start_date)){
+    const found=_scanDates([ev.start_date,ev.end_date,ev.title,ev.description,ev.full_text].filter(Boolean).join(" . "),hint);
+    if(found && found.start){ ev.start_date=found.start; if(found.end) ev.end_date=found.end; ev.is_event=true; }
+  }
+  if(_isISO(ev.start_date) && !_isISO(ev.end_date)) ev.end_date=ev.start_date;
   return ev;
 }
 // Robustly parse the scraper's first_seen timestamp and check if it's within `ms` of now.
