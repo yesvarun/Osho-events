@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780846740195",
+    "title": "Meditation Camp",
+    "type": "Camp",
+    "start_date": "2026-06-18",
+    "end_date": "2026-06-21",
+    "venue": "",
+    "city": "",
+    "state": "",
+    "country": "India",
+    "phone": "",
+    "flyer_url": "https://i.ibb.co/270QRxjH/60ed3c95b844.jpg",
+    "organizer": "",
+    "description": "",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-07T15:39:00.195Z"
+  },
+  {
     "id": "sub_1780846582416",
     "title": "Guru Purnima Celebration",
     "type": "Camp",
