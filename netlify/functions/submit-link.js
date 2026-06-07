@@ -69,7 +69,7 @@ exports.handler = async (event) => {
       method: "PUT",
       headers: { ...ghHeaders, "Content-Type": "application/json" },
       body: JSON.stringify({
-        message: "Submitted link: " + clean.url.slice(0, 80),
+        message: "Submitted link: " + clean.url.slice(0, 80) + " [skip netlify]",
         content: Buffer.from(JSON.stringify(list, null, 2)).toString("base64"),
         branch: BRANCH,
         ...(sha ? { sha } : {}),
