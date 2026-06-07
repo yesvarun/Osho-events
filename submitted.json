@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780857401468",
+    "title": "Meditation Camp",
+    "type": "Camp",
+    "start_date": "2026-09-17",
+    "end_date": "2026-09-20",
+    "venue": "Osho Sanzen",
+    "city": "Kotla, Solan",
+    "state": "HP",
+    "country": "India",
+    "phone": "8894351962",
+    "flyer_url": "",
+    "organizer": "Osho Sanzen",
+    "description": "Meditation camp with Swami Sanjay Bharti. 3 days.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-07T18:36:41.468Z"
+  },
+  {
     "id": "sub_1780857398175",
     "title": "Meditation Camp",
     "type": "Camp",
