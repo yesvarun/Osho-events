@@ -209,14 +209,24 @@
     border:2px dashed rgba(192,57,139,.45);border-radius:16px;padding:20px 28px;transition:background .15s}
   .cs-addbtn:active{background:rgba(192,57,139,.06)}
   .cs-addbtn small{font-size:11px;font-weight:800;letter-spacing:.3px}
-  .cs-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:6;all:unset;cursor:pointer;
-    width:30px;height:30px;border-radius:50%;background:rgba(20,12,20,.42);color:#fff;
-    display:flex;align-items:center;justify-content:center;font-size:19px;backdrop-filter:blur(2px);transition:opacity .2s}
-  .cs-prev{left:8px}.cs-next{right:8px}
+  .cs-nav{all:unset;position:absolute;top:50%;transform:translateY(-50%);z-index:6;cursor:pointer;
+    width:26px;height:26px;border-radius:50%;background:rgba(15,10,18,.30);color:rgba(255,255,255,.92);
+    display:flex;align-items:center;justify-content:center;font-size:16px;backdrop-filter:blur(2px);
+    transition:opacity .2s,background .2s}
+  .cs-nav:active{background:rgba(15,10,18,.5)}
+  .cs-prev{left:6px}.cs-next{right:6px}
+  /* Tools popover (FS / Instant / Lock) */
+  #ownerMenu{position:absolute;left:0;top:42px;z-index:80;background:var(--paper,#fff);
+    border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 34px -10px rgba(0,0,0,.34);
+    padding:6px;min-width:196px}
+  #ownerMenu.open{display:block !important}
+  .tool-item{all:unset;cursor:pointer;display:flex;align-items:center;gap:9px;width:100%;box-sizing:border-box;
+    padding:11px 13px;border-radius:10px;font-size:14px;font-weight:700;color:var(--ink,#222)}
+  .tool-item:hover,.tool-item:active{background:var(--paper-2)}
   .cs-dots{position:absolute;left:0;right:0;bottom:9px;display:flex;gap:5px;justify-content:center;z-index:6;pointer-events:none}
   .cs-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 2px rgba(0,0,0,.55);transition:all .2s}
   .cs-dot.on{background:#fff;width:15px;border-radius:3px}
-  .cs-del{position:absolute;top:8px;right:8px;z-index:7;all:unset;cursor:pointer;width:26px;height:26px;
+  .cs-del{all:unset;position:absolute;top:8px;right:8px;z-index:7;cursor:pointer;width:26px;height:26px;
     border-radius:50%;background:rgba(20,12,20,.5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
   /* Only generated fallback images (.has-quote) are forced to a uniform portrait shape */
   .flyer.has-quote{aspect-ratio:4/6}
@@ -374,14 +384,15 @@
       <div class="status">
         <span class="pill"><span class="dot" id="liveDot"></span><span id="updatedLabel">Loading…</span></span>
         <span class="pill"><span>Auto-refresh hourly</span> · <button id="refreshBtn">refresh now</button></span>
-        <button id="ownerLockBtn" title="Owner tools (locked)" onclick="toggleOwnerMode()"
-          style="all:unset;cursor:pointer;font-size:16px;padding:4px 8px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line);line-height:1">🔒</button>
-        <a id="fsBtn" href="flyer-splitter.html"
-          title="Flyer Splitter — split one flyer that lists many camps into separate cards"
-          style="all:unset;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.6px;padding:5px 11px;border-radius:999px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;line-height:1;box-shadow:0 2px 5px rgba(214,36,159,.35)">FS</a>
-        <button id="instantBtn" type="button" onclick="openLink()"
-          title="Paste a post link and turn it into a card instantly"
-          style="all:unset;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.4px;padding:5px 11px;border-radius:999px;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff;line-height:1;box-shadow:0 2px 5px rgba(123,47,247,.35)">⚡ Instant</button>
+        <div class="tools-wrap" style="position:relative">
+          <button id="ownerMenuBtn" type="button" title="Tools" aria-label="Tools" onclick="toggleOwnerMenu(event)"
+            style="all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#d6249f,#7b2ff7);color:#fff;box-shadow:0 2px 7px rgba(123,47,247,.4);font-size:17px;line-height:1">✦</button>
+          <div id="ownerMenu" style="display:none">
+            <button type="button" class="tool-item" onclick="openLink();closeOwnerMenu()">⚡ Instant card from a link</button>
+            <a class="tool-item" href="flyer-splitter.html">🪟 Flyer Splitter</a>
+            <button type="button" class="tool-item" id="ownerLockBtn" onclick="toggleOwnerMode()"><span id="lockIcon">🔒</span> Owner tools</button>
+          </div>
+        </div>
       </div>
     </div>
     <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
@@ -592,7 +603,10 @@
       <div class="taxi-field"><label>Start date</label><input id="mdStart" type="date"></div>
       <div class="taxi-field"><label>End date (optional)</label><input id="mdEnd" type="date"></div>
       <div class="taxi-field"><label>Camp name (optional)</label><input id="mdTitle" type="text" placeholder="e.g. Mystic Rose Camp"></div>
-      <div class="taxi-field"><label>City / venue (optional)</label><input id="mdCity" type="text" placeholder="e.g. Osho Nisarga, Dharamshala"></div>
+      <div class="taxi-field"><label>Venue / address (optional)</label><input id="mdVenue" type="text" placeholder="e.g. Osho Nisarga, McLeod Ganj Road"></div>
+      <div class="taxi-field"><label>City (optional)</label><input id="mdCity" type="text" placeholder="e.g. Dharamshala"></div>
+      <div class="taxi-field"><label>Organiser (optional)</label><input id="mdOrg" type="text" placeholder="e.g. Swami Anand"></div>
+      <div class="taxi-field"><label>Phone (optional)</label><input id="mdPhone" type="tel" placeholder="e.g. 98765 43210"></div>
       <p id="mdErr" style="display:none;color:#9a3414;font-size:13px;margin:8px 0 0"></p>
       <div style="display:flex;gap:10px;margin-top:16px">
         <button class="inform-btn" id="mdSave" style="flex:1;justify-content:center">Create card</button>
@@ -926,6 +940,14 @@ function openLink(){
 }
 function closeLinkModal(){ document.getElementById('linkOverlay').classList.remove('open'); }
 
+// Tools popover (collapses FS / Instant / Owner-lock into one button)
+function toggleOwnerMenu(e){ if(e){ e.stopPropagation(); } const m=document.getElementById('ownerMenu'); if(m) m.classList.toggle('open'); }
+function closeOwnerMenu(){ const m=document.getElementById('ownerMenu'); if(m) m.classList.remove('open'); }
+document.addEventListener('click', e=>{
+  const w=e.target.closest && e.target.closest('.tools-wrap');
+  if(!w) closeOwnerMenu();
+});
+
 /* Ask the user to type the camp date(s) by hand. Resolves to
    {start_date,end_date,title,city} or null if cancelled. */
 function askDatesManually(prefill){
@@ -934,11 +956,15 @@ function askDatesManually(prefill){
     const ov=document.getElementById('manualDateOverlay');
     const s=document.getElementById('mdStart'), e=document.getElementById('mdEnd'),
           t=document.getElementById('mdTitle'), c=document.getElementById('mdCity'),
+          v=document.getElementById('mdVenue'), o=document.getElementById('mdOrg'),
+          ph=document.getElementById('mdPhone'),
           err=document.getElementById('mdErr'),
           save=document.getElementById('mdSave'), cancel=document.getElementById('mdCancel'),
           close=document.getElementById('mdClose');
     s.value=prefill.start_date||''; e.value=prefill.end_date||'';
-    t.value=prefill.title||''; c.value=prefill.city||''; err.style.display='none';
+    t.value=prefill.title||''; c.value=prefill.city||'';
+    v.value=prefill.venue||''; o.value=prefill.organizer||''; ph.value=prefill.phone||'';
+    err.style.display='none';
     ov.classList.add('open');
     function cleanup(){
       ov.classList.remove('open');
@@ -949,7 +975,8 @@ function askDatesManually(prefill){
       const sd=s.value; if(!sd){ err.textContent='Please pick at least the start date.'; err.style.display='block'; return; }
       const ed=e.value||sd; if(ed<sd){ err.textContent="End date can't be before the start date."; err.style.display='block'; return; }
       if(ed < new Date().toISOString().slice(0,10)){ err.textContent='That date has already passed — please enter an upcoming date.'; err.style.display='block'; return; }
-      cleanup(); resolve({start_date:sd, end_date:ed, title:t.value.trim(), city:c.value.trim()});
+      cleanup(); resolve({start_date:sd, end_date:ed, title:t.value.trim(), city:c.value.trim(),
+                          venue:v.value.trim(), organizer:o.value.trim(), phone:ph.value.trim()});
     }
     function onCancel(){ cleanup(); resolve(null); }
     function onBg(ev){ if(ev.target===ov){ cleanup(); resolve(null); } }
@@ -2243,7 +2270,10 @@ flyerInput.addEventListener("change", async (e)=>{
       // instead of losing their upload. The flyer image is kept.
       const manual = await askDatesManually({
         title: (ev && ev.title) || "",
-        city:  (ev && (ev.city || ev.venue)) || ""
+        venue: (ev && ev.venue) || "",
+        city:  (ev && ev.city) || "",
+        organizer: (ev && ev.organizer) || "",
+        phone: (ev && ev.phone) || ""
       });
       if(!manual) return;                       // user cancelled
       const ev2 = Object.assign({}, ev || {}, {
@@ -2251,7 +2281,10 @@ flyerInput.addEventListener("change", async (e)=>{
         title: manual.title || (ev && ev.title) || "Meditation Camp",
         start_date: manual.start_date,
         end_date: manual.end_date || manual.start_date,
-        city: manual.city || (ev && ev.city) || ""
+        venue: manual.venue || (ev && ev.venue) || "",
+        city: manual.city || (ev && ev.city) || "",
+        organizer: manual.organizer || (ev && ev.organizer) || "",
+        phone: manual.phone || (ev && ev.phone) || ""
       });
       const res = addCampFromExtraction(ev2, { idPrefix:"fly_", platform:"Flyer upload", imgUrl: imgUrl });
       if(res === true){ closeModal(); }
@@ -2505,7 +2538,7 @@ function toggleOwnerMode(){
     if(typeof cancelAdjust==="function") cancelAdjust();
     ownerUnlocked = false;
     document.body.classList.remove("owner-unlocked");
-    const b=document.getElementById("ownerLockBtn"); if(b){ b.textContent="🔒"; b.title="Owner tools (locked)"; }
+    const b=document.getElementById("lockIcon"); if(b){ b.textContent="🔒"; }
     return;
   }
   const p = prompt("Owner tools.\nEnter the password to unlock highlight & image-adjust:");
@@ -2513,7 +2546,7 @@ function toggleOwnerMode(){
   if(p !== PASTE_PASSWORD){ alert("Incorrect password."); return; }
   ownerUnlocked = true;
   document.body.classList.add("owner-unlocked");
-  const b=document.getElementById("ownerLockBtn"); if(b){ b.textContent="🔓"; b.title="Owner tools (unlocked — tap to lock)"; }
+  const b=document.getElementById("lockIcon"); if(b){ b.textContent="🔓"; }
 }
 
 /* ============================================================
@@ -2791,7 +2824,7 @@ if ("serviceWorker" in navigator) {
   .cc-overlay.show{display:flex}
   .cc-modal{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-md);
     box-shadow:var(--shadow-hi);max-width:380px;width:100%;padding:20px 18px 18px;position:relative}
-  .cc-close{position:absolute;top:10px;right:12px;all:unset;cursor:pointer;font-size:18px;color:var(--ink-2);
+  .cc-close{all:unset;position:absolute;top:10px;right:12px;cursor:pointer;font-size:18px;color:var(--ink-2);
     width:30px;height:30px;text-align:center;line-height:30px;border-radius:50%}
   .cc-close:hover{background:var(--line)}
   .cc-title{font-weight:800;font-size:17px;padding-right:28px;line-height:1.25}
@@ -3084,7 +3117,7 @@ if ("serviceWorker" in navigator) {
   .nfx-wrap .grid{margin:0}
   .nfx-count{position:absolute;top:-14px;left:0;z-index:5;font-size:12px;font-weight:800;color:#fff;
     background:rgba(0,0,0,.45);padding:3px 10px;border-radius:999px;backdrop-filter:blur(2px)}
-  .nfx-nav{position:absolute;top:42%;z-index:6;all:unset;cursor:pointer;width:42px;height:42px;border-radius:50%;
+  .nfx-nav{all:unset;position:absolute;top:42%;z-index:6;cursor:pointer;width:42px;height:42px;border-radius:50%;
     background:rgba(255,255,255,.92);color:#b32418;font-size:26px;font-weight:700;text-align:center;line-height:42px;
     box-shadow:0 4px 14px rgba(0,0,0,.35)}
   .nfx-prev{left:-14px} .nfx-next{right:-14px}
@@ -3105,7 +3138,7 @@ if ("serviceWorker" in navigator) {
   .imap-card{max-width:420px;width:100%;border-radius:26px;padding:18px 16px 20px;position:relative;
     background:radial-gradient(130% 80% at 50% 0%,#fbe0f1,#f3e7dd 60%,#efe2d6);
     box-shadow:0 26px 64px -16px rgba(60,20,55,.6);border:1px solid rgba(176,106,160,.25)}
-  .imap-close{position:absolute;top:10px;right:14px;all:unset;cursor:pointer;font-size:19px;color:#a98;z-index:3}
+  .imap-close{all:unset;position:absolute;top:10px;right:14px;cursor:pointer;font-size:19px;color:#a98;z-index:3}
   .imap-om{text-align:center;font-size:26px;line-height:1;margin:2px 0 2px;opacity:.9}
   .imap-h{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:19px;color:#6b2a5e;text-align:center;margin:0}
   .imap-sub{text-align:center;font-size:12px;color:#9a6f8e;margin:4px 0 8px;letter-spacing:.02em}
@@ -3130,7 +3163,7 @@ if ("serviceWorker" in navigator) {
     animation:imapMe 2.4s ease-in-out infinite}
   @keyframes imapMe{0%{box-shadow:0 0 0 0 rgba(43,143,224,.45)}70%{box-shadow:0 0 0 11px rgba(43,143,224,0)}100%{box-shadow:0 0 0 0 rgba(43,143,224,0)}}
   .imap-me-lbl{color:#1c5fa0;text-shadow:0 1px 2px rgba(255,255,255,.95)}
-  .nfx-close{position:absolute;top:-12px;right:-4px;z-index:5;all:unset;cursor:pointer;width:34px;height:34px;
+  .nfx-close{all:unset;position:absolute;top:-12px;right:-4px;z-index:5;cursor:pointer;width:34px;height:34px;
     border-radius:50%;background:#fff;color:#333;text-align:center;line-height:34px;font-size:16px;
     box-shadow:0 4px 12px rgba(0,0,0,.35)}
 
