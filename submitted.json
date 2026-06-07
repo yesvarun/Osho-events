@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1780857953199",
+    "title": "Meditation Camp",
+    "type": "Camp",
+    "start_date": "2026-08-10",
+    "end_date": "2026-08-12",
+    "venue": "OSHO PRABHU KRIPAL ASHRAM",
+    "city": "Algatpur",
+    "state": "UP",
+    "country": "India",
+    "phone": "+91-9839501228",
+    "flyer_url": "",
+    "organizer": "Swami Anand Abhaya",
+    "description": "Meditation Camp by Swami Anand Abhaya at OSHO PRABHU KRIPAL ASHRAM",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-07T18:45:53.199Z"
+  },
+  {
     "id": "sub_1780857411066",
     "title": "Silence Retreat",
     "type": "Retreat",
