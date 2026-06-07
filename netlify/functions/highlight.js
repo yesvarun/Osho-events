@@ -26,7 +26,7 @@ async function readJson(api, headers, fallback) {
 
 async function writeJson(api, headers, obj, sha, msg) {
   const body = {
-    message: msg,
+    message: (msg + " [skip netlify]"),
     content: Buffer.from(JSON.stringify(obj, null, 0)).toString("base64"),
     branch: BRANCH,
   };

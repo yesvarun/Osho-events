@@ -47,7 +47,7 @@ exports.handler = async (event) => {
     counts[campKey] = (Number(counts[campKey]) || 0) + 1;
 
     const putBody = {
-      message: "interest: " + campKey,
+      message: "interest: " + campKey + " [skip netlify]",
       content: Buffer.from(JSON.stringify(counts, null, 0)).toString("base64"),
       branch: BRANCH,
     };

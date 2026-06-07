@@ -1,8 +1,12 @@
 // Netlify Function: save-camp
 // Appends a user-submitted camp to submitted.json in the GitHub repo, so EVERY
-// visitor sees it (the site loads submitted.json alongside events.json).
+// visitor sees it (the site loads submitted.json straight from GitHub raw).
 // Uses a GitHub token stored server-side as the Netlify env var GITHUB_TOKEN.
-// The token is NEVER exposed in the public page.
+//
+// CREDIT FIX: the commit message ends with "[skip netlify]" so saving a camp
+// updates submitted.json WITHOUT triggering a Netlify production deploy (15 credits).
+// The page reads submitted.json from raw.githubusercontent.com, so the new camp
+// still shows for everyone — no deploy needed.
 
 const REPO   = "yesvarun/Osho-events";      // owner/repo
 const BRANCH = "main";
@@ -76,21 +80,25 @@ exports.handler = async (event) => {
     const today = new Date().toISOString().slice(0, 10);
     list = list.filter((c) => (c.end_date || c.start_date) >= today).slice(0, 500);
 
-    // 4. Write back
+    // 4. Write back — "[skip netlify]" means NO deploy is triggered (saves 15 credits).
+    const putBody = {
+      message: "Community upload: " + clean.title + " [skip netlify]",
+      content: Buffer.from(JSON.stringify(list, null, 2)).toString("base64"),
+      branch: BRANCH,
+    };
+    if (sha) putBody.sha = sha;   // include sha only when the file already exists
+
     const put = await fetch(api, {
       method: "PUT",
-      headers: { ...ghHeaders, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: "Community upload: " + clean.title,
-        content: Buffer.from(JSON.stringify(list, null, 2)).toString("base64"),
-        branch: BRANCH,
-        ...(sha ? { sha } : {}),
-      }),
+      headers: ghHeaders,
+      body: JSON.stringify(putBody),
     });
+
     if (!put.ok) {
-      const err = await put.text();
-      return { statusCode: 502, headers, body: JSON.stringify({ error: "Save failed", detail: err.slice(0,200) }) };
+      const detail = await put.text();
+      return { statusCode: 502, headers, body: JSON.stringify({ error: "Could not save", detail: detail.slice(0, 200) }) };
     }
+
     return { statusCode: 200, headers, body: JSON.stringify({ ok: true, camp: clean }) };
   } catch (e) {
     return { statusCode: 502, headers, body: JSON.stringify({ error: "Save failed" }) };

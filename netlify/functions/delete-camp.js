@@ -59,7 +59,7 @@ exports.handler = async (event) => {
 
   async function writeJson(path, list, sha, msg) {
     const payload = {
-      message: msg,
+      message: (msg + " [skip netlify]"),
       content: Buffer.from(JSON.stringify(list, null, 2)).toString("base64"),
       branch: BRANCH,
     };
