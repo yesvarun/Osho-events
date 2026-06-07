@@ -578,6 +578,30 @@
   </div>
 </div>
 
+<!-- ===== Manual date entry (fallback when a flyer's date can't be read) ===== -->
+<div class="overlay" id="manualDateOverlay">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:420px">
+    <div class="modal-head">
+      <h2 style="font-size:18px">📅 Add the camp date</h2>
+      <button class="x" id="mdClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin:0 0 14px;color:#5b5b61;font-size:14px;line-height:1.5">
+        We couldn't read the date from this flyer. Please enter it by hand and the card will be added (the flyer image is kept).
+      </p>
+      <div class="taxi-field"><label>Start date</label><input id="mdStart" type="date"></div>
+      <div class="taxi-field"><label>End date (optional)</label><input id="mdEnd" type="date"></div>
+      <div class="taxi-field"><label>Camp name (optional)</label><input id="mdTitle" type="text" placeholder="e.g. Mystic Rose Camp"></div>
+      <div class="taxi-field"><label>City / venue (optional)</label><input id="mdCity" type="text" placeholder="e.g. Osho Nisarga, Dharamshala"></div>
+      <p id="mdErr" style="display:none;color:#9a3414;font-size:13px;margin:8px 0 0"></p>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="inform-btn" id="mdSave" style="flex:1;justify-content:center">Create card</button>
+        <button class="btn" id="mdCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Step-by-step Ride questionnaire ===== -->
 <div class="overlay" id="rideOverlay">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:440px">
@@ -901,6 +925,38 @@ function openLink(){
   document.getElementById('linkNote').value='';
 }
 function closeLinkModal(){ document.getElementById('linkOverlay').classList.remove('open'); }
+
+/* Ask the user to type the camp date(s) by hand. Resolves to
+   {start_date,end_date,title,city} or null if cancelled. */
+function askDatesManually(prefill){
+  prefill = prefill || {};
+  return new Promise(resolve=>{
+    const ov=document.getElementById('manualDateOverlay');
+    const s=document.getElementById('mdStart'), e=document.getElementById('mdEnd'),
+          t=document.getElementById('mdTitle'), c=document.getElementById('mdCity'),
+          err=document.getElementById('mdErr'),
+          save=document.getElementById('mdSave'), cancel=document.getElementById('mdCancel'),
+          close=document.getElementById('mdClose');
+    s.value=prefill.start_date||''; e.value=prefill.end_date||'';
+    t.value=prefill.title||''; c.value=prefill.city||''; err.style.display='none';
+    ov.classList.add('open');
+    function cleanup(){
+      ov.classList.remove('open');
+      save.removeEventListener('click',onSave); cancel.removeEventListener('click',onCancel);
+      close.removeEventListener('click',onCancel); ov.removeEventListener('click',onBg);
+    }
+    function onSave(){
+      const sd=s.value; if(!sd){ err.textContent='Please pick at least the start date.'; err.style.display='block'; return; }
+      const ed=e.value||sd; if(ed<sd){ err.textContent="End date can't be before the start date."; err.style.display='block'; return; }
+      if(ed < new Date().toISOString().slice(0,10)){ err.textContent='That date has already passed — please enter an upcoming date.'; err.style.display='block'; return; }
+      cleanup(); resolve({start_date:sd, end_date:ed, title:t.value.trim(), city:c.value.trim()});
+    }
+    function onCancel(){ cleanup(); resolve(null); }
+    function onBg(ev){ if(ev.target===ov){ cleanup(); resolve(null); } }
+    save.addEventListener('click',onSave); cancel.addEventListener('click',onCancel);
+    close.addEventListener('click',onCancel); ov.addEventListener('click',onBg);
+  });
+}
 
 async function submitLink(){
   const url = (document.getElementById('linkUrl').value||'').trim();
@@ -2183,9 +2239,24 @@ flyerInput.addEventListener("change", async (e)=>{
         });
       }catch(_){ /* if it fails, the card still shows on this device */ }
     } else {
-      // Couldn't read a clear dated camp from the flyer. Do NOT open the form —
-      // the two buttons are independent. Just tell the person kindly.
-      alert("Sorry, we couldn't read a clear camp date from this flyer, so it wasn't added.\n\nPlease try a clearer flyer image (with the dates and place visible), or use the “Inform a Camp” button to type the details in.");
+      // Couldn't read a clear date from the flyer — let the user type it by hand
+      // instead of losing their upload. The flyer image is kept.
+      const manual = await askDatesManually({
+        title: (ev && ev.title) || "",
+        city:  (ev && (ev.city || ev.venue)) || ""
+      });
+      if(!manual) return;                       // user cancelled
+      const ev2 = Object.assign({}, ev || {}, {
+        is_event: true,
+        title: manual.title || (ev && ev.title) || "Meditation Camp",
+        start_date: manual.start_date,
+        end_date: manual.end_date || manual.start_date,
+        city: manual.city || (ev && ev.city) || ""
+      });
+      const res = addCampFromExtraction(ev2, { idPrefix:"fly_", platform:"Flyer upload", imgUrl: imgUrl });
+      if(res === true){ closeModal(); }
+      else if(res === "blocked-word"){ alert("This flyer's text contains language that isn't allowed, so it wasn't added."); }
+      else if(res === "past"){ alert("That date has already passed, so the camp wasn't added."); }
     }
   }catch(err){
     alert("Sorry, the flyer couldn't be processed just now. Please check your connection and try again.");
