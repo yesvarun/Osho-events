@@ -57,7 +57,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC') [skip netlify]"
 
           # 2) Now bring in any commits made on GitHub (e.g. your manual uploads) and
           #    replay our commit on top. -X ours keeps our scraper data on conflicts.
