@@ -196,6 +196,28 @@
   .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi);border-color:rgba(181,23,107,.3)}
   .flyer{position:relative;background:var(--paper-2);overflow:hidden;line-height:0}
   .flyer img.main{width:100%;height:auto;display:block;object-fit:contain}
+  /* per-card photo/video gallery (sliding door of windows) */
+  .flyer-slider{position:relative;overflow:hidden;background:var(--paper-2);line-height:0;touch-action:pan-y}
+  .flyer-slider .cs-track{display:flex;width:100%;will-change:transform}
+  .flyer-slider .cs-slide{flex:0 0 100%;width:100%;position:relative}
+  .flyer-slider .cs-slide .flyer{width:100%}
+  .flyer-slider .cs-slide>img,.flyer-slider .cs-slide>video{width:100%;height:auto;display:block;max-height:74vh;object-fit:contain;background:#0c0a10}
+  .cs-add{display:flex;align-items:center;justify-content:center;min-height:170px;
+    background:radial-gradient(120% 120% at 50% 0%,#fff,var(--paper-2))}
+  .cs-addbtn{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;
+    color:#c0398b;font-size:32px;font-weight:300;line-height:1;
+    border:2px dashed rgba(192,57,139,.45);border-radius:16px;padding:20px 28px;transition:background .15s}
+  .cs-addbtn:active{background:rgba(192,57,139,.06)}
+  .cs-addbtn small{font-size:11px;font-weight:800;letter-spacing:.3px}
+  .cs-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:6;all:unset;cursor:pointer;
+    width:30px;height:30px;border-radius:50%;background:rgba(20,12,20,.42);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:19px;backdrop-filter:blur(2px);transition:opacity .2s}
+  .cs-prev{left:8px}.cs-next{right:8px}
+  .cs-dots{position:absolute;left:0;right:0;bottom:9px;display:flex;gap:5px;justify-content:center;z-index:6;pointer-events:none}
+  .cs-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 2px rgba(0,0,0,.55);transition:all .2s}
+  .cs-dot.on{background:#fff;width:15px;border-radius:3px}
+  .cs-del{position:absolute;top:8px;right:8px;z-index:7;all:unset;cursor:pointer;width:26px;height:26px;
+    border-radius:50%;background:rgba(20,12,20,.5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
   /* Only generated fallback images (.has-quote) are forced to a uniform portrait shape */
   .flyer.has-quote{aspect-ratio:4/6}
   .flyer.has-quote img.main{height:100%;object-fit:cover}
@@ -357,6 +379,9 @@
         <a id="fsBtn" href="flyer-splitter.html"
           title="Flyer Splitter — split one flyer that lists many camps into separate cards"
           style="all:unset;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.6px;padding:5px 11px;border-radius:999px;background:linear-gradient(90deg,#d6249f,#ff5fb0);color:#fff;line-height:1;box-shadow:0 2px 5px rgba(214,36,159,.35)">FS</a>
+        <button id="instantBtn" type="button" onclick="openLink()"
+          title="Paste a post link and turn it into a card instantly"
+          style="all:unset;cursor:pointer;font-size:12px;font-weight:800;letter-spacing:.4px;padding:5px 11px;border-radius:999px;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff;line-height:1;box-shadow:0 2px 5px rgba(123,47,247,.35)">⚡ Instant</button>
       </div>
     </div>
     <p class="tagline">A living directory of upcoming Osho meditation gatherings — past programmes drop away on their own, so what you see is only what's still ahead.</p>
@@ -448,12 +473,12 @@
 <div class="overlay" id="pasteOverlay">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pTitle">
     <div class="modal-head">
-      <h2 id="pTitle">Paste Camp Text</h2>
+      <h2 id="pTitle">⚡ Instant card from a post</h2>
       <button class="x" id="closePaste" aria-label="Close">✕</button>
     </div>
     <div class="modal-body">
       <p style="margin:0 0 12px;color:#5b5b61;font-size:14px;line-height:1.5">
-        Paste any camp message or WhatsApp forward below — we'll read it and turn it into a card automatically.
+        Paste a camp message, caption or WhatsApp forward — or <b>Share</b> a post to oshocamps.com from Instagram / WhatsApp / Chrome — and it instantly becomes a card.
       </p>
       <textarea id="pasteBox" rows="8" placeholder="Paste the camp announcement here…&#10;&#10;e.g. Osho Dhyan Shivir, 13–16 Aug 2026, Osho Pyramid Surat, contribution ₹3000, call 98765..." style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;resize:vertical"></textarea>
       <p id="pasteErr" style="display:none;margin:10px 0 0;font-size:13px"></p>
@@ -532,7 +557,7 @@
     </div>
     <div class="modal-body">
       <p style="margin:0 0 14px;color:#5b5b61;font-size:14px;line-height:1.5">
-        Paste the link of an Instagram, Facebook, or any public post about an Osho camp. We'll read it and create a card automatically.
+        Paste a public post link about an Osho camp. <b>⚡ Add now</b> reads it and creates a card instantly. Or queue it for the daily scraper.
       </p>
       <div class="taxi-field"><label>Post link (URL)</label><input id="linkUrl" type="url" placeholder="https://instagram.com/p/..."></div>
       <div class="taxi-field"><label>A note (optional)</label><input id="linkNote" type="text" placeholder="e.g. happening in Bathinda"></div>
@@ -542,9 +567,12 @@
         <p style="font-family:'Fraunces',serif;font-size:18px;color:var(--maroon);margin:0 0 6px">Thank you!</p>
         <p style="color:#5b5b61;font-size:14px;line-height:1.5;margin:0">Your camp link has been received. It will be read and appear in the list after the daily update at <b>10 AM</b>. 🌸</p>
       </div>
-      <div id="linkForm" style="display:flex;gap:10px;margin-top:16px">
-        <button class="inform-btn" id="linkSubmit" style="flex:1;justify-content:center;background:linear-gradient(90deg,#6a70d0,#9a9ff0);color:#fff">Submit link</button>
-        <button class="btn" id="linkCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
+      <div id="linkForm" style="margin-top:16px">
+        <button class="inform-btn" id="linkInstant" style="width:100%;justify-content:center;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff">⚡ Add now — instant card</button>
+        <div style="display:flex;gap:10px;margin-top:10px">
+          <button class="inform-btn" id="linkSubmit" style="flex:1;justify-content:center;background:linear-gradient(90deg,#6a70d0,#9a9ff0);color:#fff">Queue for scraper</button>
+          <button class="btn" id="linkCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
@@ -896,11 +924,48 @@ async function submitLink(){
   document.getElementById('linkThanks').style.display='block';
 }
 
+// ⚡ INSTANT: fetch the post server-side (extract-link), read it, make a card right now.
+async function instantLink(){
+  const url = (document.getElementById('linkUrl').value||'').trim();
+  const err = document.getElementById('linkErr');
+  const btn = document.getElementById('linkInstant');
+  if(!/^https?:\/\//i.test(url)){
+    err.style.display='block'; err.style.color='#9a3414';
+    err.textContent='Please paste a valid link starting with http(s)://'; return;
+  }
+  err.style.display='none';
+  const orig = btn.textContent; btn.disabled = true; btn.textContent = "Reading the post…";
+  try{
+    let ev = null;
+    try{
+      const r = await fetch("/.netlify/functions/extract-link", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ url })
+      });
+      ev = await r.json();
+    }catch(_){ ev = null; }
+    const result = addCampFromExtraction(ev||{}, { idPrefix:"lnk_", platform:"Shared link", sourceUrl:url, imgUrl:(ev&&ev.flyer_url)||"" });
+    if(result === true){ closeLinkModal(); }
+    else if(result === "no-date"){ err.style.display='block'; err.style.color='#9a3414';
+      err.textContent="Couldn't read a clear date from that link — Instagram often hides the caption from outside apps. Try the paste-text button with the caption, or Queue it for the scraper."; }
+    else if(result === "past"){ err.style.display='block'; err.style.color='#9a3414';
+      err.textContent="That camp looks like it has already passed, so it wasn't added."; }
+    else if(result === "blocked-word"){ err.style.display='block'; err.style.color='#9a3414';
+      err.textContent="That post contains language that isn't allowed."; }
+  }catch(e){
+    err.style.display='block'; err.style.color='#9a3414';
+    err.textContent="Sorry, couldn't fetch that link just now. Please try again, or Queue it for the scraper.";
+  }finally{
+    btn.disabled=false; btn.textContent=orig;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', ()=>{
   const lb=document.getElementById('linkBtn'); if(lb) lb.addEventListener('click', openLink);
   const cl=document.getElementById('closeLink'); if(cl) cl.addEventListener('click', closeLinkModal);
   const lc=document.getElementById('linkCancel'); if(lc) lc.addEventListener('click', closeLinkModal);
   const ls=document.getElementById('linkSubmit'); if(ls) ls.addEventListener('click', submitLink);
+  const li=document.getElementById('linkInstant'); if(li) li.addEventListener('click', instantLink);
   const lo=document.getElementById('linkOverlay'); if(lo) lo.addEventListener('click', e=>{ if(e.target.id==='linkOverlay') closeLinkModal(); });
 });
 
@@ -1181,6 +1246,35 @@ let FEED_EVENTS = [];      // from live feed / sample
 let MY_EVENTS = [];        // submitted on this device
 let ALL_EVENTS = [];       // merged + normalised + upcoming
 let usingSample = true;
+
+/* ---- Per-card photo/video gallery ----
+   Extra slides a visitor adds live in this device's localStorage, keyed by the camp's
+   stable identity (title|date|city). The first slide is always the camp's own image. */
+let CARD_MEDIA = (()=>{ try{ return JSON.parse(localStorage.getItem("oshoCardMedia")||"{}"); }catch(_){ return {}; } })();
+function getCardMedia(cid){ return CARD_MEDIA[cid] || []; }
+function saveCardMedia(){ try{ localStorage.setItem("oshoCardMedia", JSON.stringify(CARD_MEDIA)); return true; }catch(e){ return false; } }
+function _slideMediaHTML(m, cid, k){
+  const del = "<button class='cs-del' data-cid=\""+esc(cid)+"\" data-k='"+k+"' title='Remove' aria-label='Remove'>✕</button>";
+  if(m.t==='v') return "<div class='cs-slide'><video src='"+m.s+"' controls playsinline preload='metadata'></video>"+del+"</div>";
+  return "<div class='cs-slide'><img loading='lazy' src='"+m.s+"' alt=''>"+del+"</div>";
+}
+function _addSlideHTML(cid){
+  return "<div class='cs-slide cs-add'><button class='cs-addbtn' data-cid=\""+esc(cid)+"\">＋<small>Add photo / video</small></button></div>";
+}
+function _dotsHTML(n, idx){ let s=""; for(let k=0;k<n;k++) s+="<i class='cs-dot"+(k===idx?' on':'')+"'></i>"; return s; }
+function buildCardSlider(cid, baseSlideHTML){
+  const extra = getCardMedia(cid);
+  const slides = ["<div class='cs-slide'>"+baseSlideHTML+"</div>"]
+    .concat(extra.map((m,k)=>_slideMediaHTML(m,cid,k)))
+    .concat([_addSlideHTML(cid)]).join("");
+  const n = extra.length + 2;
+  return "<div class='flyer-slider cs-port' data-cid=\""+esc(cid)+"\" data-idx='0' data-n='"+n+"'>"
+    + "<div class='cs-track'>"+slides+"</div>"
+    + (n>1 ? "<button class='cs-nav cs-prev' data-dir='-1' aria-label='Previous'>‹</button>"
+           + "<button class='cs-nav cs-next' data-dir='1' aria-label='Next'>›</button>"
+           + "<div class='cs-dots'>"+_dotsHTML(n,0)+"</div>" : "")
+    + "</div>";
+}
 const ui = { view:"india", state:"", region:"", country:"", types:new Set(), q:"", newOnly:false };
 
 /* ---- Highlight + Interest + Image-adjust shared state ----
@@ -1329,6 +1423,36 @@ function normalise(events){
     const subset = [...a].every(w=>b.has(w)) || [...b].every(w=>a.has(w));
     return subset || inter/uni >= 0.5;
   };
+  // ---- DEDUPE v2: pool venue+city+state into ONE token set ----
+  // The same camp gets written as "Pune" / "Osho Nisarga, Pune" / "Nisarga" on different
+  // reposts. Comparing ordered strings split them into separate cards. Instead we collect
+  // every meaningful word from venue+city+state into a set and match camps whose sets
+  // overlap — so field order, or having only one of venue/city, no longer matters.
+  const L_STOP = new Set(["osho","meditation","retreat","retreats","camp","center","centre",
+    "ashram","hall","ground","grounds","resort","hotel","near","opp","road","marg","the","and",
+    "for","with","institute","foundation","sannyas","dham","dhyan","kendra","bhavan","dist",
+    "district","city","village","near","international","commune","garden","gardens","farm","near"]);
+  const locTokens = e => new Set(
+    (((e.venue||"")+" "+(e.city||"")+" "+(e.state||"")).toLowerCase().match(/[a-z]{3,}/g)||[])
+      .filter(w=>!L_STOP.has(w)));
+  const locClose = (a,b)=>{                 // do two location token-sets refer to the same place?
+    if(a.size===0||b.size===0) return false;
+    let inter=0; const small=a.size<=b.size?a:b, big=a.size<=b.size?b:a;
+    small.forEach(t=>{ if(big.has(t)) inter++; });
+    if(inter===0) return false;
+    if([...small].every(t=>big.has(t))) return true;        // one set is contained in the other
+    const uni=new Set([...a,...b]).size||1;
+    if(inter/uni>=0.34) return true;                        // strong overlap
+    if(inter>=1 && Math.min(a.size,b.size)<=2) return true; // tiny sets sharing a token (city-only vs venue+city)
+    return false;
+  };
+  const dateClose = (d1,d2)=>{              // same day, or off-by-one (typo / repost drift)
+    if(d1===d2) return true;
+    const a=parseDate(d1), b=parseDate(d2);
+    if(!a||!b) return d1===d2;
+    return Math.abs(a-b) <= 24*60*60*1000;
+  };
+  const groups = [];                        // clusters of {date, loc:Set, titles:[Set]}
   return events.map(e=>{
     const start = parseDate(e.start_date);
     const end = parseDate(e.end_date || e.start_date);
@@ -1345,21 +1469,23 @@ function normalise(events){
     if(SHARED_DELETED.has(idl) || SHARED_DELETED.has(dk) || SHARED_DELETED.has(titleKey)) return false; // everyone
     return true;
   })
-  .filter(e=>{                                         // DEDUPE — CITY+DATE is the gate, title is a loose tie-breaker.
-    // STEP 1: same CITY + same date = candidate same camp. City is written consistently, whereas the
-    //         VENUE is often typed many ways ("Osho Nisarga" / "O-Nisarga" / "Osho Nisarga, Dharamshala…")
-    //         which would otherwise split one camp into several cards. If city is missing, fall back to
-    //         venue; if neither, keep (can't judge, never merge).
-    // STEP 2 (only after step 1 matches): titles are unreliable (reworded every repost), so they are
-    //         compared LOOSELY — a reworded title is treated as the same camp and dropped, while a
-    //         clearly different programme in the same city/date is KEPT. So no genuine camp is lost.
-    const place = dNorm(e.city) || dNorm(e.venue);
-    if(!place) return true;                            // no city & no venue -> keep
-    const key = place+"|"+dNorm(e.country)+"|"+(e.start_date||"");
+  .filter(e=>{                                         // DEDUPE v2 — see helpers above.
+    const loc = locTokens(e);
+    const date = e.start_date || "";
     const w = dWords(e.title);
-    const reps = seen.get(key) || [];
-    if(reps.some(r=>dSameCamp(w,r))) return false;     // reworded/respelled duplicate of a camp already kept -> drop
-    reps.push(w); seen.set(key, reps); return true;    // genuinely different camp -> keep
+    if(loc.size===0) return true;                      // no place words -> can't judge, keep
+    for(const g of groups){
+      if(!dateClose(g.date, date)) continue;           // must be the same (or adjacent) day
+      if(!locClose(g.loc, loc)) continue;              // ...and the same place
+      if(g.titles.some(tt=>dSameCamp(w,tt))){           // reworded/respelled repost -> drop
+        loc.forEach(t=>g.loc.add(t));
+        return false;
+      }
+      g.titles.push(w); loc.forEach(t=>g.loc.add(t));   // a different programme, same place/day -> keep
+      return true;
+    }
+    groups.push({date, loc, titles:[w]});               // a brand-new place/day cluster -> keep
+    return true;
   })
   .sort((a,b)=>{
     // 1) Freshly added cards (within 3 minutes) pin at the very top, newest first.
@@ -1789,7 +1915,7 @@ function card(e){
 
   return `<article class="card${isFresh?' fresh':''}${isHL?' highlighted':''}${ongoing?' ongoing':''}" data-campkey="${campKeyAttr}">
     ${hlRibbon}${ownerTools}${petals}
-    ${flyer}<span class="type-tag">${esc(e.type||"Event")}</span>
+    ${buildCardSlider(campKey, flyer)}<span class="type-tag">${esc(e.type||"Event")}</span>
     ${e.source_platform?`<span class="src-tag">${esc(e.source_platform)}</span>`:""}${mine}${freshBadge}${newBadge}${nowBadge}
     <div class="body">
       ${stamp}
@@ -2090,7 +2216,7 @@ function addCampFromExtraction(ev, opts){
     country: ev.country || "India",
     phone: ev.phone || "",
     flyer_url: opts.imgUrl || "",
-    source_url: "",
+    source_url: opts.sourceUrl || "",
     source_platform: opts.platform || "Community upload",
     organizer: ev.organizer || "",
     description: ev.description || "",
@@ -2167,6 +2293,36 @@ document.getElementById("pasteSubmit").addEventListener("click", async ()=>{
     btn.disabled=false; btn.textContent=orig;
   }
 });
+
+/* ---- Web Share Target ----
+   When a post is SHARED to oshocamps.com from Instagram / WhatsApp / Chrome, Android
+   opens the app with the shared title/text/url as query params. We instantly drop that
+   into the paste box and run the same extract-text pipeline → a card appears at once. */
+(function(){
+  try{
+    const p=new URLSearchParams(location.search);
+    const url=(p.get("url")||"").trim();
+    const txt=[p.get("title"),p.get("text")].filter(Boolean).join("\n").trim();
+    // shared text sometimes contains the URL inline
+    const urlInTxt = (txt.match(/https?:\/\/\S+/)||[])[0];
+    const shareUrl = url || urlInTxt || "";
+    if(!shareUrl && !txt) return;
+    history.replaceState({}, "", location.pathname);     // clean the address bar
+    const run=()=>{
+      if(typeof openLink!=="function"){ return setTimeout(run,150); }
+      if(shareUrl){                                       // a link was shared -> instant card
+        openLink();
+        const box=document.getElementById("linkUrl"); if(box) box.value=shareUrl;
+        setTimeout(()=>{ const b=document.getElementById("linkInstant"); if(b) b.click(); }, 350);
+      } else if(typeof openPaste==="function"){           // only text -> paste-text pipeline
+        openPaste();
+        const box=document.getElementById("pasteBox"); if(box) box.value=txt;
+        setTimeout(()=>{ const b=document.getElementById("pasteSubmit"); if(b) b.click(); }, 350);
+      }
+    };
+    run();
+  }catch(_){}
+})();
 
 /* Image moderation via Sightengine (free tier, no card: ~2,000 checks/month).
    Get free keys at https://dashboard.sightengine.com/signup — you get an api_user + api_secret.
@@ -2999,7 +3155,7 @@ if ("serviceWorker" in navigator) {
     "karnataka":[76.5,14.5],"kerala":[76.5,10.3],"tamil nadu":[78.5,11.0],"andhra pradesh":[79.5,15.5],"telangana":[79.0,17.8],
     "goa":[74.0,15.4],"assam":[92.5,26.2],"sikkim":[88.5,27.4]
   };
-  const BORDER=[[74.55,37.05],[75.4,37],[76.2,36.55],[76.9,36.1],[77.8,35.75],[78.6,35.55],[79.4,35.45],[80.1,35.35],[80.35,34.8],[80.05,34.3],[79.45,34],[79.3,33.05],[79.05,32.1],[78.75,31.35],[79.2,31.05],[79.85,30.75],[80.45,30.4],[81.05,30.2],[82,29.75],[83,29.3],[84.05,28.9],[85.05,28.42],[86.05,28.1],[87.05,27.92],[88,27.9],[88.1,27.55],[88.45,27.85],[88.92,28.02],[89.65,28.1],[90.55,28.02],[91.6,27.5],[92.4,27.8],[93.25,28.6],[94.25,29.25],[95.35,29.05],[96.4,29.3],[97.4,28.3],[96.95,27.2],[96.1,26.6],[95.2,26.6],[94.55,25.45],[94.25,24.45],[93.4,23.7],[93.2,22.3],[92.45,22.95],[92.15,23.05],[91.65,22.95],[91.3,23.55],[91.35,24.05],[90.6,25.2],[89.8,25.3],[89,26.05],[88.45,26.45],[88.08,26.3],[88,25.2],[88.2,24.2],[88.7,24],[88.6,23.05],[88.9,22.2],[88.15,21.7],[87.4,21.5],[86.9,21.2],[86.5,20.8],[85.9,20.3],[85.1,19.7],[84.4,19],[83.7,18.3],[83.2,17.7],[82.3,17],[81.2,16.3],[80.7,15.9],[80.2,15.1],[80.1,14.4],[80.3,13.5],[79.9,12.5],[79.8,11.9],[79.5,11.2],[79.3,10.6],[78.9,9.6],[78.4,9.3],[78.1,8.8],[77.53,8.08],[77.1,8.4],[76.7,8.9],[76.5,9.5],[76.2,10],[75.9,10.8],[75.7,11.6],[75.2,12.3],[74.8,12.9],[74.5,13.7],[74.3,14.5],[74.1,15.3],[73.9,15.5],[73.5,16.2],[73.3,17],[73,17.9],[72.9,18.6],[72.8,19.4],[72.7,20.2],[72.9,20.7],[72.6,21.3],[72.2,21.7],[71.5,20.9],[70.6,20.8],[69.9,21.5],[69.6,22.3],[69.9,22.8],[70.5,22.6],[70,23],[69,22.8],[68.5,23],[68.4,23.6],[68.75,24],[69.6,24.3],[70.6,24.4],[71,24.7],[70.7,27.7],[72.3,28.7],[73,29.2],[73.9,29.9],[74.5,30.4],[74.1,30.9],[74.6,31.5],[75,32],[74.3,32.5],[74,32.9],[73.95,33.3],[73.75,33.75],[73.6,34.1],[73.45,34.55],[73.25,35],[73.2,35.45],[73.8,35.9],[74.3,36.3],[74.45,36.75],[74.55,37.05]];
+  const BORDER=[[74.75,37.05],[75.3,36.9],[75.7,37],[76.1,36.65],[76.55,36.42],[77.05,36.22],[77.6,36.1],[78.15,35.98],[78.75,35.82],[79.35,35.62],[79.9,35.46],[80.18,35.22],[80.38,34.92],[80.22,34.55],[80.34,34.18],[79.98,33.92],[79.58,33.66],[79.4,33.28],[79.3,33.05],[79.05,32.1],[78.75,31.35],[79.2,31.05],[79.85,30.75],[80.45,30.4],[81.05,30.2],[82,29.75],[83,29.3],[84.05,28.9],[85.05,28.42],[86.05,28.1],[87.05,27.92],[88,27.9],[88.1,27.55],[88.45,27.85],[88.92,28.02],[89.65,28.1],[90.55,28.02],[91.6,27.5],[92.4,27.8],[93.25,28.6],[94.25,29.25],[95.35,29.05],[96.4,29.3],[97.4,28.3],[96.95,27.2],[96.1,26.6],[95.2,26.6],[94.55,25.45],[94.25,24.45],[93.4,23.7],[93.2,22.3],[92.45,22.95],[92.15,23.05],[91.65,22.95],[91.3,23.55],[91.35,24.05],[90.6,25.2],[89.8,25.3],[89,26.05],[88.45,26.45],[88.08,26.3],[88,25.2],[88.2,24.2],[88.7,24],[88.6,23.05],[88.9,22.2],[88.15,21.7],[87.4,21.5],[86.9,21.2],[86.5,20.8],[85.9,20.3],[85.1,19.7],[84.4,19],[83.7,18.3],[83.2,17.7],[82.3,17],[81.2,16.3],[80.7,15.9],[80.2,15.1],[80.1,14.4],[80.3,13.5],[79.9,12.5],[79.8,11.9],[79.5,11.2],[79.3,10.6],[78.9,9.6],[78.4,9.3],[78.1,8.8],[77.53,8.08],[77.1,8.4],[76.7,8.9],[76.5,9.5],[76.2,10],[75.9,10.8],[75.7,11.6],[75.2,12.3],[74.8,12.9],[74.5,13.7],[74.3,14.5],[74.1,15.3],[73.9,15.5],[73.5,16.2],[73.3,17],[73,17.9],[72.9,18.6],[72.8,19.4],[72.7,20.2],[72.9,20.7],[72.6,21.3],[72.2,21.7],[71.5,20.9],[70.6,20.8],[69.9,21.5],[69.6,22.3],[69.9,22.8],[70.5,22.6],[70,23],[69,22.8],[68.5,23],[68.4,23.6],[68.75,24],[69.6,24.3],[70.6,24.4],[71,24.7],[70.7,27.7],[72.3,28.7],[73,29.2],[73.9,29.9],[74.5,30.4],[74.1,30.9],[74.6,31.5],[75,32],[74.3,32.5],[74,32.9],[73.95,33.05],[74.05,33.15],[74.2,33.45],[73.95,33.7],[73.9,34],[73.75,34.3],[73.55,34.55],[73.7,34.85],[73.5,35.1],[73.3,35.32],[73.55,35.6],[73.95,35.85],[74.2,36.12],[74.1,36.45],[74.42,36.72],[74.75,37.05]];
   const VW=460, VH=520;
   // Real India extent (from the labelled map): 68°7'E–97°25'E, 8°4'N–37°6'N, with a little margin.
   const LNG0=67.6, LNG1=98.0, LAT0=37.6, LAT1=7.4;
@@ -3192,6 +3348,99 @@ if ("serviceWorker" in navigator) {
     nfTone(320);
     openFullCard(t.getAttribute("data-id"));
   }, false);
+})();
+</script>
+<script>
+/* ===== Per-card photo/video gallery: swipe, add, remove ===== */
+(function(){
+  let drag=null, addCid=null;
+  // one hidden file input shared by every card
+  const fi=document.createElement("input");
+  fi.type="file"; fi.accept="image/*,video/*"; fi.style.display="none";
+  document.body.appendChild(fi);
+
+  function fileToDataURL(f){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(f); }); }
+  function downscale(f,max,q){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{ let w=img.width,h=img.height; if(w>max||h>max){ if(w>=h){ h=Math.round(h*max/w); w=max; } else { w=Math.round(w*max/h); h=max; } } const c=document.createElement("canvas"); c.width=w; c.height=h; c.getContext("2d").drawImage(img,0,0,w,h); try{ res(c.toDataURL("image/jpeg",q)); }catch(e){ rej(e); } }; img.onerror=rej; img.src=r.result; }; r.onerror=rej; r.readAsDataURL(f); }); }
+
+  fi.addEventListener("change", async ()=>{
+    const f=fi.files&&fi.files[0]; const cid=addCid; fi.value=""; if(!f||!cid) return;
+    const cur=getCardMedia(cid);
+    if(cur.length>=15){ alert("You can add up to 15 photos or videos per camp."); return; }
+    let item=null;
+    try{
+      if(f.type.indexOf("image/")===0){ item={t:"i",s:await downscale(f,1280,0.82)}; }
+      else if(f.type.indexOf("video/")===0){
+        if(f.size>3*1024*1024){ alert("That video is too large to save on this device (about 3 MB max). Try a shorter clip, or add a photo."); return; }
+        item={t:"v",s:await fileToDataURL(f)};
+      } else { alert("Please choose an image or a video."); return; }
+    }catch(e){ alert("Sorry — that file couldn't be added."); return; }
+    const next=cur.concat([item]); CARD_MEDIA[cid]=next;
+    if(!saveCardMedia()){ CARD_MEDIA[cid]=cur; alert("This device's storage is full, so the item couldn't be saved. Remove a few photos and try again."); return; }
+    rebuild(cid, true);
+  });
+
+  function rebuild(cid, jumpEnd){
+    document.querySelectorAll(".cs-port").forEach(port=>{
+      if(port.dataset.cid!==cid) return;
+      const track=port.querySelector(".cs-track");
+      const base=track.querySelector(".cs-slide");          // keep the camp's own image
+      const extra=getCardMedia(cid);
+      track.innerHTML=""; track.appendChild(base);
+      extra.forEach((m,k)=> track.insertAdjacentHTML("beforeend", _slideMediaHTML(m,cid,k)) );
+      track.insertAdjacentHTML("beforeend", _addSlideHTML(cid));
+      const n=extra.length+2; port.dataset.n=n;
+      let dots=port.querySelector(".cs-dots");
+      if(!dots){ // controls may not have existed when n was 1 (won't happen now, but be safe)
+        port.insertAdjacentHTML("beforeend","<button class='cs-nav cs-prev' data-dir='-1'>‹</button><button class='cs-nav cs-next' data-dir='1'>›</button><div class='cs-dots'></div>");
+        dots=port.querySelector(".cs-dots");
+      }
+      dots.innerHTML=_dotsHTML(n,0);
+      go(port, jumpEnd ? n-2 : 0);                          // land on the newly added photo
+    });
+  }
+
+  function go(port, idx){
+    const n=+port.dataset.n||1; idx=Math.max(0,Math.min(n-1,idx));
+    port.dataset.idx=idx;
+    const track=port.querySelector(".cs-track");
+    track.style.transition="transform .28s cubic-bezier(.4,.0,.2,1)";
+    track.style.transform="translateX("+(-idx*100)+"%)";
+    port.querySelectorAll(".cs-dot").forEach((d,k)=>d.classList.toggle("on",k===idx));
+    const p=port.querySelector(".cs-prev"), nx=port.querySelector(".cs-next");
+    if(p) p.style.opacity = idx<=0?".25":"1";
+    if(nx) nx.style.opacity = idx>=n-1?".25":"1";
+  }
+
+  document.addEventListener("click", e=>{
+    const add=e.target.closest(".cs-addbtn"); if(add){ e.preventDefault(); addCid=add.dataset.cid; fi.click(); return; }
+    const del=e.target.closest(".cs-del"); if(del){ e.preventDefault(); const cid=del.dataset.cid,k=+del.dataset.k; const arr=getCardMedia(cid).slice(); arr.splice(k,1); CARD_MEDIA[cid]=arr; saveCardMedia(); rebuild(cid,false); return; }
+    const nav=e.target.closest(".cs-nav"); if(nav){ e.preventDefault(); const port=nav.closest(".cs-port"); go(port,(+port.dataset.idx||0)+(+nav.dataset.dir)); return; }
+    const dot=e.target.closest(".cs-dot"); if(dot){ const port=dot.closest(".cs-port"); const dots=[].slice.call(port.querySelectorAll(".cs-dot")); go(port,dots.indexOf(dot)); return; }
+  });
+
+  // finger swipe — slide the door of windows back and forth
+  document.addEventListener("touchstart", e=>{
+    const port=e.target.closest(".cs-port"); if(!port) return;
+    if(e.target.closest("video")||e.target.closest(".cs-del")) return;
+    const t=e.touches[0];
+    drag={port, x0:t.clientX, y0:t.clientY, idx:+port.dataset.idx||0, w:port.clientWidth||1, lock:null, moved:false};
+  }, {passive:true});
+  document.addEventListener("touchmove", e=>{
+    if(!drag) return; const t=e.touches[0]; const dx=t.clientX-drag.x0, dy=t.clientY-drag.y0;
+    if(drag.lock===null && (Math.abs(dx)>6||Math.abs(dy)>6)) drag.lock=Math.abs(dx)>Math.abs(dy)?"x":"y";
+    if(drag.lock!=="x") return;
+    drag.moved=true; e.preventDefault();
+    const track=drag.port.querySelector(".cs-track"); track.style.transition="none";
+    track.style.transform="translateX("+((-drag.idx*100)+(dx/drag.w*100))+"%)";
+  }, {passive:false});
+  document.addEventListener("touchend", ()=>{
+    if(!drag) return; const d=drag; drag=null;
+    if(d.lock!=="x"||!d.moved){ if(d.lock==="x") go(d.port,d.idx); return; }
+    const track=d.port.querySelector(".cs-track");
+    const mm=(track.style.transform.match(/-?[\d.]+/)||[])[0];
+    const cur=mm!=null?parseFloat(mm):(-d.idx*100);
+    go(d.port, Math.round(-cur/100));
+  });
 })();
 </script>
 </body>
