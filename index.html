@@ -2024,7 +2024,7 @@ function card(e){
     ? `<button class="btn cal-btn" onclick="openCampCalendar(this)" data-start="${calStart}" data-end="${calEnd}" data-title="${calTitle}">📅 Calendar</button>`
     : "";
   const remindBtn = e.start_date
-    ? `<button class="btn remind-btn${remSet?' done':''}" onclick="setCampReminder(this)" data-start="${calStart}" data-end="${calEnd}" data-title="${calTitle}" data-key="${campKeyAttr}">${remSet?'🔔 Reminder set ✓':'🔔 Remind me'}</button>`
+    ? `<button class="btn remind-btn${remSet?' done':''}" onclick="setCampReminder(this)" data-start="${calStart}" data-end="${calEnd}" data-title="${calTitle}" data-key="${campKeyAttr}">${remSet?'🔔 Added to calendar ✓':'🔔 Remind me'}</button>`
     : "";
   const eid = String(e.id||"").replace(/[^a-zA-Z0-9_-]/g,"");
   const detailsBtn = eid ? `<button class="btn details-btn" onclick="openCampDetails('${eid}')">📖 Details</button>` : "";
@@ -2985,30 +2985,72 @@ if ("serviceWorker" in navigator) {
     }catch(_){}
   }
 
-  // Toggle: tap to set the reminder, tap again to remove it.
-  window.setCampReminder=async function(btn){
-    const key=btn.dataset.key;
-    const r=loadRem();
-    if(r[key]){                                               // ---- already set -> turn OFF ----
-      delete r[key]; saveRem(r);
-      cancelTriggers(key);
+  // ---- Add-to-Calendar reminder (reliable on every phone; the calendar reminds them) ----
+  function _pad(n){return String(n).padStart(2,"0");}
+  function _ymd(d){return d.getFullYear()+_pad(d.getMonth()+1)+_pad(d.getDate());}
+  function _icsEsc(s){return String(s||"").replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\n/g,"\\n");}
+  function _gcalLink(title,start,end){
+    const s=D(start), e=D(end)||s; if(!s) return "";
+    const eExcl=new Date(e); eExcl.setDate(eExcl.getDate()+1);   // Google all-day end is exclusive
+    const p=new URLSearchParams({action:"TEMPLATE", text:title||"Osho Camp",
+      dates:_ymd(s)+"/"+_ymd(eExcl), details:"Osho meditation camp — via oshocamps.com"});
+    return "https://calendar.google.com/calendar/render?"+p.toString();
+  }
+  function _downloadICS(title,start,end){
+    const s=D(start), e=D(end)||s; if(!s) return;
+    const eExcl=new Date(e); eExcl.setDate(eExcl.getDate()+1);
+    const now=new Date();
+    const stamp=now.getUTCFullYear()+_pad(now.getUTCMonth()+1)+_pad(now.getUTCDate())+"T"+_pad(now.getUTCHours())+_pad(now.getUTCMinutes())+_pad(now.getUTCSeconds())+"Z";
+    const uid="osho-"+_ymd(s)+"-"+Math.random().toString(36).slice(2,8)+"@oshocamps.com";
+    const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//oshocamps//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+      "BEGIN:VEVENT","UID:"+uid,"DTSTAMP:"+stamp,
+      "DTSTART;VALUE=DATE:"+_ymd(s),"DTEND;VALUE=DATE:"+_ymd(eExcl),
+      "SUMMARY:"+_icsEsc(title||"Osho Camp"),
+      "DESCRIPTION:"+_icsEsc("Osho meditation camp — via oshocamps.com"),
+      "BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+_icsEsc(title||"Osho Camp"),"TRIGGER:-P1D","END:VALARM",
+      "END:VEVENT","END:VCALENDAR"].join("\r\n");
+    try{
+      const blob=new Blob([ics],{type:"text/calendar;charset=utf-8"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");
+      a.href=url; a.download=(title||"osho-camp").replace(/[^a-z0-9]+/gi,"-").toLowerCase().slice(0,40)+".ics";
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); },1500);
+    }catch(_){}
+  }
+
+  // Tap "Remind me" -> small sheet to add the camp to the phone's own calendar.
+  window.setCampReminder=function(btn){
+    const key=btn.dataset.key, title=btn.dataset.title, start=btn.dataset.start, end=btn.dataset.end||btn.dataset.start;
+    // already added -> tap again to remove the mark
+    const _existing=loadRem();
+    if(_existing[key]){
+      if(!confirm("Remove this reminder?")) return;
+      delete _existing[key]; saveRem(_existing);
       btn.classList.remove("done"); btn.innerHTML="🔔 Remind me";
-      campToast("Reminder removed");
+      campToast("Reminder removed. If you saved it to your calendar, please remove it there too.");
       return;
     }
-    // ---- set ON ----
-    const title=btn.dataset.title, start=btn.dataset.start, end=btn.dataset.end||btn.dataset.start;
-    windChime();                                              // chime on press
-    r[key]={title,start,end,set:Date.now(),fired:{}}; saveRem(r);
-    let granted = ("Notification" in window) && Notification.permission==="granted";
-    if(("Notification" in window) && Notification.permission==="default"){
-      try{ granted = (await Notification.requestPermission())==="granted"; }catch(_){}
+    windChime();
+    let ov=document.getElementById("remindSheet");
+    if(!ov){
+      ov=document.createElement("div"); ov.id="remindSheet"; ov.className="cc-overlay";
+      ov.addEventListener("click",function(e){ if(e.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov);
     }
-    scheduleTriggers(key,title,start);
-    btn.classList.add("done"); btn.innerHTML="🔔 Reminder set ✓";
-    campToast(granted
-      ? "Reminder set 🌬️🔔  We'll notify you 2 days & 1 day before."
-      : "Reminder saved 🌬️  Turn on notifications to get the alerts.");
+    function markDone(){ try{ const r=loadRem(); r[key]={title,start,end,set:Date.now()}; saveRem(r); }catch(_){}
+      btn.classList.add("done"); btn.innerHTML="🔔 Added to calendar ✓"; ov.classList.remove("show"); campToast("Added to your calendar 🌸  It will remind you before the camp."); }
+    ov.innerHTML="<div class='cc-modal' style='text-align:center'>"
+      +"<button class='cc-close' onclick=\"document.getElementById('remindSheet').classList.remove('show')\">✕</button>"
+      +"<div class='cc-title'>Remind me</div>"
+      +"<div class='cc-sub' style='margin-bottom:14px'>"+esc(title||"Osho Camp")+"</div>"
+      +"<p style='color:#5b5b61;font-size:13.5px;line-height:1.5;margin:0 0 16px'>Add this camp to your own calendar — it will remind you before it starts, on any phone.</p>"
+      +"<button id='rmGcal' class='inform-btn' style='width:100%;justify-content:center;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff;margin-bottom:10px'>📅 Add to Google Calendar</button>"
+      +"<button id='rmIcs' class='inform-btn' style='width:100%;justify-content:center;background:var(--paper-2);color:#5b5b61'>🍏 Apple / other calendar (.ics)</button>"
+      +"</div>";
+    ov.classList.add("show");
+    const g=document.getElementById("rmGcal"); if(g) g.onclick=function(){ const l=_gcalLink(title,start,end); if(l) window.open(l,"_blank","noopener"); markDone(); };
+    const i=document.getElementById("rmIcs"); if(i) i.onclick=function(){ _downloadICS(title,start,end); markDone(); };
   };
 
   // Site-open fallback: if a reminder is due (2 or 1 days out) while the site is open, fire it with chimes.
