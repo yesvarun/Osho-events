@@ -362,6 +362,35 @@
   gtag('js', new Date());
   gtag('config', 'G-MRSJC3T9RK');
 </script>
+
+<!-- ============================================================
+     FIREBASE — powers the Sangha Chat (real-time messages + photo/video).
+     ONE-TIME SETUP (see chat setup steps):
+       1. console.firebase.google.com → your project → Project settings →
+          "Your apps" → Web app → copy the config values below.
+       2. Build → Firestore Database → Create (production mode).
+       3. Build → Storage → Get started.
+       4. Build → Authentication → Sign-in method → enable "Anonymous".
+       5. Paste the security rules you were given.
+     Until the values below are filled in, chat shows "being set up" — no errors.
+     ============================================================ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+<script>
+  window.FIREBASE_CONFIG = {
+    apiKey: "AIzaSyCRukOnC8CuGt2Ur8euuq6WsJ1oRmtP6PA",
+    authDomain: "oshocamps-3bb44.firebaseapp.com",
+    projectId: "oshocamps-3bb44",
+    storageBucket: "oshocamps-3bb44.firebasestorage.app",
+    messagingSenderId: "90781568754",
+    appId: "1:90781568754:web:67414f1d72a30d11b10a6b"
+  };
+  // Photo/video sharing needs Firebase Storage (Blaze plan). Leave false for now;
+  // when you enable Storage later, change this to true.
+  window.CHAT_MEDIA_ENABLED = false;
+</script>
 </head>
 <body>
 <div class="grain"></div>
@@ -427,6 +456,11 @@
     <div class="cta-row" style="grid-template-columns:1fr">
       <button class="inform-btn" id="linkBtn" style="background:rgba(73,80,200,.12);color:#3a40a0;border:1.5px solid #6a70d0">
         🔗 Post a social-media link of a camp
+      </button>
+    </div>
+    <div class="cta-row" style="grid-template-columns:1fr">
+      <button class="inform-btn" id="generalChatBtn" style="background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff">
+        💬 Sangha Chat — talk with fellow travellers
       </button>
     </div>
   </header>
@@ -577,11 +611,13 @@
         <p style="color:#5b5b61;font-size:14px;line-height:1.5;margin:0">Your camp link has been received. It will be read and appear in the list after the daily update at <b>10 AM</b>. 🌸</p>
       </div>
       <div id="linkForm" style="margin-top:16px">
-        <button class="inform-btn" id="linkInstant" style="width:100%;justify-content:center;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff">⚡ Add now — instant card</button>
-        <div style="display:flex;gap:10px;margin-top:10px">
-          <button class="inform-btn" id="linkSubmit" style="flex:1;justify-content:center;background:linear-gradient(90deg,#6a70d0,#9a9ff0);color:#fff">Queue for scraper</button>
-          <button class="btn" id="linkCancel" style="background:var(--paper-2);color:#5b5b61">Cancel</button>
+        <button class="inform-btn" id="linkInstant" style="width:100%;justify-content:center;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff;font-weight:700;padding:14px;box-shadow:0 8px 22px -8px rgba(123,47,247,.5)">⚡ Add now — instant card</button>
+        <div class="link-or"><span>or</span></div>
+        <div style="display:flex;gap:10px">
+          <button class="inform-btn" id="linkSubmit" style="flex:1;justify-content:center;background:var(--paper-2);color:#3a40a0;border:1.5px solid #9a9ff0">🕙 Queue for 10 AM scan</button>
+          <button class="inform-btn" id="linkCancel" style="flex:0 0 auto;padding:12px 18px;justify-content:center;background:transparent;color:#8a8a90;border:1.5px solid #e3ddd0">Cancel</button>
         </div>
+        <p style="text-align:center;color:#9a9aa0;font-size:12px;margin:10px 2px 0;line-height:1.4">Instant adds the card right away. Queue waits for the daily scan — lighter on the servers.</p>
       </div>
     </div>
   </div>
@@ -687,8 +723,13 @@
         <input id="f_phone" placeholder="e.g. +91 98160 12345" />
       </div>
       <div class="fg" data-field="flyer_url">
-        <label>Flyer image link / JPG URL <span style="color:#a78">(optional)</span></label>
-        <input id="f_flyer" placeholder="https://… link to a flyer image" />
+        <label>Flyer image <span style="color:#a78">(optional)</span></label>
+        <label id="f_flyerDrop" class="flyer-drop">
+          <input id="f_flyerFile" type="file" accept="image/*" style="display:none" />
+          <span id="f_flyerPlaceholder">📷 Tap to upload a flyer photo</span>
+          <img id="f_flyerPreview" alt="" style="display:none" />
+        </label>
+        <input id="f_flyer" type="hidden" />
       </div>
       <div class="fg" data-field="source_url">
         <label>Post / website link <span style="color:#a78">(optional)</span></label>
@@ -3085,16 +3126,11 @@ if ("serviceWorker" in navigator) {
     openSheet(h);
   };
 
-  // ---- 💬 Camp Circle: chat entry-point (real chat + photo moderation needs backend) ----
+  // ---- 💬 Camp Circle: per-card chat room (Firebase-backed) ----
   window.openCampCircle=function(id){
     const e=ev(id);
-    let h="<div class='cs-h'>Camp Circle <span class='cs-soon'>opening soon</span></div>";
-    if(e.title) h+="<div class='cs-meta-line'>"+esc(e.title)+"</div>";
-    h+="<div class='cs-note'>A gentle space to share photos and chat with fellow travellers heading to this camp is on the way. It opens to everyone first, with kind moderation so every picture and message stays decent and welcoming. Registration will follow a little later.</div>";
-    h+="<div class='cs-chatprev'><div class='cs-bubble'>🌸 Soon: be the first to greet others on this path…</div></div>";
-    h+="<div class='cs-pay'><button>📷 Share a photo · soon</button></div>";
-    h+="<div class='cs-inprev'><input disabled placeholder='Message the circle…'><button disabled>Send</button></div>";
-    openSheet(h);
+    const title=(e&&e.title? e.title : "Camp")+" · Circle";
+    if(window.openChat) window.openChat("camp_"+id, title);
   };
 })();
 </script>
@@ -3542,6 +3578,277 @@ if ("serviceWorker" in navigator) {
     const mm=(track.style.transform.match(/-?[\d.]+/)||[])[0];
     const cur=mm!=null?parseFloat(mm):(-d.idx*100);
     go(d.port, Math.round(-cur/100));
+  });
+})();
+</script>
+<!-- =====================================================================
+     SANGHA CHAT  (Firebase-backed: real-time messages + photo/video)
+     General room = "general";  per-card room = "camp_<id>"
+     Register = display name only. Delete = author or owner.
+     ===================================================================== -->
+<style>
+  /* inform-a-camp flyer upload column */
+  .flyer-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed #d9c9a8;border-radius:12px;background:#fbf6ec;padding:18px 12px;cursor:pointer;color:#9a8b6a;text-align:center;font-size:13.5px;min-height:92px}
+  .flyer-drop:hover{background:#f5edda}
+  .flyer-drop img{max-width:100%;max-height:200px;border-radius:8px;display:block}
+  /* link overlay "or" divider */
+  .link-or{display:flex;align-items:center;text-align:center;color:#b8b2a4;font-size:12px;margin:13px 0}
+  .link-or::before,.link-or::after{content:"";flex:1;height:1px;background:#e7e0d2}
+  .link-or span{padding:0 12px}
+  /* chat */
+  .chat-modal{max-width:480px;width:100%;display:flex;flex-direction:column;max-height:86vh;padding:0;overflow:hidden}
+  .chat-modal .modal-head{padding:14px 16px;border-bottom:1px solid #efe7d6;flex:none;margin:0}
+  .chat-body{flex:1;overflow-y:auto;padding:14px 14px 6px;background:#fbf7ef;min-height:240px}
+  .chat-state{text-align:center;color:#9a948a;font-size:14px;padding:26px 14px;line-height:1.55}
+  .chat-messages{display:flex;flex-direction:column;gap:10px}
+  .cmsg{max-width:82%;align-self:flex-start;background:#fff;border:1px solid #eee2cc;border-radius:14px;padding:8px 11px;font-size:14px;line-height:1.45;color:#2a2a2e;position:relative;word-wrap:break-word;overflow-wrap:anywhere}
+  .cmsg.mine{align-self:flex-end;background:#efe3ff;border-color:#dcc8f7}
+  .cmsg .who{font-size:11.5px;font-weight:700;color:#7b2ff7;margin-bottom:2px}
+  .cmsg.mine .who{color:#6a2bd0}
+  .cmsg .ctext{white-space:pre-wrap}
+  .cmsg .when{font-size:10.5px;color:#b8b2a8;margin-top:3px;text-align:right}
+  .cmsg img,.cmsg video{max-width:100%;border-radius:10px;margin-top:5px;display:block}
+  .cmsg .cdel{position:absolute;top:3px;right:5px;background:none;border:none;color:#cbb;font-size:12px;cursor:pointer;line-height:1;padding:3px}
+  .chat-upbar{font-size:12px;color:#7a746a;text-align:center;padding:6px 10px;background:#f3ecdd;flex:none}
+  .chat-input{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #efe7d6;background:#fff;flex:none}
+  .chat-input input[type=text]{flex:1;border:1.5px solid #e3ddd0;border-radius:999px;padding:10px 14px;font-size:14px;font-family:inherit;outline:none}
+  .chat-input input[type=text]:focus{border-color:#c04bd8}
+  .chat-media-btn{background:#f3ecdd;border:none;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;flex:none}
+  .chat-send{background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff;border:none;border-radius:999px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;flex:none}
+  .chat-send:disabled{opacity:.5;cursor:default}
+</style>
+
+<div class="overlay" id="chatOverlay">
+  <div class="modal chat-modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2 id="chatTitle" style="font-size:16px">💬 Sangha Chat</h2>
+      <button class="x" id="chatClose" aria-label="Close">✕</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+      <div id="chatState" class="chat-state">Connecting…</div>
+      <div id="chatMessages" class="chat-messages"></div>
+    </div>
+    <div class="chat-upbar" id="chatUpbar" style="display:none"></div>
+    <div class="chat-input" id="chatInputBar" style="display:none">
+      <button id="chatMediaBtn" class="chat-media-btn" title="Photo or video">📷</button>
+      <input id="chatMediaFile" type="file" accept="image/*,video/*" style="display:none">
+      <input id="chatText" type="text" placeholder="Write a message…" autocomplete="off" maxlength="800">
+      <button id="chatSend" class="chat-send">Send</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="chatRegOverlay">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width:380px">
+    <div class="modal-head"><h2 style="font-size:18px">🌸 Join the chat</h2><button class="x" id="chatRegClose" aria-label="Close">✕</button></div>
+    <div class="modal-body">
+      <p style="margin:0 0 12px;color:#5b5b61;font-size:14px;line-height:1.5">Choose a name others will see. (A Sannyasi ID for camp-goers will come later.)</p>
+      <input id="chatRegName" placeholder="Your name (e.g. Swami Anand)" maxlength="40" style="width:100%;border:1.5px solid #e3ddd0;border-radius:10px;padding:11px 13px;font-size:15px;font-family:inherit;outline:none" />
+      <div id="chatRegErr" style="color:#c0392b;font-size:13px;min-height:16px;margin-top:6px"></div>
+      <button id="chatRegGo" class="inform-btn" style="width:100%;justify-content:center;margin-top:6px;background:linear-gradient(90deg,#7b2ff7,#c04bd8);color:#fff">Enter chat</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+
+  var FB_READY=false, db=null, store=null, auth=null, uid=null;
+  var curRoom=null, curTitle="", unsub=null;
+
+  function configured(){ var c=window.FIREBASE_CONFIG; return !!(c && c.apiKey && c.apiKey.indexOf("PASTE")<0); }
+  function ownerOn(){ try{ return document.body.classList.contains("owner-unlocked"); }catch(e){ return false; } }
+  function getName(){ try{ return localStorage.getItem("oshoChatName")||""; }catch(e){ return ""; } }
+  function setName(n){ try{ localStorage.setItem("oshoChatName", n); }catch(e){} }
+
+  function initFB(){
+    if(FB_READY) return Promise.resolve(true);
+    if(!configured() || !window.firebase) return Promise.resolve(false);
+    try{
+      if(!firebase.apps.length) firebase.initializeApp(window.FIREBASE_CONFIG);
+      db=firebase.firestore(); store=firebase.storage(); auth=firebase.auth();
+      return auth.signInAnonymously().then(function(){
+        uid=auth.currentUser && auth.currentUser.uid; FB_READY=true; return true;
+      }).catch(function(){ return false; });
+    }catch(e){ return Promise.resolve(false); }
+  }
+
+  function showOverlay(id){ var o=$(id); if(o) o.classList.add("open"); document.body.style.overflow="hidden"; }
+  function hideOverlay(id){ var o=$(id); if(o) o.classList.remove("open"); document.body.style.overflow=""; }
+  function state(msg){ var s=$("chatState"); if(s){ s.style.display=msg?"block":"none"; s.textContent=msg||""; } }
+  function bar(t){ var u=$("chatUpbar"); if(u){ u.style.display=t?"block":"none"; u.textContent=t||""; } }
+
+  var BAD=/\b(fuck|shit|bitch|asshole|bastard|chutiya|madarchod|bhenchod|randi)\b/ig;
+  function clean(t){ return String(t).replace(BAD,"****"); }
+
+  // ---- public: open a room ----
+  window.openChat=function(roomId, title){
+    curRoom=roomId; curTitle=title||"Sangha Chat";
+    $("chatTitle").textContent="💬 "+curTitle;
+    $("chatMessages").innerHTML=""; bar("");
+    $("chatInputBar").style.display="none";
+    showOverlay("chatOverlay");
+    if(!configured()){ state("The chat is being set up and will open here soon. 🌸"); return; }
+    state("Connecting…");
+    initFB().then(function(ok){
+      if(!ok){ state("Couldn't reach the chat right now. Please try again later."); return; }
+      if(!getName()){ promptRegister(); return; }
+      enter();
+    });
+  };
+
+  function promptRegister(){
+    $("chatRegErr").textContent=""; $("chatRegName").value=getName();
+    showOverlay("chatRegOverlay");
+    setTimeout(function(){ try{ $("chatRegName").focus(); }catch(e){} }, 150);
+  }
+
+  function enter(){
+    state(""); $("chatInputBar").style.display="flex";
+    if(ownerOn() && uid){ bar("Owner: to remove others' messages from your phone, add this id under a 'moderators' collection in Firebase → "+uid); }
+    listen();
+  }
+
+  function listen(){
+    if(unsub){ try{ unsub(); }catch(e){} unsub=null; }
+    unsub=db.collection("rooms").doc(curRoom).collection("messages")
+      .orderBy("createdAt","desc").limit(300)
+      .onSnapshot(function(snap){ render(snap); },
+                  function(){ state("Chat connection lost. Close and reopen to retry."); });
+  }
+
+  function render(snap){
+    var box=$("chatMessages"), scroller=$("chatBody"); if(!box) return;
+    var docs=[]; snap.forEach(function(d){ docs.push(d); }); docs.reverse(); // oldest -> newest
+    if(!docs.length){ box.innerHTML="<div style='text-align:center;color:#aaa;font-size:13px;padding:18px'>No messages yet — say hello 🌸</div>"; return; }
+    var nearBottom = (scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight) < 140;
+    var html="";
+    docs.forEach(function(doc){
+      var m=doc.data()||{};
+      var mine=(m.uid && m.uid===uid);
+      var canDel = mine || ownerOn();
+      var when=""; try{ if(m.createdAt && m.createdAt.toDate){ when=m.createdAt.toDate().toLocaleString([], {month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}); } }catch(e){}
+      var media="";
+      if(m.mediaUrl){
+        if(m.mediaType==="video") media="<video src='"+esc(m.mediaUrl)+"' controls playsinline></video>";
+        else media="<img src='"+esc(m.mediaUrl)+"' alt='' loading='lazy'>";
+      }
+      html+="<div class='cmsg"+(mine?" mine":"")+"'>"+
+        (canDel?"<button class='cdel' data-id='"+esc(doc.id)+"' title='Delete'>🗑</button>":"")+
+        "<div class='who'>"+esc(m.name||"Traveller")+"</div>"+
+        (m.text?"<div class='ctext'>"+esc(m.text)+"</div>":"")+
+        media+
+        (when?"<div class='when'>"+esc(when)+"</div>":"")+
+      "</div>";
+    });
+    box.innerHTML=html;
+    Array.prototype.forEach.call(box.querySelectorAll(".cdel"), function(b){
+      b.addEventListener("click", function(){ delMsg(b.getAttribute("data-id")); });
+    });
+    if(nearBottom){ scroller.scrollTop=scroller.scrollHeight; }
+  }
+
+  function delMsg(id){
+    if(!id || !db || !curRoom) return;
+    if(!confirm("Delete this message?")) return;
+    db.collection("rooms").doc(curRoom).collection("messages").doc(id).delete()
+      .catch(function(){ bar("Couldn't delete that message."); setTimeout(function(){ bar(ownerOn()&&uid?("Owner id: "+uid):""); },2500); });
+  }
+
+  function addMsg(extra){
+    if(!FB_READY || !curRoom) return;
+    var base={ uid:uid, name:(getName()||"Traveller"), text:"", mediaUrl:"", mediaType:"",
+               createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    for(var k in extra){ if(extra.hasOwnProperty(k)) base[k]=extra[k]; }
+    db.collection("rooms").doc(curRoom).collection("messages").add(base)
+      .catch(function(){ bar("Message didn't send — check your connection."); setTimeout(function(){ bar(""); },2500); });
+  }
+
+  function sendText(){
+    var inp=$("chatText"); var t=(inp.value||"").trim(); if(!t) return;
+    inp.value=""; addMsg({ text: clean(t).slice(0,800) });
+  }
+
+  function downscale(file, cb){
+    try{
+      var img=new Image(), url=URL.createObjectURL(file);
+      img.onload=function(){
+        var max=1280, w=img.width, h=img.height;
+        if(w>max||h>max){ if(w>h){ h=Math.round(h*max/w); w=max; } else { w=Math.round(w*max/h); h=max; } }
+        var c=document.createElement("canvas"); c.width=w; c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h); URL.revokeObjectURL(url);
+        c.toBlob(function(b){ cb(b); }, "image/jpeg", 0.82);
+      };
+      img.onerror=function(){ URL.revokeObjectURL(url); cb(null); };
+      img.src=url;
+    }catch(e){ cb(null); }
+  }
+
+  function uploadMedia(file){
+    if(!file || !FB_READY || !store) return;
+    var isVid=/^video\//.test(file.type);
+    var maxV=25*1024*1024, maxI=8*1024*1024;
+    function put(blob){
+      if(blob.size > (isVid?maxV:maxI)){ bar(isVid?"Video too large (max 25 MB).":"Image too large (max 8 MB)."); setTimeout(function(){bar("");},2800); return; }
+      bar("Uploading…");
+      var ref=store.ref().child("chat/"+curRoom+"/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+(isVid?"":".jpg"));
+      ref.put(blob).then(function(s){ return s.ref.getDownloadURL(); })
+        .then(function(u){ bar(""); addMsg({ mediaUrl:u, mediaType: isVid?"video":"image" }); })
+        .catch(function(){ bar("Upload failed — try a smaller file."); setTimeout(function(){bar("");},2800); });
+    }
+    if(isVid) put(file); else downscale(file, function(b){ put(b||file); });
+  }
+
+  // expose an image uploader for the Inform-a-Camp flyer field
+  window.__fbUploadImage=function(file, folder){
+    return initFB().then(function(ok){
+      if(!ok || !store) return "";
+      return new Promise(function(res){
+        downscale(file, function(blob){
+          var b=blob||file;
+          var ref=store.ref().child((folder||"uploads")+"/"+Date.now()+"_"+Math.random().toString(36).slice(2,8)+".jpg");
+          ref.put(b).then(function(s){ return s.ref.getDownloadURL(); }).then(function(u){ res(u||""); }).catch(function(){ res(""); });
+        });
+      });
+    });
+  };
+
+  // ---- wiring ----
+  document.addEventListener("DOMContentLoaded", function(){
+    var gb=$("generalChatBtn"); if(gb) gb.addEventListener("click", function(){ window.openChat("general","Sangha Chat — General"); });
+    var cc=$("chatClose"); if(cc) cc.addEventListener("click", function(){ if(unsub){ try{unsub();}catch(e){} unsub=null; } hideOverlay("chatOverlay"); });
+    var co=$("chatOverlay"); if(co) co.addEventListener("click", function(e){ if(e.target.id==="chatOverlay"){ if(unsub){ try{unsub();}catch(x){} unsub=null; } hideOverlay("chatOverlay"); } });
+    var cs=$("chatSend"); if(cs) cs.addEventListener("click", sendText);
+    var ct=$("chatText"); if(ct) ct.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); sendText(); } });
+    var mb=$("chatMediaBtn"); if(mb) mb.addEventListener("click", function(){ if(!window.CHAT_MEDIA_ENABLED){ bar("📷 Photo & video sharing opens soon 🌸"); setTimeout(function(){ bar(ownerOn()&&uid?("Owner id: "+uid):""); }, 2800); return; } $("chatMediaFile").click(); });
+    var mf=$("chatMediaFile"); if(mf) mf.addEventListener("change", function(){ var f=mf.files&&mf.files[0]; if(f) uploadMedia(f); mf.value=""; });
+
+    var rg=$("chatRegGo"); if(rg) rg.addEventListener("click", function(){
+      var n=($("chatRegName").value||"").trim();
+      if(n.length<2){ $("chatRegErr").textContent="Please enter a name (at least 2 letters)."; return; }
+      setName(n); hideOverlay("chatRegOverlay");
+      if(FB_READY) enter(); else window.openChat(curRoom, curTitle);
+    });
+    var rc=$("chatRegClose"); if(rc) rc.addEventListener("click", function(){ hideOverlay("chatRegOverlay"); });
+    var ro=$("chatRegOverlay"); if(ro) ro.addEventListener("click", function(e){ if(e.target.id==="chatRegOverlay") hideOverlay("chatRegOverlay"); });
+
+    // Inform-a-Camp: flyer image upload column
+    var ff=$("f_flyerFile");
+    if(ff) ff.addEventListener("change", function(){
+      var file=ff.files&&ff.files[0]; if(!file) return;
+      var prev=$("f_flyerPreview"), ph=$("f_flyerPlaceholder");
+      try{ prev.src=URL.createObjectURL(file); prev.style.display="block"; }catch(e){}
+      if(ph){ ph.style.display="block"; ph.textContent="Uploading flyer…"; }
+      $("f_flyer").value="";
+      if(window.__fbUploadImage){
+        window.__fbUploadImage(file,"flyers").then(function(u){
+          $("f_flyer").value=u||"";
+          if(ph) ph.textContent = u ? "✓ Flyer added" : "Saved — a themed image will be used (image host not set up yet)";
+        });
+      } else if(ph){ ph.textContent="Saved — a themed image will be used"; }
+    });
   });
 })();
 </script>
