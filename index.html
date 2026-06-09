@@ -2000,21 +2000,6 @@ function card(e){
   const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
-  // 💳 Pay / Book — shows ONLY when a payment has been APPROVED by the owner.
-  const _payInfo = PAYMENTS[campKey] || {};
-  const _approved = _payInfo.status === "approved" && _payInfo.value;
-  const payType = _approved ? (_payInfo.type||"") : "";
-  const payVal  = _approved ? (_payInfo.value||"") : "";
-  let payBtn = "";
-  if(payVal){
-    payBtn = `<button class="btn pay-btn" onclick='openPay(this)' data-type="${esc(String(payType))}" data-val="${esc(String(payVal))}" data-org="${esc(e.organizer||"")}" data-title="${esc(e.title||"")}">💳 Pay / Book</button>`;
-  }
-  // Organiser-only (password-protected) setup. Label reflects state: none / pending / live.
-  const _pStatus = _payInfo.status || "";
-  const _setupLabel = _pStatus==="approved" ? "💳 Edit payment"
-                    : _pStatus==="pending"  ? "⏳ Payment pending"
-                    : "💳 Set up payment";
-  const paySetupBtn = `<button class="btn paysetup-btn" onclick='openPaySetup(this)' data-key="${campKeyAttr}" data-org="${esc(e.organizer||"")}" data-title="${esc(e.title||"")}" data-type="${esc(String(_payInfo.type||""))}" data-val="${esc(String(_payInfo.value||""))}" data-status="${esc(_pStatus)}">${_setupLabel}</button>`;
   const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";
   // Origin stamp so you can tell at a glance whether the scraper is live yet
   let stamp;
@@ -2033,6 +2018,22 @@ function card(e){
   // identity (title|date|city), exactly like the delete-block key. Lowercased.
   const campKey = ((e.title||"") + "|" + (e.start_date||"") + "|" + (e.city||"")).toLowerCase();
   const campKeyAttr = esc(campKey);
+
+  // 💳 Pay / Book — shows ONLY when a payment has been APPROVED by the owner.
+  const _payInfo = PAYMENTS[campKey] || {};
+  const _approved = _payInfo.status === "approved" && _payInfo.value;
+  const payType = _approved ? (_payInfo.type||"") : "";
+  const payVal  = _approved ? (_payInfo.value||"") : "";
+  let payBtn = "";
+  if(payVal){
+    payBtn = `<button class="btn pay-btn" onclick='openPay(this)' data-type="${esc(String(payType))}" data-val="${esc(String(payVal))}" data-org="${esc(e.organizer||"")}" data-title="${esc(e.title||"")}">💳 Pay / Book</button>`;
+  }
+  // Organiser-only (password-protected) setup. Label reflects state: none / pending / live.
+  const _pStatus = _payInfo.status || "";
+  const _setupLabel = _pStatus==="approved" ? "💳 Edit payment"
+                    : _pStatus==="pending"  ? "⏳ Payment pending"
+                    : "💳 Set up payment";
+  const paySetupBtn = `<button class="btn paysetup-btn" onclick='openPaySetup(this)' data-key="${campKeyAttr}" data-org="${esc(e.organizer||"")}" data-title="${esc(e.title||"")}" data-type="${esc(String(_payInfo.type||""))}" data-val="${esc(String(_payInfo.value||""))}" data-status="${esc(_pStatus)}">${_setupLabel}</button>`;
 
   // Highlight: is this camp marked as highlighted? (owner-set, stored server-side)
   const isHL = HIGHLIGHTED.has(campKey);
