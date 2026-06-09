@@ -409,6 +409,7 @@
       </div>
       <div class="status">
         <span class="pill"><span class="dot" id="liveDot"></span><span id="updatedLabel">Loading…</span></span>
+        <span class="pill" id="newCountPill" style="display:none">✨ <span id="newCountVal">0</span> new</span>
         <span class="pill"><span>Auto-refresh hourly</span> · <button id="refreshBtn">refresh now</button></span>
         <div class="tools-wrap" style="position:relative">
           <button id="ownerMenuBtn" type="button" title="Tools" aria-label="Tools" onclick="toggleOwnerMenu(event)"
@@ -721,6 +722,16 @@
       <div class="fg" data-field="phone">
         <label>Contact phone <span class="req">*</span></label>
         <input id="f_phone" placeholder="e.g. +91 98160 12345" />
+      </div>
+      <div class="fg" data-field="pay">
+        <label>Online payment <span style="color:#a78">(optional — money goes straight to the organiser)</span></label>
+        <select id="f_paytype">
+          <option value="">No online payment</option>
+          <option value="upi">UPI ID</option>
+          <option value="link">Payment link (Razorpay / PhonePe / etc.)</option>
+          <option value="whatsapp">WhatsApp to arrange</option>
+        </select>
+        <input id="f_payvalue" placeholder="UPI id, link, or WhatsApp number" style="margin-top:8px" />
       </div>
       <div class="fg" data-field="flyer_url">
         <label>Flyer image <span style="color:#a78">(optional)</span></label>
@@ -1414,6 +1425,8 @@ let ownerUnlocked    = false;     // becomes true after correct password (this s
 // Public raw URLs for the two shared JSON stores the scraper/functions write.
 const HIGHLIGHTS_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/highlights.json";
 const INTEREST_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/interest.json";
+const PAYMENTS_URL   = "https://raw.githubusercontent.com/yesvarun/Osho-events/main/payments.json";
+var PAYMENTS = {};   // { campKey: {type, value, status} } — organiser payment, set via password, approved by owner
 
 /* ============================================================
    LOAD
@@ -1513,6 +1526,16 @@ async function loadData(){
       }
     }
   }catch(_){ /* img_adjust.json may not exist yet — fine */ }
+
+  // Load shared PAYMENTS (organiser payment info, set via password) so everyone sees the Pay button.
+  try{
+    const purl = PAYMENTS_URL + "?t=" + Date.now();
+    const pres = await fetch(purl,{cache:"no-store"});
+    if(pres.ok){
+      const pdata = await pres.json();
+      if(pdata && typeof pdata==="object" && !Array.isArray(pdata)) PAYMENTS = pdata;
+    }
+  }catch(_){ /* payments.json may not exist yet — fine */ }
 
   MY_EVENTS = loadMine();
   rebuild(raw.generated_at);
@@ -1628,8 +1651,8 @@ function normalise(events){
     if(aHL && !bHL) return -1;                         // featured rises up (2 days)
     if(bHL && !aHL) return 1;
     // New finds (discovered in last 3 HOURS) rise above normal date order.
-    const aNew = firstSeenWithin(a.first_seen, 72*60*60*1000);
-    const bNew = firstSeenWithin(b.first_seen, 72*60*60*1000);
+    const aNew = firstSeenWithin(a.first_seen, 8*60*60*1000);
+    const bNew = firstSeenWithin(b.first_seen, 8*60*60*1000);
     if(aNew && !bNew) return -1;
     if(bNew && !aNew) return 1;
     return a._start - b._start;                        // normal: by start date
@@ -1758,7 +1781,7 @@ function currentList(){
     // When the "✨ New" filter is ON, show ALL newly-found camps regardless of
     // region/state/view — "what's new" matters more than location here.
     if(ui.newOnly){
-      if(!firstSeenWithin(e.first_seen, 72*60*60*1000)) return false;
+      if(!firstSeenWithin(e.first_seen, 8*60*60*1000)) return false;
     } else {
       if(ui.view==="india" && e.country!=="India") return false;
       if(ui.view==="india" && ui.state && e.state!==ui.state) return false;
@@ -1816,6 +1839,12 @@ function render(){
     root.innerHTML = freshStrip + `<div class="grid">${cardsWithCTA(rest)}</div>`;
   }
   if(typeof buildNowFan==="function") buildNowFan();
+  // Update the "✨ N new" counter — camps discovered in the last 8h (deduped set, badge-worthy)
+  try{
+    const nc = ALL_EVENTS.filter(e=> firstSeenWithin(e.first_seen, 8*60*60*1000)).length;
+    const pill=document.getElementById("newCountPill"), val=document.getElementById("newCountVal");
+    if(pill && val){ if(nc>0){ val.textContent=nc; pill.style.display=""; } else { pill.style.display="none"; } }
+  }catch(_){}
 }
 function cardsWithCTA(items){
   return items.map(card).join("");
@@ -1971,6 +2000,21 @@ function card(e){
   const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
+  // 💳 Pay / Book — shows ONLY when a payment has been APPROVED by the owner.
+  const _payInfo = PAYMENTS[campKey] || {};
+  const _approved = _payInfo.status === "approved" && _payInfo.value;
+  const payType = _approved ? (_payInfo.type||"") : "";
+  const payVal  = _approved ? (_payInfo.value||"") : "";
+  let payBtn = "";
+  if(payVal){
+    payBtn = `<button class="btn pay-btn" onclick='openPay(this)' data-type="${esc(String(payType))}" data-val="${esc(String(payVal))}" data-org="${esc(e.organizer||"")}" data-title="${esc(e.title||"")}">💳 Pay / Book</button>`;
+  }
+  // Organiser-only (password-protected) setup. Label reflects state: none / pending / live.
+  const _pStatus = _payInfo.status || "";
+  const _setupLabel = _pStatus==="approved" ? "💳 Edit payment"
+                    : _pStatus==="pending"  ? "⏳ Payment pending"
+                    : "💳 Set up payment";
+  const paySetupBtn = `<button class="btn paysetup-btn" onclick='openPaySetup(this)' data-key="${campKeyAttr}" data-org="${esc(e.organizer||"")}" data-title="${esc(e.title||"")}" data-type="${esc(String(_payInfo.type||""))}" data-val="${esc(String(_payInfo.value||""))}" data-status="${esc(_pStatus)}">${_setupLabel}</button>`;
   const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";
   // Origin stamp so you can tell at a glance whether the scraper is live yet
   let stamp;
@@ -1980,8 +2024,8 @@ function card(e){
   else stamp = ``;
   const isFresh = e._added && (Date.now() - e._added) < 180000;
   const freshBadge = isFresh ? `<span class="fresh-badge">✓ Just added</span>` : "";
-  // "✨ New" badge: camps the scraper discovered in the last 3 HOURS (first_seen stamp).
-  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 72*60*60*1000);
+  // "✨ New" badge: camps the scraper discovered in the last 8 HOURS (first_seen stamp).
+  const isNewFind = !isFresh && firstSeenWithin(e.first_seen, 8*60*60*1000);
   const newBadge = isNewFind ? `<span class="new-badge">✨ New</span>` : "";
 
   // STABLE camp key: scraper-fed camps get a new random id every run, so anything that
@@ -2046,7 +2090,7 @@ function card(e){
       ${e.title_original?`<div class="titleorig" lang="auto">${esc(e.title_original)}</div>`:""}
       <div class="loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>${esc(loc)}${e.venue?` · ${esc(e.venue)}`:""}</div>
       ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
-      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${locBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}${detailsBtn}${chatBtn}${pgBtn}</div>
+      <div class="meta"><span class="org">${esc(e.organizer||"")}</span>${contactBtn}${payBtn}${paySetupBtn}${locBtn}${mapBtn}${flyerBtn}${srcBtn}${shareBtn}${rideBtn}${calBtn}${remindBtn}${detailsBtn}${chatBtn}${pgBtn}</div>
       ${interestRow}
     </div>
     <span class="del-dot" title="Delete (owner only)" onclick="deleteCard('${esc(String(e.id))}', this)"></span></article>`;
@@ -2539,6 +2583,7 @@ document.getElementById("submitBtn").addEventListener("click",()=>{
     venue:v("f_venue"), city:v("f_city"),
     state:isIndia?v("f_state"):"", country:v("f_country"),
     phone:v("f_phone"), flyer_url:v("f_flyer"), source_url:v("f_source"),
+    pay_type:v("f_paytype"), pay_value:v("f_payvalue"),
     source_platform:"Submitted", organizer:v("f_organizer"), description:v("f_desc"),
     _mine:true
   };
@@ -2560,7 +2605,7 @@ document.getElementById("submitBtn").addEventListener("click",()=>{
   else { document.querySelector('.tab[data-view="world"]').click(); ui.region=""; document.getElementById("regionSelect").value=""; ui.country=""; const cs=document.getElementById("countrySelect"); if(cs) cs.value=""; }
   render();
 });
-function resetForm(){ ["f_title","f_type","f_organizer","f_start","f_end","f_city","f_state","f_venue","f_phone","f_flyer","f_source","f_desc"].forEach(id=>{document.getElementById(id).value="";}); document.getElementById("f_country").value="India"; toggleStateField(); }
+function resetForm(){ ["f_title","f_type","f_organizer","f_start","f_end","f_city","f_state","f_venue","f_phone","f_flyer","f_source","f_desc","f_paytype","f_payvalue"].forEach(id=>{document.getElementById(id).value="";}); document.getElementById("f_country").value="India"; toggleStateField(); }
 let toastTimer;
 function showToast(){ const t=document.getElementById("toast"); t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),2600); }
 
@@ -3892,6 +3937,122 @@ if ("serviceWorker" in navigator) {
       } else if(ph){ ph.textContent="Saved — a themed image will be used"; }
     });
   });
+})();
+</script>
+<style>
+  .btn.pay-btn{background:linear-gradient(90deg,#0a7d3a,#14a85a);color:#fff;border:none}
+  .btn.paysetup-btn{background:transparent;color:#8a8a90;border:1px solid #e0d8c8;font-size:12px}
+  .btn.paysetup-btn:hover{background:var(--paper-2)}
+</style>
+<script>
+(function(){
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function paySheet(upi, url, org, title){
+    let ov=document.getElementById("paySheet");
+    if(!ov){ ov=document.createElement("div"); ov.id="paySheet"; ov.className="cc-overlay";
+      ov.addEventListener("click",function(e){ if(e.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov); }
+    ov.innerHTML="<div class='cc-modal' style='text-align:center'>"
+      +"<button class='cc-close' onclick=\"document.getElementById('paySheet').classList.remove('show')\">✕</button>"
+      +"<div class='cc-title'>Pay the organiser</div>"
+      +(org?"<div class='cc-sub' style='margin-bottom:12px'>"+esc(org)+"</div>":"")
+      +"<p style='color:#5b5b61;font-size:13px;margin:0 0 14px;line-height:1.5'>This pays the organiser directly by UPI. The money does not go through this site.</p>"
+      +"<a class='inform-btn' style='width:100%;justify-content:center;background:linear-gradient(90deg,#0a7d3a,#14a85a);color:#fff;margin-bottom:12px' href='"+esc(url)+"'>📲 Open UPI app</a>"
+      +"<div style='display:flex;gap:8px;align-items:center;background:var(--paper-2);border-radius:10px;padding:10px 12px'>"
+        +"<span style='flex:1;text-align:left;font-weight:700;color:var(--maroon);word-break:break-all'>"+esc(upi)+"</span>"
+        +"<button class='btn' id='payCopy' style='background:#fff'>Copy</button></div>"
+      +"<p style='color:#9a9aa0;font-size:11.5px;margin:10px 2px 0'>If the button doesn't open an app, copy the UPI id and pay from any UPI app (GPay, PhonePe, Paytm).</p>"
+      +"</div>";
+    ov.classList.add("show");
+    const cp=document.getElementById("payCopy");
+    if(cp) cp.onclick=function(){ try{ navigator.clipboard.writeText(upi); cp.textContent="Copied ✓"; }catch(_){ cp.textContent="Select & copy"; } };
+  }
+  window.openPay=function(btn){
+    const type=(btn.dataset.type||"").toLowerCase();
+    const val=(btn.dataset.val||"").trim();
+    const org=btn.dataset.org||"", title=btn.dataset.title||"";
+    if(!val) return;
+    if(type==="link" || /^https?:\/\//i.test(val)){ window.open(val,"_blank","noopener"); return; }
+    if(type==="whatsapp"){
+      const num=val.replace(/[^\d]/g,"");
+      const msg=encodeURIComponent("Namaste 🙏 I'd like to join/pay for "+(title||"the camp")+". Please share the details.");
+      window.open("https://wa.me/"+num+"?text="+msg,"_blank","noopener"); return;
+    }
+    const url="upi://pay?pa="+encodeURIComponent(val)+"&pn="+encodeURIComponent(org||"Organiser")+"&tn="+encodeURIComponent((title||"Osho Camp").slice(0,40))+"&cu=INR";
+    paySheet(val, url, org, title);
+  };
+
+  // ---- Password-protected payment SETUP (organiser submits) + owner APPROVAL ----
+  window.openPaySetup=function(btn){
+    const key=btn.dataset.key, org=btn.dataset.org||"", title=btn.dataset.title||"";
+    const curType=btn.dataset.type||"", curVal=btn.dataset.val||"", curStatus=btn.dataset.status||"";
+    let ov=document.getElementById("paySetupSheet");
+    if(!ov){ ov=document.createElement("div"); ov.id="paySetupSheet"; ov.className="cc-overlay";
+      ov.addEventListener("click",function(e){ if(e.target===ov) ov.classList.remove("show"); });
+      document.body.appendChild(ov); }
+    function opt(v,l){ return "<option value='"+v+"'"+(curType===v?" selected":"")+">"+l+"</option>"; }
+    const statusLine = curStatus==="approved" ? "<span style='color:#0a7d3a;font-weight:700'>● Approved &amp; live</span>"
+                     : curStatus==="pending"  ? "<span style='color:#c77f00;font-weight:700'>● Pending your approval</span>"
+                     : "<span style='color:#9a9aa0'>○ No payment yet</span>";
+    ov.innerHTML="<div class='cc-modal'>"
+      +"<button class='cc-close' onclick=\"document.getElementById('paySetupSheet').classList.remove('show')\">✕</button>"
+      +"<div class='cc-title' style='text-align:center'>Payment setup</div>"
+      +"<div class='cc-sub' style='text-align:center;margin-bottom:4px'>"+esc(title||org||"this camp")+"</div>"
+      +"<div style='text-align:center;font-size:12.5px;margin-bottom:12px'>"+statusLine+"</div>"
+      +"<p style='color:#8a6;font-size:12.5px;line-height:1.5;margin:0 0 14px;background:#f3f8f0;border:1px solid #d9ead0;border-radius:10px;padding:10px 12px'>Step 1 — the <b>organiser</b> submits payment with the organiser password. It stays hidden until <b>Step 2</b>, when the owner approves it. Money always goes straight to the organiser.</p>"
+      // ----- Step 1: organiser submit -----
+      +"<div style='font-weight:700;color:var(--maroon);font-size:13px;margin-bottom:6px'>Step 1 · Organiser submits</div>"
+      +"<select id='psType' style='width:100%;margin:0 0 10px;padding:11px;border:1.5px solid #e3ddd0;border-radius:10px;font-family:inherit'>"
+        +opt('upi','UPI ID')+opt('link','Payment link (Razorpay/PhonePe)')+opt('whatsapp','WhatsApp number')+"</select>"
+      +"<input id='psVal' value='"+esc(curVal)+"' placeholder='UPI id, link, or WhatsApp number' style='width:100%;margin-bottom:10px;padding:11px;border:1.5px solid #e3ddd0;border-radius:10px;font-family:inherit' />"
+      +"<input id='psPw' type='password' placeholder='Organiser password' style='width:100%;margin-bottom:6px;padding:11px;border:1.5px solid #e3ddd0;border-radius:10px;font-family:inherit' />"
+      +"<button id='psSave' class='inform-btn' style='width:100%;justify-content:center;background:var(--maroon);color:#fff'>Submit for approval</button>"
+      // ----- Step 2: owner approve -----
+      +"<div style='border-top:1px solid #eee2cc;margin:16px 0 12px'></div>"
+      +"<div style='font-weight:700;color:#0a7d3a;font-size:13px;margin-bottom:6px'>Step 2 · Owner approves &amp; publishes</div>"
+      +"<input id='psApr' type='password' placeholder='Owner approve password' style='width:100%;margin-bottom:6px;padding:11px;border:1.5px solid #cfe6d0;border-radius:10px;font-family:inherit' />"
+      +"<button id='psApprove' class='inform-btn' style='width:100%;justify-content:center;background:linear-gradient(90deg,#0a7d3a,#14a85a);color:#fff'"+(curStatus?"":" disabled title='Submit a payment first'")+">✓ Approve &amp; publish</button>"
+      +"<div id='psErr' style='color:#c0392b;font-size:12.5px;min-height:16px;margin-top:8px'></div>"
+      +(curStatus?"<button id='psRemove' class='btn' style='width:100%;justify-content:center;margin-top:6px;background:transparent;color:#c0392b'>Remove payment</button>":"")
+      +"</div>";
+    ov.classList.add("show");
+    const errEl=document.getElementById("psErr");
+    function post(payload, okMsg, btnEl){
+      const orig=btnEl.textContent; btnEl.textContent="Working…"; btnEl.disabled=true; errEl.textContent="";
+      fetch("/.netlify/functions/set-pay",{ method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload) })
+        .then(function(r){ return r.json().then(function(d){ return {ok:r.ok, status:r.status, d:d}; }); })
+        .then(function(res){
+          if(res.status===403){ errEl.textContent="Wrong password."; btnEl.textContent=orig; btnEl.disabled=false; return; }
+          if(res.status===404){ errEl.textContent="Submit a payment first, then approve."; btnEl.textContent=orig; btnEl.disabled=false; return; }
+          if(!res.ok){ errEl.textContent="Couldn't save — try again."; btnEl.textContent=orig; btnEl.disabled=false; return; }
+          ov.classList.remove("show");
+          if(typeof window.campToast==="function") window.campToast(okMsg);
+          if(typeof window.rebuild==="function"){ try{ window.rebuild(); }catch(_){ location.reload(); } } else { location.reload(); }
+        })
+        .catch(function(){ errEl.textContent="Network error — try again."; btnEl.textContent=orig; btnEl.disabled=false; });
+    }
+    document.getElementById("psSave").onclick=function(){
+      const type=document.getElementById("psType").value, val=(document.getElementById("psVal").value||"").trim(), pw=(document.getElementById("psPw").value||"").trim();
+      if(!val){ errEl.textContent="Enter the UPI id / link / number."; return; }
+      if(!pw){ errEl.textContent="Enter the organiser password."; return; }
+      try{ if(window.PAYMENTS){ window.PAYMENTS[key]={type:type||"upi",value:val,status:"pending"}; } }catch(_){}
+      post({ camp_key:key, action:"set", pay_type:type, pay_value:val, password:pw }, "Submitted 🌸  Waiting for owner approval.", document.getElementById("psSave"));
+    };
+    const ap=document.getElementById("psApprove");
+    if(ap) ap.onclick=function(){
+      const pw=(document.getElementById("psApr").value||"").trim();
+      if(!pw){ errEl.textContent="Enter the owner approve password."; return; }
+      try{ if(window.PAYMENTS && window.PAYMENTS[key]){ window.PAYMENTS[key].status="approved"; } }catch(_){}
+      post({ camp_key:key, action:"approve", password:pw }, "Approved ✓  The Pay button is now live for everyone.", ap);
+    };
+    const rm=document.getElementById("psRemove");
+    if(rm) rm.onclick=function(){
+      const pw=(document.getElementById("psPw").value||document.getElementById("psApr").value||"").trim();
+      if(!pw){ errEl.textContent="Enter a password (organiser or owner) to remove."; return; }
+      try{ if(window.PAYMENTS){ delete window.PAYMENTS[key]; } }catch(_){}
+      post({ camp_key:key, action:"remove", password:pw }, "Payment removed.", rm);
+    };
+  };
 })();
 </script>
 </body>
