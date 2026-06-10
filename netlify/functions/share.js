@@ -96,11 +96,12 @@ exports.handler = async (event) => {
   const q = event.queryStringParameters || {};
   let title="", sub="", img="";
 
-  // 1) tiny path form: /c/<code>
-  let code = "";
-  const m = /\/c\/([^/?#]+)/.exec(event.path || "");
-  if(m) code = decodeURIComponent(m[1]);
-  if(!code && q.id) code = q.id;
+  // 1) tiny path form: /c/<code>  (Netlify passes it as ?id=<code>; also parse path/rawUrl as backup)
+  let code = q.id || "";
+  if(!code){
+    const m = /\/c\/([^/?#]+)/.exec(event.path || event.rawUrl || "");
+    if(m) code = decodeURIComponent(m[1]);
+  }
 
   if(code){
     try{
