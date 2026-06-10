@@ -788,16 +788,20 @@ function shareCamp(btn){
   const title = btn.getAttribute('data-title')||'Osho Camp';
   const text  = btn.getAttribute('data-text')||'';
   const img   = btn.getAttribute('data-img')||'';
-  const url   = btn.getAttribute('data-url')||img||location.href;
-  const shareText = text + (url ? ('\n' + url) : '');
-  // Native share sheet (mobile) — lets user pick WhatsApp, Telegram, etc.
+  // Build a rich, self-contained share link. It opens a preview card (flyer photo +
+  // title + details) and a button back to oshocamps.com for the full info.
+  const p = new URLSearchParams();
+  p.set('t', title);
+  if(text) p.set('s', text);
+  if(img)  p.set('i', img);
+  const shareUrl = location.origin + '/.netlify/functions/share?' + p.toString();
+  // Native share sheet (mobile) — WhatsApp/Telegram/etc. will show the preview card.
   if(navigator.share){
-    navigator.share({ title: title, text: shareText, url: url||undefined }).catch(()=>{});
+    navigator.share({ title: title, text: text, url: shareUrl }).catch(()=>{});
   } else {
-    // Desktop fallback: copy the text + link
-    try{ navigator.clipboard.writeText(shareText); }catch(_){}
+    try{ navigator.clipboard.writeText(shareUrl); }catch(_){}
     const t=document.getElementById('toast');
-    if(t){ t.textContent='Camp details copied to share ✓'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+    if(t){ t.textContent='Share link copied ✓'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
   }
 }
 
@@ -2209,6 +2213,12 @@ document.querySelectorAll(".chip").forEach(c=>c.addEventListener("click",()=>{
 let qTimer; document.getElementById("searchInput").addEventListener("input",e=>{
   clearTimeout(qTimer); qTimer=setTimeout(()=>{ui.q=e.target.value.trim();render();},180);
 });
+// Arriving from a shared preview link (oshocamps.com/?q=Title) — prefill the search
+// so the visitor lands right on that camp.
+try{
+  const _q = new URLSearchParams(location.search).get("q");
+  if(_q){ const _si=document.getElementById("searchInput"); if(_si){ _si.value=_q; ui.q=_q.trim(); } }
+}catch(_){}
 document.getElementById("refreshBtn").addEventListener("click",loadData);
 const _nfb=document.getElementById("newFilterBtn");
 if(_nfb) _nfb.addEventListener("click",()=>{
