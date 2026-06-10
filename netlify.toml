@@ -1,12 +1,14 @@
-# Pretty share links:  oshocamps.com/c?t=...&i=...  ->  the share preview function
-# (status 200 = rewrite, so the address bar stays /c and query params pass through)
+# Pretty share links.
+#   oshocamps.com/c/<code>        -> share function, code passed as ?id=<code>
+#   oshocamps.com/c?t=..&i=..     -> share function (self-contained fallback)
+# (status 200 = rewrite, so the address bar keeps showing /c/<code>)
 [[redirects]]
-  from = "/c"
-  to = "/.netlify/functions/share"
+  from = "/c/*"
+  to = "/.netlify/functions/share?id=:splat"
   status = 200
 
 [[redirects]]
-  from = "/c/*"
+  from = "/c"
   to = "/.netlify/functions/share"
   status = 200
 
