@@ -784,20 +784,30 @@ let rideData = {};
 let rideSteps = [];
 let rideIdx = 0;
 
+// MUST match share.js shortHash exactly (same code => same camp).
+function shortHash(s){
+  s=String(s); let a=5381, b=0;
+  for(let i=0;i<s.length;i++){ const c=s.charCodeAt(i); a=((a*33)^c)>>>0; b=(b*65599+c)>>>0; }
+  return (a.toString(36)+b.toString(36)).slice(0,10);
+}
 function shareCamp(btn){
   const title = btn.getAttribute('data-title')||'Osho Camp';
   const text  = btn.getAttribute('data-text')||'';
   const img   = btn.getAttribute('data-img')||'';
-  // Build a rich, self-contained share link. It opens a preview card (flyer photo +
-  // title + details) and a button back to oshocamps.com for the full info.
-  const p = new URLSearchParams();
-  p.set('t', title);
-  if(text) p.set('s', text);
-  if(img)  p.set('i', img);
-  const shareUrl = location.origin + '/.netlify/functions/share?' + p.toString();
-  // Native share sheet (mobile) — WhatsApp/Telegram/etc. will show the preview card.
+  const key   = btn.getAttribute('data-key')||'';
+  // Tiny link: oshocamps.com/c/<code>. The share page looks the camp up in events.json
+  // for its flyer photo + details. Falls back to a self-contained link if no key.
+  let shareUrl;
+  if(key){
+    shareUrl = location.origin + '/c/' + shortHash(key);
+  } else {
+    const p = new URLSearchParams();
+    p.set('t', title); if(text) p.set('s', text); if(img) p.set('i', img);
+    shareUrl = location.origin + '/c?' + p.toString();
+  }
+  // Share the LINK only — apps build the preview card from it.
   if(navigator.share){
-    navigator.share({ title: title, text: text, url: shareUrl }).catch(()=>{});
+    navigator.share({ title: title, url: shareUrl }).catch(()=>{});
   } else {
     try{ navigator.clipboard.writeText(shareUrl); }catch(_){}
     const t=document.getElementById('toast');
@@ -2001,7 +2011,7 @@ function card(e){
   const shareText  = esc([e.title, (e._start?dateRange(e):""), [e.venue,e.city].filter(Boolean).join(", "), e.organizer].filter(Boolean).join(" • "));
   const shareImg   = esc(e.flyer_url||"");
   const shareUrl   = esc(e.source_url||"");
-  const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
+  const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-key="${campKeyAttr}" data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
   const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";

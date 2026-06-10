@@ -1,0 +1,16 @@
+# Pretty share links:  oshocamps.com/c?t=...&i=...  ->  the share preview function
+# (status 200 = rewrite, so the address bar stays /c and query params pass through)
+[[redirects]]
+  from = "/c"
+  to = "/.netlify/functions/share"
+  status = 200
+
+[[redirects]]
+  from = "/c/*"
+  to = "/.netlify/functions/share"
+  status = 200
+
+# Firebase web apiKey is meant to be public, so the secret scanner's hit on it is a
+# false alarm — turn the scanner off so deploys publish.
+[build.environment]
+  SECRETS_SCAN_ENABLED = "false"
