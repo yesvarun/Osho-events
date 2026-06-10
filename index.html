@@ -2011,7 +2011,8 @@ function card(e){
   const shareText  = esc([e.title, (e._start?dateRange(e):""), [e.venue,e.city].filter(Boolean).join(", "), e.organizer].filter(Boolean).join(" • "));
   const shareImg   = esc(e.flyer_url||"");
   const shareUrl   = esc(e.source_url||"");
-  const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-key="${campKeyAttr}" data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
+  const _shareKey = esc(((e.title||"")+"|"+(e.start_date||"")+"|"+(e.city||"")).toLowerCase());
+  const shareBtn = `<button class="btn share-btn" onclick='shareCamp(this)' data-key="${_shareKey}" data-title="${shareTitle}" data-text="${shareText}" data-img="${shareImg}" data-url="${shareUrl}">↗ Share</button>`;
   // Contact: show the phone Call button + WhatsApp when we have a number; otherwise nothing.
   const contactBtn = phone + waBtn;
   const mine = e._mine ? `<span class="mine-tag">Added by you · now live for everyone</span>` : "";
