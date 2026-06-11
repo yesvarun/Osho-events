@@ -1,6 +1,7 @@
 {
- "pointer": 0,
+ "pointer": 40,
  "pass": 1,
  "last_run": "2026-06-11",
- "last_batch": "Pune -> Pune (0 districts)"
+ "last_batch": "Pune -> Gorakhpur (40 districts, ddg)",
+ "engine": "ddg"
 }

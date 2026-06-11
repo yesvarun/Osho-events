@@ -1,1 +1,57 @@
-[]
+[
+ {
+  "url": "https://www.facebook.com/osho.international.meditation.resort",
+  "platform": "facebook",
+  "title": "OSHO International Meditation Resort | Pune - Facebook",
+  "snippet": "",
+  "district": "Pune",
+  "state": "Maharashtra",
+  "found": "2026-06-11",
+  "score": 10,
+  "reason": "Official Osho International Meditation Resort Pune"
+ },
+ {
+  "url": "https://www.facebook.com/OSHOActiveMeditations",
+  "platform": "facebook",
+  "title": "OSHO Active Meditations | Pune - Facebook",
+  "snippet": "",
+  "district": "Pune",
+  "state": "Maharashtra",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Active meditation programs, likely posts camp/event info"
+ },
+ {
+  "url": "https://www.facebook.com/Oshomeditationsansthan8080",
+  "platform": "facebook",
+  "title": "Osho Sansthan - Facebook",
+  "snippet": "",
+  "district": "Pune",
+  "state": "Maharashtra",
+  "found": "2026-06-11",
+  "score": 7,
+  "reason": "Sansthan suggests ashram/center, likely posts events"
+ },
+ {
+  "url": "https://www.facebook.com/Osho-International-Meditation-pune-118181471229723",
+  "platform": "facebook",
+  "title": "Osho International Meditation pune - Facebook",
+  "snippet": "",
+  "district": "Pune",
+  "state": "Maharashtra",
+  "found": "2026-06-11",
+  "score": 9,
+  "reason": "International meditation center, high likelihood of camp posts"
+ },
+ {
+  "url": "https://www.facebook.com/groups/puneinfo4visiting",
+  "platform": "facebook",
+  "title": "Pune: Info for visiting the Osho Meditation Resort - Facebook",
+  "snippet": "",
+  "district": "Pune",
+  "state": "Maharashtra",
+  "found": "2026-06-11",
+  "score": 6,
+  "reason": "Visitor info group, may discuss camps but not primary organizer"
+ }
+]
