@@ -1,0 +1,43 @@
+name: Discover Osho Pages
+
+on:
+  schedule:
+    - cron: '30 3 * * *'   # 9:00 AM IST daily (1 hour before the events scraper)
+  workflow_dispatch:        # manual "Run workflow" button
+
+permissions:
+  contents: write
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run discovery
+        env:
+          GOOGLE_CSE_KEY: ${{ secrets.GOOGLE_CSE_KEY }}
+          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python discover.py
+
+      - name: Commit results (commit first, then pull --rebase, retry)
+        run: |
+          git config user.name "discover-bot"
+          git config user.email "bot@oshocamps.com"
+          git add candidates.json discover_state.json
+          if git diff --cached --quiet; then
+            echo "Nothing new today."
+            exit 0
+          fi
+          git commit -m "discover: candidates $(date -u +%F)"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push origin main && exit 0
+            echo "Push attempt $i failed, retrying..."
+            sleep 6
+          done
+          exit 1
