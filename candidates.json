@@ -262,5 +262,60 @@
   "found": "2026-06-11",
   "score": 8,
   "reason": "Named meditation center, likely posts camps/events"
+ },
+ {
+  "url": "https://www.facebook.com/groups/422001244617617",
+  "platform": "facebook",
+  "title": "OshoWA - Facebook",
+  "snippet": "",
+  "district": "Etawah",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 7,
+  "reason": "Regional Osho group, likely posts events/camps"
+ },
+ {
+  "url": "https://www.facebook.com/osho.international",
+  "platform": "facebook",
+  "title": "OSHO - Facebook",
+  "snippet": "",
+  "district": "Etawah",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 4,
+  "reason": "Official Osho page, mixed content (quotes, news, info)"
+ },
+ {
+  "url": "https://www.facebook.com/oshoinbangalore",
+  "platform": "facebook",
+  "title": "OSHO Wellness Bangalore - Facebook",
+  "snippet": "",
+  "district": "Etawah",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Wellness center in India, likely posts camps/events"
+ },
+ {
+  "url": "https://www.facebook.com/OSHOphilippines",
+  "platform": "facebook",
+  "title": "OSHO Information Center Philippines | El Nido - Facebook",
+  "snippet": "",
+  "district": "Etawah",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 6,
+  "reason": "Information center, may post events but location outside India"
+ },
+ {
+  "url": "https://www.facebook.com/groups/20300229444",
+  "platform": "facebook",
+  "title": "Osho Ottawa Circle - Facebook",
+  "snippet": "",
+  "district": "Etawah",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 5,
+  "reason": "Meditation circle group, location outside India"
  }
 ]
