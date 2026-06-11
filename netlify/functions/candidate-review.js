@@ -67,8 +67,8 @@ exports.handler = async (event) => {
       const bucket = action === 'approve' ? 'approved' : 'rejected';
       if (!rev.data[bucket].some(c => c.url === url)) rev.data[bucket].push(item);
 
-      await putFile('candidates.json', cand.data, cand.sha, `review: ${action} (queue ${cand.data.length})`);
-      await putFile('reviewed.json', rev.data, rev.sha, `review: ${action} ${url}`);
+      await putFile('candidates.json', cand.data, cand.sha, `review: ${action} [skip netlify]`);
+      await putFile('reviewed.json', rev.data, rev.sha, `review: ${action} ${url} [skip netlify]`);
 
       return { statusCode: 200, headers, body: JSON.stringify({ ok: true, remaining: cand.data.length }) };
     } catch (e) {
