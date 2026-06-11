@@ -207,5 +207,60 @@
   "found": "2026-06-11",
   "score": 5,
   "reason": "Official foundation, posts content but not local camps"
+ },
+ {
+  "url": "https://www.facebook.com/people/OSHO-TRUST/100064690930535",
+  "platform": "facebook",
+  "title": "OSHO TRUST | Rewari - Facebook",
+  "snippet": "",
+  "district": "Rewari",
+  "state": "Haryana",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Trust entity likely posts Osho events/camps"
+ },
+ {
+  "url": "https://www.facebook.com/people/Harmony-Yoga-and-Meditation-Center/100066204234841",
+  "platform": "facebook",
+  "title": "Harmony Yoga and Meditation Center | Rewari - Facebook",
+  "snippet": "",
+  "district": "Rewari",
+  "state": "Haryana",
+  "found": "2026-06-11",
+  "score": 6,
+  "reason": "Meditation center may host Osho camps"
+ },
+ {
+  "url": "https://www.facebook.com/100066204234841",
+  "platform": "facebook",
+  "title": "Harmony Yoga and Meditation Center | Rewari - Facebook",
+  "snippet": "",
+  "district": "Rewari",
+  "state": "Haryana",
+  "found": "2026-06-11",
+  "score": 6,
+  "reason": "Meditation center may host Osho camps"
+ },
+ {
+  "url": "https://www.instagram.com/osho_meditation_center/",
+  "platform": "instagram",
+  "title": "OSHO Meditation Center (@osho_meditation_center)",
+  "snippet": "",
+  "district": "Rewari",
+  "state": "Haryana",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Meditation center account, likely posts events"
+ },
+ {
+  "url": "https://www.instagram.com/osho_meditation_center_indore/",
+  "platform": "instagram",
+  "title": "OSHO Meditation Center Indore (@osho_meditation_center ...",
+  "snippet": "",
+  "district": "Rewari",
+  "state": "Haryana",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Named meditation center, likely posts camps/events"
  }
 ]
