@@ -317,5 +317,71 @@
   "found": "2026-06-11",
   "score": 5,
   "reason": "Meditation circle group, location outside India"
+ },
+ {
+  "url": "https://www.facebook.com/OSHOGlimpseMumbai",
+  "platform": "facebook",
+  "title": "OSHO Glimpse, Mumbai - Facebook",
+  "snippet": "",
+  "district": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 7,
+  "reason": "Likely meditation centre or camp organiser in Mumbai"
+ },
+ {
+  "url": "https://www.facebook.com/oshodharahyd",
+  "platform": "facebook",
+  "title": "Oshodhara Hyderabad | Secunderabad - Facebook",
+  "snippet": "",
+  "district": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Named meditation centre, likely posts events/camps in Hyderabad"
+ },
+ {
+  "url": "https://www.facebook.com/groups/112559247546",
+  "platform": "facebook",
+  "title": "Osho Chicago | O-Meditation Sangha is hosting an online Meditation ...",
+  "snippet": "",
+  "district": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 6,
+  "reason": "Osho meditation group, likely posts events but international focus"
+ },
+ {
+  "url": "https://www.facebook.com/profile.php?id=100081337844771",
+  "platform": "facebook",
+  "title": "Meditation Centre - Facebook",
+  "snippet": "",
+  "district": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 5,
+  "reason": "Generic 'Meditation Centre' name, unclear if Osho-focused"
+ },
+ {
+  "url": "https://www.facebook.com/OshoTathagat123",
+  "platform": "facebook",
+  "title": "Tathagat Rajneesh Meditation Center | Bharatpur - Facebook",
+  "snippet": "",
+  "district": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Named Osho meditation centre in Bharatpur, likely posts events"
+ },
+ {
+  "url": "https://www.facebook.com/nmcofosho",
+  "platform": "facebook",
+  "title": "Osho Niranjana - Facebook",
+  "snippet": "",
+  "district": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 7,
+  "reason": "Osho Niranjana centre, likely posts meditation camps/events"
  }
 ]
