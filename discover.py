@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
 Daily Osho page discovery for oshocamps.com  (v2 — dual engine)
-Engine 1: Google Programmable Search (if GOOGLE_CSE_KEY/ID secrets work)
-Engine 2: DuckDuckGo HTML search — FREE, NO KEY NEEDED (automatic fallback)
+Engine 1: Tavily Search API (free 1000/month, no card) — set TAVILY_API_KEY secret
+Engine 2: DuckDuckGo HTML search — free, no key (automatic fallback)
+(Google CSE removed: closed to new customers, discontinued Jan 2027)
 Rotates through all districts of India; new pages -> Claude filter -> candidates.json.
 No pip packages needed (urllib only).
 """
 import html as htmllib
 import json, os, re, sys, time, urllib.parse, urllib.request
 
-CSE_KEY   = os.environ.get("GOOGLE_CSE_KEY", "")
-CSE_ID    = os.environ.get("GOOGLE_CSE_ID", "")
-CLAUDE_KEY= os.environ.get("ANTHROPIC_API_KEY", "")
-BATCH     = int(os.environ.get("DISCOVER_BATCH", "80"))
-MIN_SCORE = int(os.environ.get("DISCOVER_MIN_SCORE", "4"))
+TAVILY_KEY = os.environ.get("TAVILY_API_KEY", "")
+CLAUDE_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+TAVILY_DAILY = int(os.environ.get("TAVILY_DAILY", "30"))   # ~30/day = 1000/month free tier
+MIN_SCORE  = int(os.environ.get("DISCOVER_MIN_SCORE", "4"))
 
-ENGINE = "google" if (CSE_KEY and CSE_ID) else "ddg"
+ENGINE = "tavily" if TAVILY_KEY else "ddg"
 
 def load(path, fallback):
     try:
@@ -65,20 +65,17 @@ def normalize(url):
 def key(url):
     return url.lower().rstrip("/")
 
-# ---------------- Engine 1: Google CSE ----------------
-def cse_search(query):
-    qs = urllib.parse.urlencode({"key": CSE_KEY, "cx": CSE_ID, "q": query, "num": 10, "gl": "in"})
-    req = urllib.request.Request(f"https://www.googleapis.com/customsearch/v1?{qs}")
-    try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            return json.load(r).get("items", [])
-    except urllib.error.HTTPError as e:
-        try:
-            detail = json.load(e).get("error", {}).get("message", "")
-        except Exception:
-            detail = ""
-        print(f"  Google API {e.code}: {detail[:160]}")
-        raise
+# ---------------- Engine 1: Tavily (free 1000/mo, no card) ----------------
+def tavily_search(query):
+    body = json.dumps({"query": query, "max_results": 10,
+                       "include_domains": ["facebook.com", "instagram.com"]}).encode()
+    req = urllib.request.Request("https://api.tavily.com/search", data=body,
+                                 headers={"Content-Type": "application/json",
+                                          "Authorization": f"Bearer {TAVILY_KEY}"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        data = json.load(r)
+    return [{"link": it.get("url", ""), "title": it.get("title", ""),
+             "snippet": (it.get("content") or "")[:240]} for it in data.get("results", [])]
 
 # ---------------- Engine 2: DuckDuckGo (free, no key) ----------------
 UA = ("Mozilla/5.0 (Linux; Android 13; SM-G991B) AppleWebKit/537.36 "
@@ -106,15 +103,22 @@ def ddg_search(query):
 def search_district(term):
     """Return list of raw results for a district, via active engine."""
     global ENGINE
-    if ENGINE == "google":
+    if ENGINE == "tavily":
         try:
-            return cse_search(f"osho meditation {term}")
+            return tavily_search(f"osho meditation {term}")
         except urllib.error.HTTPError as e:
-            if e.code in (403, 429):
-                print(">>> Google blocked — switching to DuckDuckGo (no key needed).")
+            body = ""
+            try: body = e.read().decode()[:120]
+            except Exception: pass
+            print(f"  tavily {e.code}: {body}")
+            if e.code in (401, 403, 432, 429):   # bad key / out of credits
+                print(">>> Tavily unavailable — switching to DuckDuckGo.")
                 ENGINE = "ddg"
             else:
                 return []
+        except Exception as e:
+            print(f"  tavily error: {e}")
+            return []
     if ENGINE == "ddg":
         out = []
         for site in ("facebook.com", "instagram.com"):
@@ -122,7 +126,7 @@ def search_district(term):
                 out += ddg_search(f"osho meditation {term} site:{site}")
             except Exception as e:
                 print(f"  ddg {term}/{site}: {e}")
-            time.sleep(2.5)  # be gentle, avoid throttling
+            time.sleep(6)  # slow and steady survives throttling longer
         return out
     return []
 
@@ -192,12 +196,18 @@ def main():
     fresh, done = [], 0
 
     print(f"Engine: {ENGINE} | starting at district #{ptr}")
-    batch = BATCH
-    for i in range(batch):
-        if ENGINE == "ddg" and done >= 40:   # DDG: stay gentle, 40 districts/day
+    tav_used, ddg_used = 0, 0
+    for i in range(700):
+        if ENGINE == "tavily" and tav_used >= TAVILY_DAILY:
+            print(f"Tavily budget ({TAVILY_DAILY}) done — DuckDuckGo bonus round.")
+            ENGINE = "ddg"
+        if ENGINE == "ddg" and ddg_used >= 20:   # bonus round cap
             break
         d = districts[(ptr + i) % n]
+        eng = ENGINE
         results = search_district(d["term"])
+        if eng == "tavily": tav_used += 1
+        else: ddg_used += 1
         done += 1
         for item in results:
             norm = normalize(item.get("link", ""))
@@ -210,8 +220,8 @@ def main():
                                           item.get("title", "")).strip(),
                           "snippet": (item.get("snippet") or "")[:240],
                           "district": d["term"], "state": d["state"], "found": today})
-        if ENGINE == "google":
-            time.sleep(0.4)
+        if ENGINE == "tavily":
+            time.sleep(1.0)
 
     if (ptr + done) >= n and done:
         state["pass"] = state.get("pass", 1) + 1
