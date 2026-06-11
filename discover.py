@@ -70,8 +70,17 @@ def key(url):  # dedupe key
 def cse_search(query):
     qs = urllib.parse.urlencode({"key": CSE_KEY, "cx": CSE_ID, "q": query, "num": 10, "gl": "in"})
     req = urllib.request.Request(f"https://www.googleapis.com/customsearch/v1?{qs}")
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r).get("items", [])
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.load(r).get("items", [])
+    except urllib.error.HTTPError as e:
+        # Surface Google's real reason on the first failure for diagnosis
+        try:
+            detail = json.load(e).get("error", {}).get("message", "")
+        except Exception:
+            detail = ""
+        print(f"  Google API {e.code}: {detail[:200]}")
+        raise
 
 # ---------------- Claude relevance filter ----------------
 def claude_filter(items):
