@@ -34,7 +34,7 @@ jobs:
             echo "Nothing new today."
             exit 0
           fi
-          git commit -m "discover: candidates $(date -u +%F)"
+          git commit -m "discover: candidates $(date -u +%F) [skip netlify]"
           for i in 1 2 3 4 5; do
             git pull --rebase origin main && git push origin main && exit 0
             echo "Push attempt $i failed, retrying..."
