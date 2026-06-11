@@ -1,0 +1,3157 @@
+[
+ {
+  "term": "Pune",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Mumbai",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Delhi",
+  "state": "Delhi",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jabalpur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Narsinghpur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Raisen",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Bhopal",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Indore",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Ujjain",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Gwalior",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Jaipur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jodhpur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Udaipur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ajmer",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kota",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ahmedabad",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Surat",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Vadodara",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Rajkot",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Nagpur",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Nashik",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Thane",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Bengaluru",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mysuru",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Hyderabad",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chennai",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Coimbatore",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kolkata",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Chandigarh",
+  "state": "Chandigarh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ludhiana",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Amritsar",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bathinda",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Patiala",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jalandhar",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Dehradun",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Haridwar",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Lucknow",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Varanasi",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Prayagraj",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Gorakhpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kanpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Patna",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Ranchi",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Raipur",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Bhubaneswar",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Cuttack",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Visakhapatnam",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Vijayawada",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Ernakulam",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Thiruvananthapuram",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Goa",
+  "state": "Goa",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Anantnag",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bandipora",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Baramulla",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Budgam",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Doda",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ganderbal",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jammu",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kathua",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kishtwar",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kulgam",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kupwara",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Poonch",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pulwama",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rajouri",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ramban",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Reasi",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Samba",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Shopian",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Srinagar",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Udhampur",
+  "state": "Jammu & Kashmir",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kargil",
+  "state": "Ladakh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Leh",
+  "state": "Ladakh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bilaspur",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Chamba",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hamirpur",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kangra",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kinnaur",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kullu",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Keylong",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mandi",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Shimla",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sirmaur",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Solan",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Una",
+  "state": "Himachal Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Barnala",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Faridkot",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Fatehgarh Sahib",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Fazilka",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ferozepur",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Gurdaspur",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hoshiarpur",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kapurthala",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Malerkotla",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mansa",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Moga",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pathankot",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rupnagar",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mohali",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sangrur",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Nawanshahr",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Muktsar",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Tarn Taran",
+  "state": "Punjab",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ambala",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bhiwani",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Charkhi Dadri",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Faridabad",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Fatehabad",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Gurugram",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hisar",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jhajjar",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jind",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kaithal",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Karnal",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kurukshetra",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mahendragarh",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Nuh",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Palwal",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Panchkula",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Panipat",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rewari",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rohtak",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sirsa",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sonipat",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Yamunanagar",
+  "state": "Haryana",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Almora",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bageshwar",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Chamoli",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Champawat",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Nainital",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pauri",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pithoragarh",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rudraprayag",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Tehri",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Udham Singh Nagar",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Uttarkashi",
+  "state": "Uttarakhand",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Agra",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Aligarh",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ambedkar Nagar",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Amethi",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Amroha",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Auraiya",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ayodhya",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Azamgarh",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Baghpat",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bahraich",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ballia",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Balrampur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Banda",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Barabanki",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bareilly",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Basti",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bhadohi",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bijnor",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Budaun",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bulandshahr",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Chandauli",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Chitrakoot",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Deoria",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Etah",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Etawah",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Farrukhabad",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Fatehpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Firozabad",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Noida",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ghaziabad",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Ghazipur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Gonda",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hapur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hardoi",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hathras",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jalaun",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jaunpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jhansi",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kannauj",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kanpur Dehat",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kasganj",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kaushambi",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kushinagar",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Lakhimpur Kheri",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Lalitpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Maharajganj",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mahoba",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mainpuri",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mathura",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mau",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Meerut",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Mirzapur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Moradabad",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Muzaffarnagar",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pilibhit",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pratapgarh",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Raebareli",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rampur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Saharanpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sambhal",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sant Kabir Nagar",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Shahjahanpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Shamli",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Shravasti",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Siddharthnagar",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sitapur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sonbhadra",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sultanpur",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Unnao",
+  "state": "Uttar Pradesh",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Alwar",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Balotra",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Banswara",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Baran",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Barmer",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Beawar",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bharatpur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bhilwara",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bikaner",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Bundi",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Chittorgarh",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Churu",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Dausa",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Deeg",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Dholpur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Didwana-Kuchaman",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Dungarpur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Hanumangarh",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jaisalmer",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jalore",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jhalawar",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Jhunjhunu",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Karauli",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Khairthal-Tijara",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Kotputli-Behror",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Nagaur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Pali",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Phalodi",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Rajsamand",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Salumbar",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sawai Madhopur",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sikar",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sirohi",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Sri Ganganagar",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Tonk",
+  "state": "Rajasthan",
+  "region": "NORTH INDIA"
+ },
+ {
+  "term": "Agar Malwa",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Alirajpur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Anuppur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Ashoknagar",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Balaghat",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Barwani",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Betul",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Bhind",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Burhanpur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Chhatarpur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Chhindwara",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Damoh",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Datia",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Dewas",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Dhar",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Dindori",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Guna",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Harda",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Jhabua",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Katni",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Khandwa",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Khargone",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Maihar",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Mandla",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Mandsaur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Mauganj",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Morena",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Narmadapuram",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Neemuch",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Niwari",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Pandhurna",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Panna",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Rajgarh",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Ratlam",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Rewa",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sagar",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Satna",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sehore",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Seoni",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Shahdol",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Shajapur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sheopur",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Shivpuri",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sidhi",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Singrauli",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Tikamgarh",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Umaria",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Vidisha",
+  "state": "Madhya Pradesh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Balod",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Baloda Bazar",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Bastar",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Bemetara",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Bijapur",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Dantewada",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Dhamtari",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Durg",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Gariaband",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Gaurela-Pendra-Marwahi",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Janjgir-Champa",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Jashpur",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Kawardha",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Kanker",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Khairagarh-Chhuikhadan-Gandai",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Kondagaon",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Korba",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Korea",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Mahasamund",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Manendragarh-Chirmiri-Bharatpur",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Mohla-Manpur-Ambagarh Chowki",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Mungeli",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Narayanpur",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Raigarh",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Rajnandgaon",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sakti",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sarangarh-Bilaigarh",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Sukma",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Surajpur",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Surguja",
+  "state": "Chhattisgarh",
+  "region": "CENTRAL INDIA"
+ },
+ {
+  "term": "Amreli",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Anand",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Aravalli",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Banaskantha",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Bharuch",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Bhavnagar",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Botad",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Chhota Udaipur",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Dahod",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Dang",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Devbhoomi Dwarka",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Gandhinagar",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Gir Somnath",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Jamnagar",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Junagadh",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Kheda",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Kutch",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Mahisagar",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Mehsana",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Morbi",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Narmada",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Navsari",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Panchmahal",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Patan",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Porbandar",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Sabarkantha",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Surendranagar",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Tapi",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Valsad",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Vav-Tharad",
+  "state": "Gujarat",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Ahmednagar",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Akola",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Amravati",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Beed",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Bhandara",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Buldhana",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Chandrapur",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Aurangabad",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Osmanabad",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Dhule",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Gadchiroli",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Gondia",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Hingoli",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Jalgaon",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Jalna",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Kolhapur",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Latur",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Nanded",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Nandurbar",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Palghar",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Parbhani",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Raigad",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Ratnagiri",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Sangli",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Satara",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Sindhudurg",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Solapur",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Wardha",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Washim",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Yavatmal",
+  "state": "Maharashtra",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Dadra & Nagar Haveli",
+  "state": "Dadra & Nagar Haveli and Daman & Diu",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Daman",
+  "state": "Dadra & Nagar Haveli and Daman & Diu",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Diu",
+  "state": "Dadra & Nagar Haveli and Daman & Diu",
+  "region": "WEST INDIA"
+ },
+ {
+  "term": "Araria",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Arwal",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Banka",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Begusarai",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bhagalpur",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bhojpur",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Buxar",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Darbhanga",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Motihari",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Gaya",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Gopalganj",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jamui",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jehanabad",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Kaimur",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Katihar",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Khagaria",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Kishanganj",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Lakhisarai",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Madhepura",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Madhubani",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Munger",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Muzaffarpur",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Nalanda",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Nawada",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Purnia",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Rohtas",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Saharsa",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Samastipur",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Saran",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Sheikhpura",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Sheohar",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Sitamarhi",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Siwan",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Supaul",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Vaishali",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bettiah",
+  "state": "Bihar",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bokaro",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Chatra",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Deoghar",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Dhanbad",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Dumka",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "East Singhbhum",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Garhwa",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Giridih",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Godda",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Gumla",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Hazaribagh",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jamtara",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Khunti",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Koderma",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Latehar",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Lohardaga",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Pakur",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Palamu",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Ramgarh",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Sahibganj",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Seraikela-Kharsawan",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Simdega",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "West Singhbhum",
+  "state": "Jharkhand",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Alipurduar",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bankura",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Birbhum",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Cooch Behar",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Dakshin Dinajpur",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Darjeeling",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Hooghly",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Howrah",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jalpaiguri",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jhargram",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Kalimpong",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Malda",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Murshidabad",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Nadia",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "North 24 Parganas",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Paschim Bardhaman",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Paschim Medinipur",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Purba Bardhaman",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Purba Medinipur",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Purulia",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "South 24 Parganas",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Uttar Dinajpur",
+  "state": "West Bengal",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Angul",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Balangir",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Balasore",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bargarh",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Bhadrak",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Boudh",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Deogarh",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Dhenkanal",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Gajapati",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Ganjam",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jagatsinghpur",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jajpur",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Jharsuguda",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Kalahandi",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Kandhamal",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Kendrapara",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Keonjhar",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Koraput",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Malkangiri",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Mayurbhanj",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Nabarangpur",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Nayagarh",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Nuapada",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Puri",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Rayagada",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Sambalpur",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Subarnapur",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Sundargarh",
+  "state": "Odisha",
+  "region": "EAST INDIA"
+ },
+ {
+  "term": "Alluri Sitharama Raju",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Anakapalli",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Anantapur",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Annamayya",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Bapatla",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chittoor",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Konaseema",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "East Godavari",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Eluru",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Guntur",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kakinada",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Krishna",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kurnool",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nandyal",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Palnadu",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Parvathipuram Manyam",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Prakasam",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nellore",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Sri Sathya Sai",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Srikakulam",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tirupati",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Vizianagaram",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "West Godavari",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kadapa",
+  "state": "Andhra Pradesh",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Adilabad",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Bhadradri Kothagudem",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Hanumakonda",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Jagtial",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Jangaon",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Jayashankar Bhupalpally",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Jogulamba Gadwal",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kamareddy",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Karimnagar",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Khammam",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Komaram Bheem Asifabad",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mahabubabad",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mahabubnagar",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mancherial",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Medak",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Medchal-Malkajgiri",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mulugu",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nagarkurnool",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nalgonda",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Narayanpet",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nirmal",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nizamabad",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Peddapalli",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Rajanna Sircilla",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Rangareddy",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Sangareddy",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Siddipet",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Suryapet",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Vikarabad",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Wanaparthy",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Warangal",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Yadadri Bhuvanagiri",
+  "state": "Telangana",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Bagalkot",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Ballari",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Belagavi",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Bengaluru Rural",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Ramanagara",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Bidar",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chamarajanagar",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chikkaballapur",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chikkamagaluru",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chitradurga",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Dakshina Kannada",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Davanagere",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Dharwad",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Gadag",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Hassan",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Haveri",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kalaburagi",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kodagu",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kolar",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Koppal",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mandya",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Raichur",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Shivamogga",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tumakuru",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Udupi",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Uttara Kannada",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Vijayanagara",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Vijayapura",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Yadgir",
+  "state": "Karnataka",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Ariyalur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Chengalpattu",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Cuddalore",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Dharmapuri",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Dindigul",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Erode",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kallakurichi",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kancheepuram",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kanyakumari",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Karur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Krishnagiri",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Madurai",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mayiladuthurai",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nagapattinam",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Namakkal",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nilgiris",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Perambalur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Pudukkottai",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Ramanathapuram",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Ranipet",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Salem",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Sivaganga",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tenkasi",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Thanjavur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Theni",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Thoothukudi",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tiruchirappalli",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tirunelveli",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tirupathur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tiruppur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tiruvallur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tiruvannamalai",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Tiruvarur",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Vellore",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Viluppuram",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Virudhunagar",
+  "state": "Tamil Nadu",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Alappuzha",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Idukki",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kannur",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kasaragod",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kollam",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kottayam",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Kozhikode",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Malappuram",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Palakkad",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Pathanamthitta",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Thrissur",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Wayanad",
+  "state": "Kerala",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Karaikal",
+  "state": "Puducherry",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Mahe",
+  "state": "Puducherry",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Puducherry",
+  "state": "Puducherry",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Yanam",
+  "state": "Puducherry",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Lakshadweep",
+  "state": "Lakshadweep",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "Nicobar",
+  "state": "Andaman & Nicobar Islands",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "North & Middle Andaman",
+  "state": "Andaman & Nicobar Islands",
+  "region": "SOUTH INDIA"
+ },
+ {
+  "term": "South Andaman",
+  "state": "Andaman & Nicobar Islands",
+  "region": "SOUTH INDIA"
+ }
+]

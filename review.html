@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3d1118">
+<title>Page Hunter · Sannyas Gatherings</title>
+<style>
+:root{
+  --bg:#2a0c12; --bg2:#3d1118; --card:#4a161f; --line:#6b2530;
+  --ink:#f3e4d3; --dim:#c9a690; --saffron:#e8923a; --gold:#d4a853;
+  --ok:#7fb069; --no:#c75146; --fb:#7da8e8; --ig:#e07a9b;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:Georgia,'Noto Serif',serif;background:var(--bg);color:var(--ink);min-height:100vh}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(var(--bg2),var(--bg2) 70%,transparent);
+  padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+h1{font-size:1.25rem;font-weight:normal;letter-spacing:.5px}
+h1 b{color:var(--saffron)}
+.sub{font-family:system-ui,sans-serif;font-size:.72rem;color:var(--dim);margin-top:2px}
+.tabs{display:flex;gap:8px;margin-top:10px}
+.tab{flex:1;text-align:center;padding:8px;border:1px solid var(--line);border-radius:20px;
+  font-family:system-ui,sans-serif;font-size:.8rem;color:var(--dim);cursor:pointer;background:none}
+.tab.on{background:var(--saffron);color:#2a0c12;border-color:var(--saffron);font-weight:600}
+.chips{display:flex;gap:6px;padding:10px 16px 0;font-family:system-ui,sans-serif}
+.chip{font-size:.72rem;padding:5px 12px;border-radius:14px;border:1px solid var(--line);
+  color:var(--dim);cursor:pointer;background:none}
+.chip.on{border-color:var(--gold);color:var(--gold)}
+main{padding:12px 14px 60px;max-width:560px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.top{display:flex;align-items:center;gap:8px;font-family:system-ui,sans-serif;font-size:.7rem;margin-bottom:8px}
+.pf{padding:3px 9px;border-radius:10px;font-weight:600;letter-spacing:.3px}
+.pf.facebook{background:rgba(125,168,232,.15);color:var(--fb)}
+.pf.instagram{background:rgba(224,122,155,.15);color:var(--ig)}
+.score{margin-left:auto;color:var(--gold)}
+.title{font-size:1.02rem;line-height:1.35;margin-bottom:4px}
+.where{font-family:system-ui,sans-serif;font-size:.74rem;color:var(--saffron);margin-bottom:6px}
+.snip{font-size:.82rem;color:var(--dim);line-height:1.45;margin-bottom:12px}
+.btns{display:flex;gap:8px;font-family:system-ui,sans-serif}
+.btn{flex:1;padding:11px 0;border-radius:10px;border:none;font-size:.85rem;font-weight:600;cursor:pointer}
+.open{background:none;border:1px solid var(--line);color:var(--ink)}
+.yes{background:var(--ok);color:#1d2a14}
+.no{background:none;border:1px solid var(--no);color:var(--no)}
+.empty{text-align:center;color:var(--dim);padding:60px 20px;font-size:.95rem;line-height:1.7}
+.empty .sym{font-size:2.2rem;color:var(--gold);display:block;margin-bottom:12px}
+.copyall{width:100%;padding:12px;border-radius:10px;border:1px dashed var(--gold);background:none;
+  color:var(--gold);font-family:system-ui,sans-serif;font-size:.85rem;margin-bottom:14px;cursor:pointer}
+.aurl{font-family:ui-monospace,monospace;font-size:.72rem;word-break:break-all;color:var(--dim)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--gold);color:#2a0c12;
+  padding:10px 20px;border-radius:20px;font-family:system-ui,sans-serif;font-size:.82rem;font-weight:600;
+  opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+  <h1>ੴ&nbsp; Page <b>Hunter</b></h1>
+  <div class="sub" id="sub">loading the day's catch…</div>
+  <div class="tabs">
+    <button class="tab on" id="tR" onclick="tab('R')">Review <span id="nR"></span></button>
+    <button class="tab" id="tA" onclick="tab('A')">Approved <span id="nA"></span></button>
+  </div>
+</header>
+<div class="chips" id="chips">
+  <button class="chip on" data-f="all">All</button>
+  <button class="chip" data-f="facebook">Facebook</button>
+  <button class="chip" data-f="instagram">Instagram</button>
+</div>
+<main id="main"></main>
+<div class="toast" id="toast"></div>
+
+<script>
+const RAW='https://raw.githubusercontent.com/yesvarun/Osho-events/main/',
+      CDN='https://cdn.jsdelivr.net/gh/yesvarun/Osho-events@main/',
+      FN='/.netlify/functions/candidate-review';
+let cands=[], approved=[], view='R', filt='all';
+
+const $=id=>document.getElementById(id);
+const toast=m=>{const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)};
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+async function fetchJson(file, fallback){
+  for(const base of [RAW, CDN]){
+    try{
+      const r=await fetch(base+file+'?t='+Date.now());
+      if(r.ok) return await r.json();
+    }catch(e){}
+  }
+  return fallback;
+}
+
+function pw(){
+  let p=localStorage.getItem('oc_review_pw');
+  if(!p){ p=prompt('Review password:')||''; if(p) localStorage.setItem('oc_review_pw',p); }
+  return p;
+}
+
+async function act(action,url,btn){
+  const card=btn.closest('.card');
+  card.style.opacity=.35; card.style.pointerEvents='none';
+  try{
+    const r=await fetch(FN,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action,url,password:pw()})});
+    const j=await r.json();
+    if(!r.ok){ if(r.status===401) localStorage.removeItem('oc_review_pw'); throw new Error(j.error||r.status); }
+    const i=cands.findIndex(c=>c.url===url);
+    if(i>=0){ const it=cands.splice(i,1)[0]; if(action==='approve'){ approved.push(it); } }
+    toast(action==='approve' ? '✓ Approved — add it in Link Sorter' : 'Skipped');
+    render();
+  }catch(e){
+    card.style.opacity=1; card.style.pointerEvents='auto';
+    toast('Failed: '+e.message);
+  }
+}
+
+function copyAll(){
+  const txt=approved.map(a=>a.url).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>toast(approved.length+' links copied — paste into Link Sorter'));
+}
+
+function tab(v){ view=v; $('tR').classList.toggle('on',v==='R'); $('tA').classList.toggle('on',v==='A');
+  $('chips').style.display=v==='R'?'flex':'none'; render(); }
+
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); filt=c.dataset.f; render();
+});
+
+function render(){
+  $('nR').textContent='('+cands.length+')'; $('nA').textContent='('+approved.length+')';
+  const m=$('main');
+  if(view==='A'){
+    if(!approved.length){ m.innerHTML='<div class="empty"><span class="sym">ੴ</span>Nothing approved yet.</div>'; return; }
+    m.innerHTML='<button class="copyall" onclick="copyAll()">⎘ Copy all '+approved.length+' approved links for Link Sorter</button>'+
+      approved.slice().reverse().map(a=>'<div class="card"><div class="top"><span class="pf '+a.platform+'">'+
+      (a.platform==='facebook'?'Facebook':'Instagram')+'</span><span class="score">'+esc(a.reviewed||'')+'</span></div>'+
+      '<div class="title">'+esc(a.title||a.url)+'</div><div class="aurl">'+esc(a.url)+'</div></div>').join('');
+    return;
+  }
+  let list=cands.filter(c=>filt==='all'||c.platform===filt);
+  list.sort((a,b)=>(b.score||0)-(a.score||0));
+  if(!list.length){ m.innerHTML='<div class="empty"><span class="sym">ੴ</span>Queue is empty.<br>The bot hunts again tomorrow 9 AM.</div>'; return; }
+  m.innerHTML=list.map(c=>'<div class="card"><div class="top">'+
+    '<span class="pf '+c.platform+'">'+(c.platform==='facebook'?'Facebook':'Instagram')+'</span>'+
+    '<span>'+esc(c.found||'')+'</span><span class="score">★ '+(c.score??'–')+'/10</span></div>'+
+    '<div class="title">'+esc(c.title||c.url)+'</div>'+
+    '<div class="where">'+esc(c.district)+' · '+esc(c.state)+'</div>'+
+    (c.snippet?'<div class="snip">'+esc(c.snippet)+'</div>':'')+
+    '<div class="btns">'+
+    '<button class="btn open" onclick="window.open(\''+c.url.replace(/'/g,"%27")+'\',\'_blank\')">Open ↗</button>'+
+    '<button class="btn yes" onclick="act(\'approve\',\''+c.url.replace(/'/g,"%27")+'\',this)">✓ Add</button>'+
+    '<button class="btn no" onclick="act(\'reject\',\''+c.url.replace(/'/g,"%27")+'\',this)">✕ Skip</button>'+
+    '</div></div>').join('');
+}
+
+(async()=>{
+  const [c,r,s]=await Promise.all([
+    fetchJson('candidates.json',[]),
+    fetchJson('reviewed.json',{approved:[],rejected:[]}),
+    fetchJson('discover_state.json',{})
+  ]);
+  cands=c; approved=r.approved||[];
+  $('sub').textContent=(s.last_batch?('Last hunt: '+s.last_batch+' · '):'')+(s.last_run||'');
+  render();
+})();
+</script>
+</body>
+</html>
