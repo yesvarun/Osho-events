@@ -42,5 +42,60 @@
   "found": "2026-06-11",
   "score": 6,
   "reason": "Visitor info group, may discuss camps but not primary organizer"
+ },
+ {
+  "url": "https://www.facebook.com/groups/315038065327618",
+  "platform": "facebook",
+  "title": "OSHO and Swami ji. kanpur - Facebook",
+  "snippet": "",
+  "district": "Kanpur",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 4,
+  "reason": "Generic Osho group, unclear if posts events"
+ },
+ {
+  "url": "https://www.facebook.com/gautambudhha2008",
+  "platform": "facebook",
+  "title": "Rishi Meditation & Yoga | Kanpur - Facebook",
+  "snippet": "",
+  "district": "Kanpur",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 6,
+  "reason": "Meditation center, likely posts workshops/camps"
+ },
+ {
+  "url": "https://www.facebook.com/groups/738168630454151",
+  "platform": "facebook",
+  "title": "Osho Mukti Dham Katherua kanpur - Facebook",
+  "snippet": "",
+  "district": "Kanpur",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 8,
+  "reason": "Named ashram/dham, high likelihood of event posts"
+ },
+ {
+  "url": "https://www.facebook.com/swami.sandesh",
+  "platform": "facebook",
+  "title": "Profile for Swami Dhayan Sandesh - Facebook",
+  "snippet": "",
+  "district": "Kanpur",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 5,
+  "reason": "Individual swami profile, unclear posting focus"
+ },
+ {
+  "url": "https://www.instagram.com/worldofmeditation_wom/",
+  "platform": "instagram",
+  "title": "The World of Meditation (@worldofmeditation_wom)",
+  "snippet": "",
+  "district": "Kanpur",
+  "state": "Uttar Pradesh",
+  "found": "2026-06-11",
+  "score": 5,
+  "reason": "Meditation page, may post camps/events"
  }
 ]
