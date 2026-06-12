@@ -49,5 +49,18 @@
    "reviewed": "2026-06-12"
   }
  ],
- "rejected": []
+ "rejected": [
+  {
+   "url": "https://www.facebook.com/oshohimalayas",
+   "platform": "facebook",
+   "title": "OSHO HIMALAYAS | Dharamsala - Facebook",
+   "snippet": "",
+   "district": "Mandi",
+   "state": "Himachal Pradesh",
+   "found": "2026-06-11",
+   "score": 8,
+   "reason": "Named center in Dharamsala, posts shivirs",
+   "reviewed": "2026-06-12"
+  }
+ ]
 }
