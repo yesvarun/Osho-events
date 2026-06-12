@@ -143,6 +143,18 @@
    "score": 6,
    "reason": "Group mentions Osho meditation camp in Surat, appears to share camp-related content",
    "reviewed": "2026-06-12"
+  },
+  {
+   "url": "https://www.facebook.com/osho.international",
+   "platform": "facebook",
+   "title": "OSHO - Facebook",
+   "snippet": "",
+   "district": "Etawah",
+   "state": "Uttar Pradesh",
+   "found": "2026-06-11",
+   "score": 4,
+   "reason": "Official Osho page, mixed content (quotes, news, info)",
+   "reviewed": "2026-06-12"
   }
  ],
  "rejected": [
