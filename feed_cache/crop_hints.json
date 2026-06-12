@@ -11116,5 +11116,251 @@
   "focus_y_pct": 45.0,
   "object_fit": "center",
   "note": "Group of 5 people, full-body framing needed"
- }
+ },
+ "3b6e5ecdb0151718": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Two facilitator headshots centered in composition"
+ },
+ "13a81577e9bf9dce": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Osho portrait at top-right, crop preserves face and upper body."
+ },
+ "fffc8ac974f076c1": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Meditating figure centered, balanced composition with text areas"
+ },
+ "db190e04a3644856": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two people seated, faces in upper-middle frame, balanced composition"
+ },
+ "869baee96ce8748f": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Upper body shot, face centered, vibrant outfit focal point"
+ },
+ "4a589822d8f1e1dc": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Portrait with text below; center crop balances person and content"
+ },
+ "96e67920fad4522e": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Full-body pose with building context, center composition balanced"
+ },
+ "1842181ed127da7e": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Spiritual guru portrait with balanced composition, centered face"
+ },
+ "67160ffd3a44df2b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face centered in upper portion, seated position"
+ },
+ "e7e61890201eb75b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Head-and-shoulders framing, centered composition for event card"
+ },
+ "cade448fb55d2678": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body event photo, multiple people, center composition"
+ },
+ "d86f85eeca28c088": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group event, multiple people, center composition balanced"
+ },
+ "05cf51b42b5b4fdb": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Mountain landscape; keep peaks and sky visible"
+ },
+ "4226c0f254dbf266": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 48.0,
+  "object_fit": "center",
+  "note": "Group photo, faces distributed across middle section"
+ },
+ "743fde8a98191722": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Temple structure centered, balanced composition with sky and grounds"
+ },
+ "b496259e2fbc37f5": {
+  "has_person": true,
+  "face_y_pct": 15,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group photo with text below; center crop includes faces and branding"
+ },
+ "8ff08343a7234e45": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Woman meditating in nature, centered composition for event card"
+ },
+ "b432102273b01eaa": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body cultural dance performance, face prominent"
+ },
+ "78cb962c63812f37": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third, smile is focal point"
+ },
+ "7a7b2962b127b1cf": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Portrait headshot with beard, position upper-middle area"
+ },
+ "f337035fe9bd36c4": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Peacock is main subject, centered composition for event card"
+ },
+ "514977606151960a": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Face centered with text elements above and below"
+ },
+ "f278ea5820d27a60": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Buddha statue full-body, face high, keep statue intact"
+ },
+ "145e302acfb84c57": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group photo, faces distributed middle-upper, full bodies visible"
+ },
+ "b883592c7c722695": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body seated portrait, face mid-frame, balanced composition"
+ },
+ "655c50d6c36b42fb": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Plant shadow composition, text-focused design, centered balance"
+ },
+ "ea0da9260a662041": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body yoga pose, balance face and torso positioning"
+ },
+ "60a3ab27a390309f": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Full-body seated pose, balanced composition with face upper-third"
+ },
+ "c1568d106781afb2": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Face upper third, scenic mountain background important context"
+ },
+ "66f432f9028420e5": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Reclining full-body pose, face mid-frame with text overlay"
+ },
+ "fcc74311e0d7d033": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group circle activity, focus on center gathering point"
+ },
+ "cf9d14289aa04f0a": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third, text overlay requires headroom"
+ },
+ "0e70384e5198c3e4": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two-person composition, faces mid-frame, event details below"
+ },
+ "5fd2300f4c2b10a1": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body portrait with scenic mountain background, face positioned upper third"
+ },
+ "219f570994b24473": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Full-body seated pose, balanced composition with face upper-third"
+ },
+ "5f4f545225cdfb9a": {}
 }
