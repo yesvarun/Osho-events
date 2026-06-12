@@ -220,17 +220,6 @@
   "reason": "Regional Osho group, likely posts events/camps"
  },
  {
-  "url": "https://www.facebook.com/osho.international",
-  "platform": "facebook",
-  "title": "OSHO - Facebook",
-  "snippet": "",
-  "district": "Etawah",
-  "state": "Uttar Pradesh",
-  "found": "2026-06-11",
-  "score": 4,
-  "reason": "Official Osho page, mixed content (quotes, news, info)"
- },
- {
   "url": "https://www.facebook.com/oshoinbangalore",
   "platform": "facebook",
   "title": "OSHO Wellness Bangalore - Facebook",
