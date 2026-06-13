@@ -383,6 +383,18 @@
    "score": 8,
    "reason": "Trust entity likely posts Osho events/camps",
    "reviewed": "2026-06-13"
+  },
+  {
+   "url": "https://www.facebook.com/oshoinbangalore",
+   "platform": "facebook",
+   "title": "OSHO Wellness Bangalore - Facebook",
+   "snippet": "",
+   "district": "Etawah",
+   "state": "Uttar Pradesh",
+   "found": "2026-06-11",
+   "score": 8,
+   "reason": "Wellness center in India, likely posts camps/events",
+   "reviewed": "2026-06-13"
   }
  ],
  "rejected": [
