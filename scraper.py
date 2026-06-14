@@ -46,6 +46,9 @@ FB_GROUPS_ACTOR = "apify~facebook-groups-scraper"           # scrapes public gro
 # Find it on the actor's page header (looks like "creator~facebook-search-...").
 FB_SEARCH_ACTOR = "danek~facebook-search-ppr"
 FB_SEARCH_ENABLED = True          # ON: searches Facebook by keyword (like IG hashtag search)
+FB_GROUPS_ENABLED = False         # OFF: groups actor aborts on private/members-only groups
+                                  # (the HTTP 400 you saw) тАФ a wasted run every scrape. Set True
+                                  # ONLY after confirming your group URLs are PUBLIC and readable.
 
 # JS-rendered websites: pages whose events only appear after JavaScript runs.
 # DISABLED for now тАФ the apify~web-scraper input config needs more work.
@@ -97,8 +100,11 @@ IG_PROFILES = [
 ]
 # Facebook SEARCH terms тАФ searched ONE AT A TIME, so each adds a small cost.
 # Covers common camp types. Trim if cost matters; add if you want wider reach.
-SEARCH_TERMS = ["osho meditation camp", "osho retreat", "osho meditation shivir",
-                "mystic rose meditation", "osho festival", "рдзреНрдпрд╛рди рд╢рд┐рд╡рд┐рд░", "osho tapoban"]
+SEARCH_TERMS = ["osho meditation camp", "osho meditation shivir", "рдзреНрдпрд╛рди рд╢рд┐рд╡рд┐рд░"]
+# Cut from 7 тЖТ 3 terms. FB Search runs ONCE PER TERM (pay-per-event each), so this was the
+# biggest Apify cost тАФ7 runs every scrape. These 3 cover English + Hindi camp announcements.
+# Dropped: "osho retreat", "mystic rose meditation", "osho festival", "osho tapoban"
+# (low net-new yield тАФ re-add individually only if you confirm they convert to new events).
 
 # IMPORTANT: Instagram now blocks most ANONYMOUS hashtag browsing, which is the #1 reason
 # a hashtag scrape returns 0 posts. If your Apify test confirms this, paste a logged-in
@@ -147,8 +153,8 @@ def load_external_sources():
     print(f"  ЁЯУе sources.json merged: +{n_ig} IG profiles, +{n_fb} FB pages, "
           f"+{n_fbg} FB groups, +{n_tag} hashtags")
 
-POSTS_PER_QUERY = 40          # more posts per run = more camps found (and higher cost per run)
-MAX_POST_AGE_DAYS = 45        # balanced window тАФ wide enough to catch advance announcements, modest cost
+POSTS_PER_QUERY = 25          # lowered from 40 тАФ fewer billed events per actor run = lower Apify cost
+MAX_POST_AGE_DAYS = 30        # tightened from 45 тАФ most camps announce <30 days out; fewer posts pulled
 
 # VISION: when a post has little/no caption text, read its flyer IMAGE with Claude vision.
 # Costs more per image, so it only fires for caption-less posts (cost-aware). Set False to disable.
@@ -461,7 +467,7 @@ def scrape_facebook():
         print("  (no FB pages configured)")
 
     # 2) GROUPS тАФ public Osho groups where camps get announced
-    if FB_GROUPS:
+    if FB_GROUPS_ENABLED and FB_GROUPS:
         group_payload = {
             "startUrls": [{"url": u} for u in FB_GROUPS],
             "maxPosts": POSTS_PER_QUERY,
