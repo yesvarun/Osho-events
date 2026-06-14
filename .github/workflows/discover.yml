@@ -2,7 +2,7 @@ name: Discover Osho Pages
 
 on:
   schedule:
-    - cron: '30 3 * * *'   # 9:00 AM IST daily (1 hour before the events scraper)
+    - cron: '17 3 * * 1'   # Mondays only, 08:47 IST (was daily — discovery is slow-changing)
   workflow_dispatch:        # manual "Run workflow" button
 
 permissions:
@@ -22,7 +22,7 @@ jobs:
         env:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: python discover.py
+        run: python -u discover.py
 
       - name: Commit results (commit first, then pull --rebase, retry)
         run: |

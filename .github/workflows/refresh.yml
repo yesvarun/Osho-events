@@ -1,5 +1,5 @@
 # Place this file at:  .github/workflows/refresh.yml
-# Runs the scraper once every 24 hours AND on manual "Run workflow".
+# Runs the scraper every 2 days AND on manual "Run workflow".
 # Commits events.json AND all cache files (feed_cache/, card_images/) so the
 # flyer cache, Unsplash cache, and Apify day-cache persist between runs.
 
@@ -7,7 +7,7 @@ name: Refresh Osho events
 
 on:
   schedule:
-    - cron: "30 4 * * *"      # 04:30 UTC = 10:00 AM India
+    - cron: "37 4 */2 * *"    # 04:37 UTC, every 2 days (odd minute dodges GitHub queue delay)
   workflow_dispatch: {}
 
 permissions:
@@ -33,7 +33,7 @@ jobs:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           IG_SESSION_COOKIE: ${{ secrets.IG_SESSION_COOKIE }}
           TEST_MODE: ${{ vars.TEST_MODE }}
-        run: python scraper.py
+        run: python -u scraper.py
 
       - name: Show what the cache looks like (debug)
         run: |
