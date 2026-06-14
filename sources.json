@@ -1,5 +1,6 @@
 {
   "_README": "Pasted from Source Collector. Replace the whole sources.json with this. Pages/profiles/groups/hashtags are scraped every run.",
+  "_PRUNED": "FB pages trimmed by conversion data (events__3_.json, 657 events). Kept proven converters + a few unconfirmed centre pages for one fair full run. Removed dead stubs and 0-yield non-centre pages. Re-add any page only if it proves it converts.",
   "instagram_profiles": [
     "https://www.instagram.com/oshobliss_experiences/",
     "https://www.instagram.com/shashikant_sadaiv/",
@@ -20,38 +21,16 @@
     "https://www.instagram.com/osho_meditation_center_indore/"
   ],
   "facebook_pages": [
-    "https://www.facebook.com/share/",
+    "https://www.facebook.com/osho.international/",
     "https://www.facebook.com/OshoTarang/",
-    "https://www.facebook.com/Oshomeditationsansthan8080/",
     "https://www.facebook.com/oshoamritsarashram/",
     "https://www.facebook.com/oshomahakaldham/",
-    "https://www.facebook.com/oshomadhushala.narela/",
-    "https://www.facebook.com/profile.php/",
-    "https://www.facebook.com/100064261504788/",
-    "https://www.facebook.com/100063841591511/",
-    "https://www.facebook.com/osho.international/",
-    "https://www.facebook.com/pranichealingcenterbilaspur/",
-    "https://www.facebook.com/meena.jindal.5/",
-    "https://www.facebook.com/61584228407690/",
     "https://www.facebook.com/oshoprembindu/",
     "https://www.facebook.com/osho.resortnargol/",
-    "https://www.facebook.com/oshogangasagar/",
-    "https://www.facebook.com/oshoglimpseindore/",
-    "https://www.facebook.com/100068922593240/",
-    "https://www.facebook.com/100090272291343/",
-    "https://www.facebook.com/pyramid.porbandar.3/",
-    "https://www.facebook.com/people/",
-    "https://www.facebook.com/oshoinbangalore/",
     "https://www.facebook.com/oshodharahyd/",
     "https://www.facebook.com/OshoTathagat123/",
-    "https://www.facebook.com/100064660886147/",
-    "https://www.facebook.com/100090775245843/"
+    "https://www.facebook.com/oshoinbangalore/"
   ],
-  "facebook_groups": [
-    "https://www.facebook.com/groups/1599959900102320/",
-    "https://www.facebook.com/groups/331266310583625/",
-    "https://www.facebook.com/groups/315038065327618/",
-    "https://www.facebook.com/groups/824368598656507/"
-  ],
+  "facebook_groups": [],
   "instagram_hashtags": []
 }

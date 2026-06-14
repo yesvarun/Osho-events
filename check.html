@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Source Conversion · oshocamps</title>
+<style>
+  :root{
+    --bg:#0a0814; --panel:#15101f; --line:#2a2238;
+    --ink:#ece7f5; --dim:#9a8fb0; --faint:#675d7e;
+    --gold:#e8b14c; --saffron:#ff8a3d; --good:#5ed39e; --bad:#e8676b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:15px/1.5 ui-sans-serif,system-ui,-apple-system,sans-serif;
+    padding:20px 14px 60px; max-width:760px; margin:0 auto;
+  }
+  h1{font-size:20px;font-weight:700;letter-spacing:-.3px;margin-bottom:2px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:18px}
+  .summary{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px;
+  }
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .stat .n{font-size:24px;font-weight:700;color:var(--gold);line-height:1}
+  .stat .l{font-size:11px;color:var(--dim);margin-top:4px;text-transform:uppercase;letter-spacing:.4px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);
+     margin:24px 0 10px;font-weight:600}
+  .row{
+    display:flex;align-items:center;gap:10px;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:7px;
+  }
+  .row .name{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .name a{color:var(--ink);text-decoration:none}
+  .row .name a:hover{color:var(--gold)}
+  .row .plat{font-size:11px;color:var(--faint);font-weight:400}
+  .count{font-size:18px;font-weight:700;min-width:34px;text-align:right}
+  .count.zero{color:var(--bad)}
+  .count.few{color:var(--gold)}
+  .count.many{color:var(--good)}
+  .bar{height:4px;border-radius:2px;background:var(--saffron);margin-top:6px}
+  .barwrap{flex:0 0 80px}
+  .loading,.err{text-align:center;padding:40px 20px;color:var(--dim)}
+  .err{color:var(--bad)}
+  .hint{font-size:12px;color:var(--faint);margin:16px 0;line-height:1.6}
+  .tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;
+       background:#2a2238;color:var(--dim);margin-left:6px;vertical-align:middle}
+  footer{margin-top:30px;font-size:11px;color:var(--faint);text-align:center}
+</style>
+</head>
+<body>
+  <h1>Source Conversion</h1>
+  <div class="sub">Which sources actually become live camps · oshocamps.com</div>
+  <div id="out"><div class="loading">Loading live events.json…</div></div>
+  <footer>Reads the live events.json. Refresh after each scrape to see changes.</footer>
+
+<script>
+const EVENTS_URL = "https://oshocamps.com/events.json";
+
+// Pull a readable source handle out of a post URL.
+function handleFromUrl(url, platform){
+  if(!url) return "(no link)";
+  try{
+    const u = new URL(url);
+    const host = u.hostname.replace(/^www\./,"");
+    const parts = u.pathname.split("/").filter(Boolean);
+    if(host.includes("instagram")){
+      // /p/CODE/ is a post; the profile isn't in a post URL, so group by "Instagram (post)"
+      if(parts[0]==="p"||parts[0]==="reel") return "Instagram · (post link)";
+      return "IG · " + (parts[0]||"?");
+    }
+    if(host.includes("facebook")){
+      if(parts[0]==="groups") return "FB group · " + (parts[1]||"?");
+      if(parts[0]==="profile.php") return "FB · profile";
+      return "FB · " + (parts[0]||"?");
+    }
+    return host;
+  }catch(e){ return url.slice(0,40); }
+}
+
+function bucket(url, platform){
+  // Prefer a website/organiser platform string when it's descriptive
+  if(platform && /website|ical|flyer|upload|multivers|tapoban|world/i.test(platform)){
+    return platform;
+  }
+  return handleFromUrl(url, platform);
+}
+
+function countClass(n){ return n===0?"zero":n<3?"few":"many"; }
+
+async function run(){
+  const out = document.getElementById("out");
+  let data;
+  try{
+    const r = await fetch(EVENTS_URL, {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    data = await r.json();
+  }catch(e){
+    out.innerHTML = '<div class="err">Could not load events.json<br><small>'+e.message+
+      '</small><br><br>If you opened this file directly, host it on the site or run from oshocamps.com so it can reach events.json.</div>';
+    return;
+  }
+
+  const events = Array.isArray(data) ? data : (data.events||[]);
+  if(!events.length){ out.innerHTML='<div class="err">events.json loaded but holds 0 events.</div>'; return; }
+
+  // Group by source bucket
+  const groups = {};
+  let byPlatform = {Instagram:0,Facebook:0,Other:0};
+  for(const ev of events){
+    const url = ev.source_url||"";
+    const plat = ev.source_platform||"";
+    const key = bucket(url, plat);
+    (groups[key] = groups[key]||{n:0,sample:url,plat:plat}).n++;
+    if(plat==="Instagram") byPlatform.Instagram++;
+    else if(plat==="Facebook") byPlatform.Facebook++;
+    else byPlatform.Other++;
+  }
+
+  const rows = Object.entries(groups).sort((a,b)=>b[1].n-a[1].n);
+  const max = rows[0][1].n;
+
+  let html = '';
+  html += '<div class="summary">'+
+    '<div class="stat"><div class="n">'+events.length+'</div><div class="l">Live events</div></div>'+
+    '<div class="stat"><div class="n">'+rows.length+'</div><div class="l">Sources</div></div>'+
+    '<div class="stat"><div class="n">'+byPlatform.Other+'</div><div class="l">Web / flyer</div></div>'+
+    '</div>';
+
+  html += '<div class="hint">Sources are ranked by how many <b>live camps</b> they produced. '+
+    'Low counts (red) are candidates to drop — they cost scraping money but yield little. '+
+    'Note: Instagram post links don\'t reveal the profile, so IG posts group together; '+
+    'FB pages and websites show individually.</div>';
+
+  html += '<h2>By source · most productive first</h2>';
+  for(const [name,info] of rows){
+    const pct = Math.round(info.n/max*100);
+    const link = info.sample ? '<a href="'+info.sample+'" target="_blank" rel="noopener">'+name+'</a>' : name;
+    html += '<div class="row">'+
+      '<div class="name">'+link+'</div>'+
+      '<div class="barwrap"><div class="bar" style="width:'+pct+'%"></div></div>'+
+      '<div class="count '+countClass(info.n)+'">'+info.n+'</div>'+
+      '</div>';
+  }
+
+  html += '<h2>By platform</h2>';
+  for(const [p,n] of Object.entries(byPlatform)){
+    html += '<div class="row"><div class="name">'+p+'</div>'+
+      '<div class="count '+countClass(n)+'">'+n+'</div></div>';
+  }
+
+  out.innerHTML = html;
+}
+run();
+</script>
+</body>
+</html>
