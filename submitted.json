@@ -1,5 +1,22 @@
 [
   {
+    "id": "sub_1781624703631",
+    "title": "ओशो द्वारा खोजा गया विश्व साहित्य का खजाना और ज्ञान का महाकुंभ",
+    "type": "Retreat",
+    "start_date": "2026-07-16",
+    "end_date": "2026-07-19",
+    "venue": "Centa Rosa - Majhgaon Village, P.O. Shamti, Rajhgarh Road",
+    "city": "Solan",
+    "state": "Himachal Pradesh",
+    "country": "India",
+    "phone": "9041751881, 9321138224",
+    "flyer_url": "",
+    "organizer": "Swami Ashok Bharati Ji",
+    "description": "Meditation and knowledge gathering led by Swami Ashok Bharati, celebrating Osho's literary treasures in Himalayas.",
+    "source_platform": "Community upload",
+    "submitted_at": "2026-06-16T15:45:03.631Z"
+  },
+  {
     "id": "sub_1781201805920",
     "title": "Doing Nothing - Champa Chhattisgarh",
     "type": "Retreat",
@@ -83,23 +100,6 @@
     "description": "Half day meditation group. Entry fee ¥3,500 includes sweets.",
     "source_platform": "Community upload",
     "submitted_at": "2026-06-08T05:41:21.790Z"
-  },
-  {
-    "id": "sub_1780897274790",
-    "title": "Half a day Meditation",
-    "type": "Workshop",
-    "start_date": "2026-06-14",
-    "end_date": "2026-06-14",
-    "venue": "OSHO Sakshin Meditation Center",
-    "city": "Tokyo",
-    "state": "Tokyo",
-    "country": "Japan",
-    "phone": "03-5382-4734",
-    "flyer_url": "",
-    "organizer": "OSHO Sakshin Meditation Center",
-    "description": "Chakra sound, Trarak, chakra breathing, goldenlight meditation, dinner included.",
-    "source_platform": "Community upload",
-    "submitted_at": "2026-06-08T05:41:14.790Z"
   },
   {
     "id": "sub_1780858002755",
@@ -408,23 +408,6 @@
     "submitted_at": "2026-06-07T18:31:49.039Z"
   },
   {
-    "id": "sub_1780857105395",
-    "title": "Osho Dhyan Shivir",
-    "type": "Camp",
-    "start_date": "2026-06-10",
-    "end_date": "2026-06-14",
-    "venue": "Osho Pyramid Gokulam Farm & Resort, Mota Gam, Bardoli",
-    "city": "Surat",
-    "state": "Gujarat",
-    "country": "India",
-    "phone": "93747 18325, 93277 99399, 93747 10414",
-    "flyer_url": "",
-    "organizer": "Swami Aasho Vaiswak",
-    "description": "Janmashtami Celebration. Five days camp with dormitory, six sharing, triple sharing options.",
-    "source_platform": "Community upload",
-    "submitted_at": "2026-06-07T18:31:45.395Z"
-  },
-  {
     "id": "sub_1780847102734",
     "title": "Osho No Mind",
     "type": "Camp",
@@ -491,23 +474,6 @@
     "description": "5-day meditation and music camp featuring Dynamic Meditation, silent sitting, nature walks, and evening celebrations.",
     "source_platform": "Community upload",
     "submitted_at": "2026-06-05T18:58:35.453Z"
-  },
-  {
-    "id": "sub_1780484750498",
-    "title": "Cosmic Consciousness Samadhi",
-    "type": "Workshop",
-    "start_date": "2026-06-14",
-    "end_date": "2026-06-14",
-    "venue": "Shree Rajneesh Dhyan Mandir, Kumashpur-Deepalpur Road, Vill. Deepalpur, Bahalgarh",
-    "city": "Sonipat",
-    "state": "Haryana",
-    "country": "India",
-    "phone": "+91 7015800931",
-    "flyer_url": "",
-    "organizer": "Osho Fragrance",
-    "description": "Cosmic Consciousness Samadhi meditation workshop",
-    "source_platform": "Community upload",
-    "submitted_at": "2026-06-03T11:05:50.498Z"
   },
   {
     "id": "sub_1780484694409",
