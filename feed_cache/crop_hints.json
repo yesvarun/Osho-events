@@ -15303,5 +15303,495 @@
   "focus_y_pct": 35.0,
   "object_fit": "top",
   "note": "Full-body silhouette with face in upper third, dynamic pose"
+ },
+ "87ed1c90944a117a": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Butterfly illustration is central focal point, balanced composition"
+ },
+ "7f77a8c0deef2db2": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Logo and text centered; balanced composition"
+ },
+ "e79f71f50b224045": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Meditation pose centered, balanced composition with text areas"
+ },
+ "b77b4fe37a853f16": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Upper body portrait, face in upper third, centered composition"
+ },
+ "078163dd73b26e0d": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Face centered with text overlay, balanced composition"
+ },
+ "5ccc00ffbd1138de": {
+  "has_person": true,
+  "face_y_pct": 30,
+  "focus_y_pct": 45.0,
+  "object_fit": "top",
+  "note": "Full-body musician with guitar, face in upper third"
+ },
+ "6b4f436f4520c2e5": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Silhouette with candle; balance composition vertically"
+ },
+ "b71aa4d577f2bd3b": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group meditation event, center composition captures multiple participants"
+ },
+ "11c86ed26d9b8e63": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Full-body standing pose, face in upper third, balance with torso"
+ },
+ "9c98417e52126c30": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body event photo, face positioned upper third"
+ },
+ "fab2e23602b25197": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body musician with guitar, face upper third"
+ },
+ "45ac846313d229d0": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Full-body meditation scene, centered composition for balanced crop"
+ },
+ "ff1c9485d7bcef5b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 38.0,
+  "object_fit": "center",
+  "note": "Face centered with balanced text layout above and below"
+ },
+ "6af95cd6dea1db1b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Face positioned right-center, needs balanced vertical crop"
+ },
+ "94558739b56a8274": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Crystal ball sphere is central focus, balanced composition"
+ },
+ "3bb4c70e828c1fb1": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Multiple subjects, intimate moment composition, center focus balances frame"
+ },
+ "7f38e8f9cfae1dbc": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Upper body portrait, face positioned high, center torso for event card"
+ },
+ "65049d73ae215272": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group event photo, center composition captures dancers and energy"
+ },
+ "e48ca469a57d937a": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Text-based design, center composition optimal"
+ },
+ "bba4334ac7f425a5": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 38.0,
+  "object_fit": "top",
+  "note": "Portrait headshot, face positioned upper-middle, text below"
+ },
+ "3ef7c2044b1dba31": {
+  "has_person": true,
+  "face_y_pct": 8,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Full-body figure with arms raised, balance person and cosmos"
+ },
+ "4452de8b0f5b4768": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third, text overlay requires headroom below"
+ },
+ "a2244fe2625717ea": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Headshot with text overlay below, face positioned upper-middle"
+ },
+ "0bcac7ed54f567eb": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Scenic landscape with river and mountains, center composition optimal"
+ },
+ "8d61de88c2433bb8": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 48.0,
+  "object_fit": "center",
+  "note": "Group photo, faces distributed across middle, text overlay below"
+ },
+ "854c637b994e43c8": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group circle activity, center focus captures all participants"
+ },
+ "607c1ebc17992424": {
+  "has_person": true,
+  "face_y_pct": 28,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body seated pose, balanced composition needed"
+ },
+ "1b9c10f38d980289": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two people centered, event text overlay requires balanced composition"
+ },
+ "4d2bc73ec84d1777": {
+  "has_person": true,
+  "face_y_pct": 30,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Upper body seated, face prominent for event card visibility"
+ },
+ "e9aa48ce31abdcff": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third, seated composition needs head room"
+ },
+ "08b45c86ddfb9734": {
+  "has_person": true,
+  "face_y_pct": 15,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Group photo with text elements; center crop balances faces and branding"
+ },
+ "7e2b07054aeab5e6": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body standing pose, face in upper third"
+ },
+ "7bac473e3b4824ea": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Performer with guitar, face upper portion, colorful outfit below"
+ },
+ "3c08f5c26d5cc5d4": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Temple architecture centered, balanced composition"
+ },
+ "3a3d8aff5129dbd7": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Osho portrait at top, retreat info below needs inclusion"
+ },
+ "87ded58ce1997a05": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Mountain landscape; keep sky and peaks visible for event card"
+ },
+ "c6e1b857aac9e936": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body pose with landmark building, balance composition"
+ },
+ "53f0de83932f36d5": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two facilitator headshots centered, balanced composition"
+ },
+ "60f5683ef18e4ea5": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Portrait headshot with text overlay, keep face prominent"
+ },
+ "a08f5405b2ff5270": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Two subjects seated, balanced composition, center crop optimal"
+ },
+ "45cad34309243ce4": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group circle formation, faces distributed mid-frame"
+ },
+ "39cbc1004b9d0cea": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Plant shadow and text composition, minimal subject"
+ },
+ "22f0589d9595d4a9": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group photo, center composition for balanced event card."
+ },
+ "0bd6466dd64681c2": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Seated person, face in upper-middle area, balanced framing needed"
+ },
+ "7ea6ccb5e18da74a": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 30.0,
+  "object_fit": "top",
+  "note": "Face in upper portion, shoulder visible, center on head area"
+ },
+ "f7e524ea691af23c": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 50.0,
+  "object_fit": "center",
+  "note": "Schedule/table layout, center crop preserves readability"
+ },
+ "196be09366b3f890": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Spiritual leader portrait, face in upper-middle area"
+ },
+ "2c69a7c311c9b1fc": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Group dancing scene, faces distributed mid-frame vertically"
+ },
+ "ed4a95ac72eb39fe": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Seated figure with balanced composition, meditation pose centered"
+ },
+ "dbf48b4d4d30dcce": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Face positioned upper-third, include shoulders for event context"
+ },
+ "1f7cbce7c643e2da": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Group event, multiple people distributed throughout frame"
+ },
+ "53b78228a150e81b": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Buddha statue full-body, centered composition with sky"
+ },
+ "adc7db13eec919ec": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Seated figure with decorative floral arrangement below"
+ },
+ "7a085ce6efc3eca0": {
+  "has_person": true,
+  "face_y_pct": 45,
+  "focus_y_pct": 42.0,
+  "object_fit": "center",
+  "note": "Two singers with guitars, faces centered, decorative birds above"
+ },
+ "0386370b000f9c59": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Upper body portrait, face positioned in upper third"
+ },
+ "d0b243040c8496f9": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Buddha statue is primary subject, centered composition"
+ },
+ "3160a77e15e7b4c0": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Woman's face in upper-middle, meditation pose with nature background"
+ },
+ "92d804c9e43f6696": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Group event, multiple people, centered composition works best"
+ },
+ "0a2baa09db31204f": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "center",
+  "note": "Reclining pose, face upper third, body spans full frame"
+ },
+ "97b1fefce8a42ef6": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Full-body traditional dress performance, center composition"
+ },
+ "d968f7523111e6b6": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Guru portrait positioned upper-middle, center crop preserves face and text"
+ },
+ "47f8374b813dabde": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Headshot portrait with text below, crop top-focused"
+ },
+ "f42d8ccd9a6705be": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Multiple scenes with people in maroon robes, group focus"
+ },
+ "4bfa72a42cb23d81": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "top",
+  "note": "Headshot portrait with face in upper portion, text below"
+ },
+ "8898d6b7c66a7563": {
+  "has_person": true,
+  "face_y_pct": 35,
+  "focus_y_pct": 40.0,
+  "object_fit": "center",
+  "note": "Performer with instrument, centered composition works best"
+ },
+ "0c264eb6309159fd": {
+  "has_person": true,
+  "face_y_pct": 30,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Portrait headshot in circular frame, position at top"
+ },
+ "4c23c420c291e4b4": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body silhouette with head in upper portion, dynamic pose"
+ },
+ "e2ee549ea8f7ac9d": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Butterfly image is main visual element, center composition"
+ },
+ "0b1cf6eea0dcdeba": {
+  "has_person": false,
+  "face_y_pct": null,
+  "focus_y_pct": 45.0,
+  "object_fit": "center",
+  "note": "Book and text are central; balanced composition needs centered crop."
+ },
+ "ae9dd2e30cf5edfe": {
+  "has_person": true,
+  "face_y_pct": 25,
+  "focus_y_pct": 35.0,
+  "object_fit": "top",
+  "note": "Full-body standing pose, face in upper third"
  }
 }
