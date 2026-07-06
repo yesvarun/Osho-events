@@ -1,7 +1,7 @@
 {
- "pointer": 60,
+ "pointer": 110,
  "pass": 2,
- "last_run": "2026-06-29",
- "last_batch": "Jaipur -> Kishtwar (50 districts, ddg)",
+ "last_run": "2026-07-06",
+ "last_batch": "Kulgam -> Hisar (50 districts, ddg)",
  "engine": "ddg"
 }
