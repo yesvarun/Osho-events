@@ -1,17 +1,18 @@
 # Place this file at:  .github/workflows/refresh.yml
-# Runs the scraper every 2 days AND on manual "Run workflow".
-# Commits events.json AND all cache files (feed_cache/, card_images/) so the
-# flyer cache, Unsplash cache, and Apify day-cache persist between runs.
+# Runs the scraper automatically once every 24 hours, AND whenever you click
+# "Run workflow" in the Actions tab. Commits the fresh events.json so your
+# raw.githubusercontent.com URL always serves the latest data.
 
 name: Refresh Osho events
 
 on:
+  # Auto-schedule: runs once every 24 hours at 04:30 UTC (10:00 AM India time).
   schedule:
-    - cron: "37 4 */2 * *"    # 04:37 UTC, every 2 days (odd minute dodges GitHub queue delay)
+    - cron: "30 4 * * *"
   workflow_dispatch: {}
 
 permissions:
-  contents: write              # needed so the job can commit results back
+  contents: write              # needed so the job can commit events.json back
 
 jobs:
   scrape:
@@ -32,41 +33,20 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           IG_SESSION_COOKIE: ${{ secrets.IG_SESSION_COOKIE }}
+          # NEW (optional): Apify Console -> Proxy -> Password. NOT the API token.
+          # Lets sites that 403 GitHub's datacenter IP (Osho Sadhana Path) be retried
+          # through Apify's residential proxy, which is included in your $29 Starter plan.
+          # If you don't add this secret, nothing breaks -- those sites are just skipped.
+          APIFY_PROXY_PASSWORD: ${{ secrets.APIFY_PROXY_PASSWORD }}
           TEST_MODE: ${{ vars.TEST_MODE }}
-        run: python -u scraper.py
-
-      - name: Show what the cache looks like (debug)
-        run: |
-          echo "=== feed_cache/ contents ==="
-          ls -la feed_cache/ || echo "feed_cache/ does NOT exist"
-          echo "=== flyer_cache.json size ==="
-          wc -c feed_cache/flyer_cache.json 2>/dev/null || echo "flyer_cache.json NOT created"
+        run: python scraper.py
 
       - name: Commit updated data
         run: |
           git config user.name  "events-bot"
           git config user.email "bot@users.noreply.github.com"
-
-          # 1) STAGE + COMMIT the scraper's changes FIRST. (The old order tried to pull
-          #    while these were unstaged, which made rebase fail and the push get rejected.)
           git add -A
-          git add -f feed_cache/ card_images/ events.json 2>/dev/null || true
-
-          if git diff --staged --quiet; then
-            echo "no changes — nothing to commit"
-            exit 0
-          fi
-
-          git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC') [skip netlify]"
-
-          # 2) Now bring in any commits made on GitHub (e.g. your manual uploads) and
-          #    replay our commit on top. -X ours keeps our scraper data on conflicts.
-          #    Retry the whole pull+push a few times in case the remote moves again.
-          for i in 1 2 3; do
-            git pull --rebase -X ours origin main && git push && { echo "pushed ✓"; exit 0; }
-            echo "push attempt $i failed — retrying after pulling latest…"
-            sleep 3
-          done
-
-          echo "ERROR: could not push after 3 attempts"
-          exit 1
+          git diff --staged --quiet && echo "no changes -- nothing to commit" && exit 0
+          git commit -m "refresh: $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git pull --rebase -X ours origin main || true
+          git push
