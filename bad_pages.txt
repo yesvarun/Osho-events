@@ -1,0 +1,13 @@
+# Unreachable on 2026-07-15 (dead, renamed, or private). Remove these from sources.json.
+https://www.facebook.com/100064519796180/
+https://www.facebook.com/61583418910267/
+https://www.facebook.com/Oshomeditationsansthan8080/
+https://www.facebook.com/oshobengaluru/
+https://www.facebook.com/oshosadhanapath/
+https://www.facebook.com/oshotapoban1/
+https://www.facebook.com/oshoworld/
+https://www.facebook.com/people/
+https://www.facebook.com/pranichealingcenterbilaspur/
+https://www.facebook.com/profile.php/
+https://www.facebook.com/share/
+https://www.facebook.com/zorbathebuddhaindia/

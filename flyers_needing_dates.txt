@@ -1,0 +1,8 @@
+# Checked 2026-07-15. Claude read these flyers and
+# found a real camp, but no date on the image. They are NOT on the site.
+# Fix: open the flyer, find the date, and add the camp via the
+# Paste Text route — or delete the flyer if it's an old one.
+
+IMG-20260527-WA0005.jpg  →  Osho Sadhna Shivir with Book Release
+Screenshot_20260526_105513_Facebook.jpg  →  Osho Bliss Meditation for Elites
+Screenshot_20260526_230239_Instagram.jpg  →  Art of Breathing
