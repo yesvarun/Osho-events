@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Sannyas Gatherings тАФ hourly scraper pipeline
+Sannyas Gatherings — hourly scraper pipeline
 =============================================
 Flow:
   1. Apify scrapes Instagram + Facebook for Osho event posts (hashtags + search).
@@ -17,7 +17,7 @@ import os, json, time, hashlib, datetime as dt
 import re as _re
 import requests
 
-# Realistic browser headers тАФ some sites (e.g. Osho World) return 403 to obvious bots.
+# Realistic browser headers — some sites (e.g. Osho World) return 403 to obvious bots.
 # Looking like a normal Chrome browser avoids that blocking.
 BROWSER_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
@@ -32,8 +32,18 @@ BROWSER_HEADERS = {
 # ----------------------------------------------------------------------
 # CONFIG
 # ----------------------------------------------------------------------
+def _utcnow():
+    """Naive UTC 'now'. Replaces dt.datetime.utcnow(), which Python has deprecated and will
+    remove — it printed a DeprecationWarning on every run. Output is byte-for-byte identical,
+    so events.json and the site's freshness timers are unaffected."""
+    return dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)
+
+
 APIFY_TOKEN     = os.environ["APIFY_TOKEN"]
 ANTHROPIC_KEY   = os.environ["ANTHROPIC_API_KEY"]
+# Apify Console → Proxy → Password. NOT the same as APIFY_TOKEN. Optional: without it,
+# sites that block GitHub's datacenter IP (403) are simply skipped, as before.
+APIFY_PROXY_PASSWORD = os.environ.get("APIFY_PROXY_PASSWORD", "")
 UNSPLASH_KEY    = os.environ.get("UNSPLASH_ACCESS_KEY", "")   # optional: themed images for camps with no real photo
 EXTRACT_MODEL   = "claude-haiku-4-5-20251001"   # cheap + fast for per-post extraction
 OUTPUT_FILE     = "events.json"
@@ -42,16 +52,20 @@ OUTPUT_FILE     = "events.json"
 IG_ACTOR = "apify~instagram-scraper"
 FB_PAGES_ACTOR  = "apify~facebook-posts-scraper"            # scrapes specific page URLs (reliable)
 FB_GROUPS_ACTOR = "apify~facebook-groups-scraper"           # scrapes public group posts
-# Facebook SEARCH actor тАФ works cheaply (40 results тЙИ $0.10). Set the exact actor ID here.
+# Facebook SEARCH actor — works cheaply (40 results ≈ $0.10). Set the exact actor ID here.
 # Find it on the actor's page header (looks like "creator~facebook-search-...").
 FB_SEARCH_ACTOR = "danek~facebook-search-ppr"
 FB_SEARCH_ENABLED = True          # ON: searches Facebook by keyword (like IG hashtag search)
-FB_GROUPS_ENABLED = False         # OFF: groups actor aborts on private/members-only groups
-                                  # (the HTTP 400 you saw) тАФ a wasted run every scrape. Set True
-                                  # ONLY after confirming your group URLs are PUBLIC and readable.
+FB_GROUPS_ENABLED = True          # ON: groups are where regional/rural camps get announced.
+                                  # Was OFF because the actor 400s on private/members-only groups.
+                                  # Now safe: groups run in small BATCHES, so one bad URL only
+                                  # kills its own batch (logged to bad_groups.txt), not the run.
+GROUP_POSTS_PER_QUERY = 10        # groups bill ~$2.60/1k posts. 45 groups x 10 = ~450 posts ≈ $1.2
+GROUP_MAX_AGE_DAYS    = 10        # groups are noisy — a short window keeps Claude costs down
+GROUP_BATCH_SIZE      = 10        # one 400 kills only 10 groups, not all of them
 
 # JS-rendered websites: pages whose events only appear after JavaScript runs.
-# DISABLED for now тАФ the apify~web-scraper input config needs more work.
+# DISABLED for now — the apify~web-scraper input config needs more work.
 # When re-enabled, uncomment the URLs below and (if needed) switch the actor.
 JS_RENDER_URLS = set()   # empty = skip JS render path, use HTTP only
 # JS_RENDER_URLS = {
@@ -60,7 +74,7 @@ JS_RENDER_URLS = set()   # empty = skip JS render path, use HTTP only
 # }
 JS_RENDER_ACTOR = "apify~web-scraper"
 
-# Known, active Osho Facebook PAGES тАФ adds a reliable source beyond search.
+# Known, active Osho Facebook PAGES — adds a reliable source beyond search.
 FB_PAGES = [
     "https://www.facebook.com/osho.international.meditation.resort/",
     "https://www.facebook.com/OSHOInternational/",
@@ -74,49 +88,66 @@ FB_PAGES = [
 
 # Public Osho Facebook GROUPS to scrape. Groups are where many regional camps get
 # announced. Paste public group URLs here, e.g. "https://www.facebook.com/groups/123456/".
-# NOTE: PRIVATE groups need your own login cookies тАФ public groups work without login.
+# NOTE: PRIVATE groups need your own login cookies — public groups work without login.
 FB_GROUPS = [
     # "https://www.facebook.com/groups/oshomeditation/",
     # "https://www.facebook.com/groups/oshosannyas/",
 ]
 
 # What we look for. Trimmed to the most productive tags to save credit.
+# NOTE: every tag below was previously mojibake (the whole file had been through a CP866
+# round-trip), so the regional tags were searching for garbage strings and returning nothing.
+# Fixed. Instagram matches hashtags exactly — one wrong byte = zero results.
 IG_HASHTAGS = ["oshomeditation", "oshocamp", "oshoretreat", "oshointernational",
-               # Hindi / Punjabi / Nepali / regional tags to catch regional-language posts:
-               "рдУрд╢реЛ", "рдУрд╢реЛрдзреНрдпрд╛рди", "рдзреНрдпрд╛рдирд╢рд┐рд╡рд┐рд░", "рдУрд╢реЛрд╢рд┐рд╡рд┐рд░", "рд╕рд╛рдзрдирд╛рд╢рд┐рд╡рд┐рд░",
-               "риУри╕ри╝рйЛ", "ризри┐риЖрии",
+               # Hindi / Marathi (Devanagari) — the Hindi belt is the biggest camp region
+               "ओशो", "ओशोध्यान", "ध्यानशिविर", "ओशोशिविर", "साधनाशिविर", "ओशोसंन्यास",
+               # Gujarati — Osho's oldest base after MP
+               "ઓશો", "ધ્યાનશિબિર",
+               # Punjabi (Gurmukhi)
+               "ਓਸ਼ੋ", "ਧਿਆਨ",
+               # Malayalam — Osho Lovers Kerala run camps across small towns
+               "ഓഷോ",
                # Nepal-focused:
-               "oshotapoban", "oshonepal", "meditationnepal", "рдУрд╢реЛрдиреЗрдкрд╛рд▓", "рдзреНрдпрд╛рдирд╢рд┐рд╡рд┐рд░рдиреЗрдкрд╛рд▓"]
+               "oshotapoban", "oshonepal", "meditationnepal", "ओशोनेपाल", "ध्यानशिविरनेपाल"]
 # Specific Instagram PROFILES to scrape (more reliable than hashtags).
 # Paste profile URLs, e.g. "https://www.instagram.com/oshointernational/".
 IG_PROFILES = [
     "https://www.instagram.com/oshointernational/",
-    "https://www.instagram.com/tapobaninternational/",   # Osho Tapoban, Nepal тАФ correct handle
+    "https://www.instagram.com/tapobaninternational/",   # Osho Tapoban, Nepal — correct handle
     "https://www.instagram.com/oshobliss_experiences/",  # Osho Bliss, Rishikesh
     "https://www.instagram.com/zorbathebuddhaindia/",    # Zorba the Buddha, India
     "https://www.instagram.com/osho_humaniversity/",     # Osho Humaniversity, Netherlands
     "https://www.instagram.com/oshohimalayas/",          # Osho Himalayas (website is JS-rendered)
     # add more Osho centre / organiser accounts here
 ]
-# Facebook SEARCH terms тАФ searched ONE AT A TIME, so each adds a small cost.
-# Covers common camp types. Trim if cost matters; add if you want wider reach.
-SEARCH_TERMS = ["osho meditation camp", "osho meditation shivir", "рдзреНрдпрд╛рди рд╢рд┐рд╡рд┐рд░"]
-# Cut from 7 тЖТ 3 terms. FB Search runs ONCE PER TERM (pay-per-event each), so this was the
-# biggest Apify cost тАФ7 runs every scrape. These 3 cover English + Hindi camp announcements.
-# Dropped: "osho retreat", "mystic rose meditation", "osho festival", "osho tapoban"
-# (low net-new yield тАФ re-add individually only if you confirm they convert to new events).
+# Facebook SEARCH terms — searched ONE AT A TIME, so each is a separate actor run.
+# On the $29 Starter plan these are pay-per-result and cheap (last run: 16 results across
+# 3 terms), so widening the language coverage costs very little.
+# The Devanagari term below was ALSO mojibake before this fix — it was never matching anything.
+SEARCH_TERMS = [
+    "osho meditation camp",
+    "osho meditation shivir",
+    "ध्यान शिविर",          # Hindi — was corrupted, now correct
+    "ओशो ध्यान साधना शिविर",  # the exact phrase rural organisers use in press releases
+    "ओशो शिविर",
+    "ધ્યાન શિબિર",           # Gujarati
+    "ਧਿਆਨ ਸ਼ਿਵਿਰ",           # Punjabi
+]
+# Was cut 7 → 3 when Apify credit was the constraint. Now on Starter, the binding cost is
+# Claude extraction (handled by the prefilter), not Apify — so language coverage wins.
+# Dropped still: "osho retreat", "mystic rose meditation", "osho festival" (low net-new yield).
 
 # IMPORTANT: Instagram now blocks most ANONYMOUS hashtag browsing, which is the #1 reason
 # a hashtag scrape returns 0 posts. If your Apify test confirms this, paste a logged-in
 # Instagram session cookie below (or set it as a GitHub secret IG_SESSION_COOKIE).
-# How to get it: log into instagram.com in a browser тЖТ DevTools тЖТ Application тЖТ
-# Cookies тЖТ copy the value of the "sessionid" cookie. Format: "sessionid=XXXXтАж"
+# How to get it: log into instagram.com in a browser → DevTools → Application →
+# Cookies → copy the value of the "sessionid" cookie. Format: "sessionid=XXXX…"
 IG_SESSION_COOKIE = os.environ.get("IG_SESSION_COOKIE", "")
 
-# тФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФАтФА
-# EXTERNAL SOURCES (sources.json) тАФ paste page/profile URLs here to grow coverage.
+# ─────────────────────────────────────────────────────────────────────────────
+# EXTERNAL SOURCES (sources.json) — paste page/profile URLs here to grow coverage.
 # The owner edits sources.json in the repo; every scheduled run reads it and adds
-# those URLs on top of the built-in lists above. Source once тЖТ scraped forever.
+# those URLs on top of the built-in lists above. Source once → scraped forever.
 #
 # sources.json format (all keys optional):
 # {
@@ -131,12 +162,12 @@ def load_external_sources():
     """Merge user-maintained sources.json into the built-in lists. De-duplicates."""
     global FB_PAGES, FB_GROUPS, IG_PROFILES, IG_HASHTAGS
     if not os.path.exists(SOURCES_FILE):
-        print("  (no sources.json yet тАФ using built-in source lists only)")
+        print("  (no sources.json yet — using built-in source lists only)")
         return
     try:
         src = json.load(open(SOURCES_FILE, encoding="utf-8"))
     except Exception as e:
-        print(f"  ! couldn't read sources.json ({type(e).__name__}) тАФ using built-in lists")
+        print(f"  ! couldn't read sources.json ({type(e).__name__}) — using built-in lists")
         return
     def _merge(existing, key):
         added = [u.strip() for u in src.get(key, []) if isinstance(u, str) and u.strip()]
@@ -150,11 +181,11 @@ def load_external_sources():
     n_fb  = _merge(FB_PAGES,    "facebook_pages")
     n_fbg = _merge(FB_GROUPS,   "facebook_groups")
     n_tag = _merge(IG_HASHTAGS, "instagram_hashtags")
-    print(f"  ЁЯУе sources.json merged: +{n_ig} IG profiles, +{n_fb} FB pages, "
+    print(f"  📥 sources.json merged: +{n_ig} IG profiles, +{n_fb} FB pages, "
           f"+{n_fbg} FB groups, +{n_tag} hashtags")
 
-POSTS_PER_QUERY = 25          # lowered from 40 тАФ fewer billed events per actor run = lower Apify cost
-MAX_POST_AGE_DAYS = 30        # tightened from 45 тАФ most camps announce <30 days out; fewer posts pulled
+POSTS_PER_QUERY = 25          # lowered from 40 — fewer billed events per actor run = lower Apify cost
+MAX_POST_AGE_DAYS = 30        # tightened from 45 — most camps announce <30 days out; fewer posts pulled
 
 # VISION: when a post has little/no caption text, read its flyer IMAGE with Claude vision.
 # Costs more per image, so it only fires for caption-less posts (cost-aware). Set False to disable.
@@ -162,7 +193,7 @@ VISION_FOR_IMAGE_POSTS = True
 VISION_MIN_CAPTION_LEN = 40   # if caption is shorter than this, try reading the image instead
 
 # LOCAL FLYERS: drop WhatsApp camp flyer images into this folder in your repo, and the
-# scraper reads them with Claude vision into events (no Apify cost тАФ they're your own files).
+# scraper reads them with Claude vision into events (no Apify cost — they're your own files).
 FLYERS_DIR = "flyers"
 # Public base URL for files in your repo, so uploaded flyers can DISPLAY on their cards.
 # This is your repo's raw URL (same host that serves events.json).
@@ -173,14 +204,14 @@ FLYERS_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/h
 CARD_IMG_DIR = "card_images"
 CARD_IMG_BASE_URL = "https://raw.githubusercontent.com/yesvarun/Osho-events/refs/heads/main/card_images/"
 
-# WORDPRESS "The Events Calendar" sites тАФ these expose a clean JSON API of their events.
+# WORDPRESS "The Events Calendar" sites — these expose a clean JSON API of their events.
 # FREE to read (no Apify, no AI). Add any Osho centre that runs this plugin.
 # Each entry: (base_site_url, default_country). The scraper hits {site}/wp-json/tribe/events/v1/events
 WP_EVENT_SITES = [
-    ("https://tapoban.com", "Nepal"),   # Osho Tapoban, Kathmandu тАФ major Nepal centre
+    ("https://tapoban.com", "Nepal"),   # Osho Tapoban, Kathmandu — major Nepal centre
 ]
 
-# iCAL FEEDS тАФ the universal way to read centre calendars (no Apify, no AI cost).
+# iCAL FEEDS — the universal way to read centre calendars (no Apify, no AI cost).
 # Many Osho centres expose a .ics feed. Each entry: (ics_url, default_country, organizer_name).
 # To find a centre's feed: look for "Add to Calendar" / "Save iCal" / "Subscribe" on their events page.
 # Common patterns: {site}/events/?ical=1  or  {site}/?post_type=tribe_events&ical=1
@@ -192,7 +223,7 @@ ICAL_FEEDS = [
     # Add more centres' .ics feeds here as you find them.
 ]
 
-# HTML EVENT PAGES тАФ for centres WITHOUT an iCal/JSON feed (e.g. custom-built sites).
+# HTML EVENT PAGES — for centres WITHOUT an iCal/JSON feed (e.g. custom-built sites).
 # The scraper fetches the page and Claude reads the listed camps from it. Free of Apify
 # (uses Claude, which you already pay for).
 # Each entry: (events_page_url, default_country, organizer, contact_phone, venue_address).
@@ -218,7 +249,7 @@ HTML_EVENT_PAGES = [
      "Osho Risk Meditation Center, Lalit, Braedstrup, Denmark"),
     ("https://www.oshouta.de/de/programm", "Germany", "Osho Uta",
      "+49 221 9520320",
-     "Osho UTA Institut, Venloer Str. 5-7, 50672 K├╢ln, Germany"),
+     "Osho UTA Institut, Venloer Str. 5-7, 50672 Köln, Germany"),
     ("https://www.humaniversity.com/courses/", "Netherlands", "Osho Humaniversity",
      "+31 72 506 4114",
      "OSHO Humaniversity, Dr. Wiardi Beckmanlaan 8, Egmond aan Zee, Netherlands"),
@@ -253,20 +284,20 @@ APIFY_BASE = "https://api.apify.com/v2/acts/{actor}/run-sync-get-dataset-items?t
 def run_actor(actor, payload):
     """Run an Apify actor synchronously and return its dataset items. Loud on failure."""
     url = APIFY_BASE.format(actor=actor)
-    print(f"  тЖТ calling actor: {actor}")
+    print(f"  → calling actor: {actor}")
     try:
         r = requests.post(url, json=payload, timeout=310)
         print(f"    HTTP {r.status_code}")
         if r.status_code == 408:
-            print("    !! 408 timeout тАФ actor took >300s. Lower POSTS_PER_QUERY or fewer hashtags.")
+            print("    !! 408 timeout — actor took >300s. Lower POSTS_PER_QUERY or fewer hashtags.")
             return []
         if r.status_code not in (200, 201):
-            # show Apify's error message so we know WHY (bad token, wrong actor, bad inputтАж)
+            # show Apify's error message so we know WHY (bad token, wrong actor, bad input…)
             print(f"    !! Apify error body: {r.text[:500]}")
             return []
         data = r.json()
         items = data if isinstance(data, list) else data.get("items", [])
-        print(f"    тЬУ received {len(items)} items")
+        print(f"    ✓ received {len(items)} items")
         if items:
             first = items[0]
             print(f"    sample keys: {list(first.keys())[:20]}")
@@ -274,7 +305,7 @@ def run_actor(actor, payload):
             for k in ("caption","text","title","description"):
                 if first.get(k):
                     preview = str(first[k])[:80].replace(chr(10)," ")
-                    print(f"    sample {k}: {preview}тАж")
+                    print(f"    sample {k}: {preview}…")
                     break
         return items
     except Exception as e:
@@ -284,7 +315,7 @@ def run_actor(actor, payload):
 def render_with_browser(url):
     """Fetch a URL through Apify web-scraper (real browser, runs JS) so we can read
     pages whose events only appear after JavaScript renders. Returns rendered HTML, or "" on failure.
-    Used ONLY for URLs in JS_RENDER_URLS тАФ other sources keep the cheap HTTP path."""
+    Used ONLY for URLs in JS_RENDER_URLS — other sources keep the cheap HTTP path."""
     if not APIFY_TOKEN:
         return ""
     # web-scraper needs a pageFunction returning JSON. We grab outerHTML + scroll to load lazy content.
@@ -338,7 +369,7 @@ def _ig_post(it):
     }
 
 def scrape_instagram():
-    print("Scraping InstagramтАж")
+    print("Scraping Instagram…")
     payload = {
         # The official actor scrapes posts from hashtag PAGE urls in one run:
         "directUrls": ([f"https://www.instagram.com/explore/tags/{h}/" for h in IG_HASHTAGS]
@@ -354,27 +385,27 @@ def scrape_instagram():
         payload["sessionCookies"] = [{"name":"sessionid","value":sid,"domain":".instagram.com"}]
         # Diagnostic: a valid sessionid is long (40+ chars) and contains "%3A".
         looks_valid = len(sid) >= 30 and "%3A" in sid
-        print(f"  (using Instagram session cookie тАФ length {len(sid)}, "
-              f"{'looks valid тЬУ' if looks_valid else 'WARNING: looks too short / wrong cookie тЬЧ'})")
+        print(f"  (using Instagram session cookie — length {len(sid)}, "
+              f"{'looks valid ✓' if looks_valid else 'WARNING: looks too short / wrong cookie ✗'})")
     else:
-        print("  (no IG session cookie set тАФ hashtag results may be empty; see config note)")
+        print("  (no IG session cookie set — hashtag results may be empty; see config note)")
     items = run_actor(IG_ACTOR, payload)
     posts = []
     skipped_no_caption = 0
     for it in items:
-        # Different IG actors name the caption field differently тАФ try them all
+        # Different IG actors name the caption field differently — try them all
         cap = (it.get("caption") or it.get("text") or it.get("title")
                or it.get("description") or it.get("edge_media_to_caption") or "")
         if isinstance(cap, dict):   # some actors nest caption in an object
             cap = cap.get("text") or cap.get("caption") or ""
-        # real post permalink тАФ IG actor returns shortCode; build a clean /p/ link as fallback
+        # real post permalink — IG actor returns shortCode; build a clean /p/ link as fallback
         link = it.get("url") or it.get("postUrl") or it.get("inputUrl") or ""
         if not link and it.get("shortCode"):
             link = f"https://www.instagram.com/p/{it['shortCode']}/"
         img = it.get("displayUrl") or it.get("imageUrl")
         if not img and isinstance(it.get("images"), list) and it["images"]:
             img = it["images"][0]
-        # Keep the post if it has a caption OR an image (image-only flyers тЖТ vision reads them)
+        # Keep the post if it has a caption OR an image (image-only flyers → vision reads them)
         if not cap and not img:
             skipped_no_caption += 1
             continue
@@ -385,12 +416,61 @@ def scrape_instagram():
             "platform": "Instagram",
             "timestamp": it.get("timestamp") or it.get("takenAt"),
         })
-    print(f"  тЖТ {len(posts)} Instagram posts"
-          + (f"  ({skipped_no_caption} skipped тАФ no caption or image)" if skipped_no_caption else ""))
+    print(f"  → {len(posts)} Instagram posts"
+          + (f"  ({skipped_no_caption} skipped — no caption or image)" if skipped_no_caption else ""))
     if skipped_no_caption and not posts:
         print("    !! All items skipped for missing caption. The actor uses a DIFFERENT field name.")
         print("       Look at the 'sample keys' line above to see the real field names.")
     return posts
+
+def fetch_via_apify_proxy(url, headers=None):
+    """Re-fetch a URL through Apify's RESIDENTIAL proxy — for sites that 403 GitHub's
+    datacenter IP (e.g. Osho Sadhana Path). Residential proxy is included in the paid
+    Apify plan; the password is separate from the API token:
+        Apify Console → Proxy → Password  →  save as GitHub secret APIFY_PROXY_PASSWORD
+
+    If the secret isn't set, this quietly does nothing and the caller keeps its 403."""
+    if not APIFY_PROXY_PASSWORD:
+        print("    (403 — set APIFY_PROXY_PASSWORD secret to retry via Apify residential proxy)")
+        return None
+    proxy = (f"http://groups-RESIDENTIAL,country-IN:{APIFY_PROXY_PASSWORD}"
+             f"@proxy.apify.com:8000")
+    try:
+        print("    ↻ retrying through Apify residential proxy…")
+        r = requests.get(url, timeout=60, headers=headers or BROWSER_HEADERS,
+                         proxies={"http": proxy, "https": proxy})
+        print(f"    proxy fetch → HTTP {r.status_code}")
+        return r
+    except Exception as e:
+        print(f"    ! proxy fetch failed ({type(e).__name__})")
+        return None
+
+
+def _log_bad_sources(urls, filename):
+    """Write unreachable page/group URLs to a file so you know what to prune from sources.json.
+    Overwritten each run — it always reflects the LAST run, not a growing pile."""
+    try:
+        uniq = sorted({u for u in urls if u})
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(f"# Unreachable on {dt.date.today().isoformat()} "
+                    f"(dead, renamed, or private). Remove these from sources.json.\n")
+            f.write("\n".join(uniq) + "\n")
+    except Exception:
+        pass
+
+
+def _is_error_item(it):
+    """True if the actor returned an error object instead of a post.
+    Shape seen in the logs: {'url': ..., 'error': ..., 'errorDescription': ...}"""
+    if not isinstance(it, dict):
+        return False
+    if not it.get("error"):
+        return False
+    # A real post always has SOME text or media; an error object has neither.
+    return not any(it.get(k) for k in
+                   ("text", "message", "message_text", "postText", "content",
+                    "image", "images", "media", "thumb", "imageUrl"))
+
 
 def _fb_post(it):
     """Normalise one Facebook dataset item into our shape. Handles multiple actor formats."""
@@ -407,7 +487,7 @@ def _fb_post(it):
                or (m0.get("photo_image") or {}).get("uri") or "")
     if not img and isinstance(it.get("images"), list) and it["images"]:
         img = it["images"][0] if isinstance(it["images"][0], str) else ""
-    # Keep if there's text OR an image (image-only flyers тЖТ vision reads them)
+    # Keep if there's text OR an image (image-only flyers → vision reads them)
     if not cap and not img:
         return None
     return {
@@ -419,11 +499,11 @@ def _fb_post(it):
     }
 
 def scrape_facebook():
-    print("Scraping FacebookтАж")
+    print("Scraping Facebook…")
     posts = []
 
-    # 0) SEARCH тАФ keyword search across Facebook (like IG hashtag search).
-    # Search ONE term at a time (one big comma-joined query tends to return 0 тАФ FB reads it
+    # 0) SEARCH — keyword search across Facebook (like IG hashtag search).
+    # Search ONE term at a time (one big comma-joined query tends to return 0 — FB reads it
     # as a single literal phrase). Splitting the budget across terms gets real results.
     if FB_SEARCH_ENABLED and FB_SEARCH_ACTOR and FB_SEARCH_ACTOR != "REPLACE_WITH_ACTOR_ID":
         start = (dt.date.today() - dt.timedelta(days=MAX_POST_AGE_DAYS)).isoformat()
@@ -443,12 +523,12 @@ def scrape_facebook():
                 p = _fb_post(it)
                 if p: posts.append(p); got += 1
                 else: skipped += 1
-        print(f"  тЖТ {got} Facebook SEARCH posts"
-              + (f"  ({skipped} skipped тАФ no text)" if skipped else ""))
+        print(f"  → {got} Facebook SEARCH posts"
+              + (f"  ({skipped} skipped — no text)" if skipped else ""))
     else:
-        print("  (FB search actor not set тАФ fill FB_SEARCH_ACTOR to enable)")
+        print("  (FB search actor not set — fill FB_SEARCH_ACTOR to enable)")
 
-    # 1) PAGES тАФ point at specific Osho pages (reliable)
+    # 1) PAGES — point at specific Osho pages (reliable)
     if FB_PAGES:
         page_payload = {
             "startUrls": [{"url": u} for u in FB_PAGES],
@@ -457,34 +537,69 @@ def scrape_facebook():
         }
         skipped = 0
         got = 0
+        dead_pages = []
         for it in run_actor(FB_PAGES_ACTOR, page_payload):
+            if _is_error_item(it):
+                # Dead / renamed / private page — NOT a "no text" post. Log it.
+                if it.get("url"):
+                    dead_pages.append(it["url"])
+                continue
             p = _fb_post(it)
             if p: posts.append(p); got += 1
             else: skipped += 1
-        print(f"  тЖТ {got} Facebook PAGE posts"
-              + (f"  ({skipped} skipped тАФ no text)" if skipped else ""))
+        print(f"  → {got} Facebook PAGE posts"
+              + (f"  ({skipped} skipped — no text)" if skipped else ""))
+        if dead_pages:
+            _log_bad_sources(dead_pages, "bad_pages.txt")
+            print(f"  ↳ {len(dead_pages)} page URL(s) unreachable — see bad_pages.txt, "
+                  f"remove them from sources.json")
     else:
         print("  (no FB pages configured)")
 
-    # 2) GROUPS тАФ public Osho groups where camps get announced
-    if FB_GROUPS_ENABLED and FB_GROUPS:
-        group_payload = {
-            "startUrls": [{"url": u} for u in FB_GROUPS],
-            "maxPosts": POSTS_PER_QUERY,
-            "onlyPostsNewerThan": f"{MAX_POST_AGE_DAYS} days",
-        }
-        skipped = 0
-        got = 0
-        for it in run_actor(FB_GROUPS_ACTOR, group_payload):
-            p = _fb_post(it)
-            if p: posts.append(p); got += 1
-            else: skipped += 1
-        print(f"  тЖТ {got} Facebook GROUP posts"
-              + (f"  ({skipped} skipped тАФ no text)" if skipped else ""))
+    # 2) GROUPS — public Osho groups. This is the main channel for regional / rural camps
+    #    that have no website. Run in small batches so one private group can't abort the lot.
+    if not FB_GROUPS_ENABLED:
+        print("  (FB groups disabled — set FB_GROUPS_ENABLED = True to include them)")
+    elif not FB_GROUPS:
+        print("  (FB groups enabled but list is empty — add public group URLs to "
+              "sources.json → \"facebook_groups\")")
     else:
-        print("  (no FB groups configured тАФ add public group URLs to FB_GROUPS to include them)")
+        got = skipped = 0
+        bad_batches = []
+        batches = [FB_GROUPS[i:i + GROUP_BATCH_SIZE]
+                   for i in range(0, len(FB_GROUPS), GROUP_BATCH_SIZE)]
+        print(f"  → {len(FB_GROUPS)} groups in {len(batches)} batch(es) of {GROUP_BATCH_SIZE}, "
+              f"{GROUP_POSTS_PER_QUERY} posts each, last {GROUP_MAX_AGE_DAYS} days")
+        for bnum, batch in enumerate(batches, 1):
+            group_payload = {
+                "startUrls": [{"url": u} for u in batch],
+                "maxPosts": GROUP_POSTS_PER_QUERY,
+                "onlyPostsNewerThan": f"{GROUP_MAX_AGE_DAYS} days",
+            }
+            items = run_actor(FB_GROUPS_ACTOR, group_payload)
+            if not items:
+                # Whole batch failed (usually a private/members-only group → HTTP 400).
+                bad_batches.extend(batch)
+                print(f"    ! batch {bnum}/{len(batches)} returned nothing — logged for review")
+                continue
+            for it in items:
+                # Some actors return {"url","error","errorDescription"} for unreachable groups.
+                if isinstance(it, dict) and it.get("error") and not it.get("text"):
+                    if it.get("url"):
+                        bad_batches.append(it["url"])
+                    skipped += 1
+                    continue
+                p = _fb_post(it)
+                if p: posts.append(p); got += 1
+                else: skipped += 1
+        print(f"  → {got} Facebook GROUP posts"
+              + (f"  ({skipped} skipped — no text / unreachable)" if skipped else ""))
+        if bad_batches:
+            _log_bad_sources(bad_batches, "bad_groups.txt")
+            print(f"  ↳ {len(bad_batches)} group URL(s) unreachable — see bad_groups.txt, "
+                  f"remove them from sources.json to stop paying for them")
 
-    print(f"  тЖТ {len(posts)} Facebook posts total")
+    print(f"  → {len(posts)} Facebook posts total")
     return posts
 
 
@@ -504,10 +619,10 @@ EXTRACT_SYSTEM = (
     "Rules: is_event=false if it's not a real datable event, is a past recap, or is generic content. "
     "Infer the year if only a day/month is given (use the next future occurrence). "
     "state is the Indian state when country is India, else null. Keep description under 30 words. "
-    "full_text = the COMPLETE text of the post/caption тАФ every detail, kept in full and organised readably with line "
+    "full_text = the COMPLETE text of the post/caption — every detail, kept in full and organised readably with line "
     "breaks (facilitators, full schedule/timings, fees, what to bring, contact numbers, registration links). "
     "Translate it to English. Do NOT summarise or shorten full_text. "
-    "Captions may be in Hindi, Punjabi, Nepali, Marathi, Gujarati or other languages тАФ read them, "
+    "Captions may be in Hindi, Punjabi, Nepali, Marathi, Gujarati or other languages — read them, "
     "and OUTPUT all fields in English (translate title, venue, city, description). "
     "Recognise regional date formats. For Nepal, country='Nepal' and leave state null."
 )
@@ -516,7 +631,7 @@ _extract_fail_count = [0]   # mutable counter shared across calls
 
 def check_anthropic_key():
     """Verify the Anthropic key works BEFORE processing 130 posts. Fail loudly if not."""
-    print("Checking Anthropic API keyтАж")
+    print("Checking Anthropic API key…")
     try:
         r = requests.post(
             "https://api.anthropic.com/v1/messages",
@@ -525,43 +640,83 @@ def check_anthropic_key():
                   "messages": [{"role": "user", "content": "Reply with the single word OK"}]},
             timeout=30)
         if r.status_code == 200:
-            print("  тЬУ Anthropic key works.")
+            print("  ✓ Anthropic key works.")
             return True
-        print(f"  !! Anthropic key FAILED: HTTP {r.status_code} тАФ {r.text[:300]}")
-        print("     тЖТ Fix your ANTHROPIC_API_KEY secret and/or add billing credit at console.anthropic.com")
+        print(f"  !! Anthropic key FAILED: HTTP {r.status_code} — {r.text[:300]}")
+        print("     → Fix your ANTHROPIC_API_KEY secret and/or add billing credit at console.anthropic.com")
         return False
     except Exception as e:
         print(f"  !! Anthropic check error: {e}")
         return False
 
-MAX_IMAGE_BYTES = 4 * 1024 * 1024   # 4 MB тАФ Claude vision rejects larger images (HTTP 400)
+MAX_IMAGE_BYTES = 4 * 1024 * 1024   # 4 MB — Claude vision rejects larger images (HTTP 400)
 VALID_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+
+def sniff_image_type(raw):
+    """Work out an image's REAL format from its magic bytes.
+
+    This is the fix for 'Could not process image' (HTTP 400): the old code fell back to
+    claiming image/jpeg whenever the server's content-type was missing or odd. If the bytes
+    were actually WebP/AVIF/HEIC — or a video thumbnail, or an HTML error page — we told
+    Claude 'jpeg' and Claude rejected it. Never guess; read the header."""
+    if not raw or len(raw) < 12:
+        return None
+    if raw[:3] == b"\xff\xd8\xff":                       return "image/jpeg"
+    if raw[:8] == b"\x89PNG\r\n\x1a\n":                  return "image/png"
+    if raw[:6] in (b"GIF87a", b"GIF89a"):                return "image/gif"
+    if raw[:4] == b"RIFF" and raw[8:12] == b"WEBP":      return "image/webp"
+    return None   # AVIF/HEIC/BMP/SVG/HTML-error-page → unsupported, don't lie about it
+
+
+def _reencode_to_jpeg(raw):
+    """Last resort for unsupported formats and huge images: convert to a sane JPEG.
+    Uses Pillow only if it's installed — returns None if not, so nothing breaks."""
+    try:
+        from PIL import Image
+        import io
+        im = Image.open(io.BytesIO(raw))
+        im.load()
+        if im.mode not in ("RGB", "L"):
+            im = im.convert("RGB")
+        # Claude also rejects very large dimensions; 1568px is its own recommended max edge.
+        im.thumbnail((1568, 1568), Image.LANCZOS)
+        buf = io.BytesIO()
+        im.save(buf, format="JPEG", quality=85, optimize=True)
+        return buf.getvalue()
+    except Exception:
+        return None
+
 
 def _download_image_b64(url):
     """Fetch an image URL and return (base64, media_type) or (None, None).
-    Rejects images that are too large or in an unsupported format to prevent Claude HTTP 400."""
+    Guarantees the media_type we send matches the bytes we send."""
     try:
-        r = requests.get(url, timeout=30)
+        r = requests.get(url, timeout=30, headers=BROWSER_HEADERS)
         if r.status_code != 200 or not r.content:
             return None, None
-        # Reject oversized images тАФ Claude vision returns HTTP 400 for images > ~5 MB
-        if len(r.content) > MAX_IMAGE_BYTES:
-            print(f"  ! image too large ({len(r.content)//1024}KB) тАФ skipping vision for this post")
-            return None, None
-        ctype = r.headers.get("content-type", "").split(";")[0].strip().lower()
-        # Normalise common aliases
-        if ctype in ("image/jpg",):
-            ctype = "image/jpeg"
-        if ctype not in VALID_IMAGE_TYPES:
-            ctype = "image/jpeg"   # most IG/FB flyers are jpeg
+        raw = r.content
+        ctype = sniff_image_type(raw)
+
+        # Unsupported format (AVIF/HEIC/…) or oversized → try converting rather than dropping.
+        if ctype is None or len(raw) > MAX_IMAGE_BYTES:
+            conv = _reencode_to_jpeg(raw)
+            if conv is None:
+                why = "unsupported format" if ctype is None else f"{len(raw)//1024}KB too large"
+                print(f"  ! image skipped ({why}, and Pillow not available to convert)")
+                return None, None
+            raw, ctype = conv, "image/jpeg"
+            if len(raw) > MAX_IMAGE_BYTES:
+                print("  ! image still too large after re-encode — skipping vision")
+                return None, None
+
         import base64
-        return base64.standard_b64encode(r.content).decode(), ctype
+        return base64.standard_b64encode(raw).decode(), ctype
     except Exception:
         return None, None
 
 def _caption_has_date(caption):
     """Rough check: does the caption text itself contain a date?
-    If NOT, the date is probably in the flyer image тАФ so we should read it."""
+    If NOT, the date is probably in the flyer image — so we should read it."""
     t = (caption or "").lower()
     # month names (en) + common date patterns + Hindi/Devanagari month hints
     if _re.search(r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", t): return True
@@ -569,6 +724,67 @@ def _caption_has_date(caption):
     if _re.search(r"\d{1,2}(st|nd|rd|th)\b", t): return True            # 12th
     if _re.search(r"\d{4}", t) and _re.search(r"\d{1,2}", t): return True
     return False
+
+# ----------------------------------------------------------------------
+# PREFILTER — free Python gate that runs BEFORE Claude.
+# Last run: 418 posts scraped → only 77 were real events. We paid Claude to read 341
+# Osho quote/wallpaper/photo posts. This gate drops those for free.
+# Deliberately generous: when in doubt it PASSES the post through to Claude.
+# ----------------------------------------------------------------------
+
+# Words that only appear when something is actually being ORGANISED.
+# A quote/wallpaper post says "ओशो" and "ध्यान" — but not "शिविर" or "registration".
+EVENT_WORDS = [
+    # English / transliterated
+    "camp", "shivir", "shibir", "retreat", "workshop", "satsang", "gathering",
+    "celebration", "festival", "utsav", "mahotsav", "samaroh", "programme", "program",
+    "register", "registration", "booking", "book now", "venue", "contact", "fees",
+    "accommodation", "participants", "sannyas", "diksha", "invitation", "join us",
+    "schedule", "dates", "seats", "limited", "whatsapp", "call now", "rsvp",
+    # Hindi / Marathi (Devanagari)
+    "शिविर", "शिबिर", "साधना", "संन्यास", "सन्यास", "उत्सव", "महोत्सव", "समारोह",
+    "आयोजन", "पंजीयन", "पंजीकरण", "संपर्क", "निवास", "आमंत्रण", "कार्यक्रम",
+    "दीक्षा", "प्रवचन", "सत्संग", "शुल्क", "आवास", "स्थान", "दिनांक",
+    # Gujarati
+    "શિબિર", "સાધના", "ઉત્સવ", "કાર્યક્રમ", "સંપર્ક", "નોંધણી", "આમંત્રણ",
+    # Punjabi (Gurmukhi)
+    "ਸ਼ਿਵਿਰ", "ਸਾਧਨਾ", "ਸਮਾਗਮ", "ਪ੍ਰੋਗਰਾਮ", "ਸੰਪਰਕ", "ਸੱਦਾ",
+    # Malayalam
+    "ശിബിരം", "സാധന", "പരിപാടി", "ബന്ധപ്പെടുക", "ക്ഷണം",
+]
+
+# Topic words — on their own these prove nothing (every quote post has them),
+# but paired with a date they're a strong signal.
+TOPIC_WORDS = [
+    "osho", "rajneesh", "meditation", "dhyan", "dhyaan", "sannyas", "zorba",
+    "ओशो", "ध्यान", "रजनीश", "ઓશો", "ધ્યાન", "ਓਸ਼ੋ", "ਧਿਆਨ", "ഓഷോ", "ധ്യാനം",
+]
+
+def _worth_extracting(caption, image):
+    """Should we spend a Claude call on this post? Free, runs on every post."""
+    cap = (caption or "")
+    if not isinstance(cap, str):
+        cap = str(cap)
+    cap_l = cap.lower().strip()
+
+    # 1. Image with little/no caption → the flyer IS the content. Vision must read it.
+    if image and len(cap_l) < 20:
+        return True
+    # 2. No caption and no image → nothing to read.
+    if not cap_l:
+        return False
+    # 3. Any organising word → let Claude decide.
+    if any(w in cap_l for w in EVENT_WORDS):
+        return True
+    # 4. A date + an Osho/meditation word → let Claude decide.
+    if _caption_has_date(cap_l) and any(w in cap_l for w in TOPIC_WORDS):
+        return True
+    # 5. Devanagari/Gujarati/Gurmukhi/Malayalam digits alongside a topic word — regional
+    #    posts often write dates in native numerals, which the date regex above misses.
+    if _re.search(r"[०-९૦-૯੦-੯൦-൯]", cap) and any(w in cap_l for w in TOPIC_WORDS):
+        return True
+    return False
+
 
 SUBMITTED_LINKS_FILE = "submitted_links.json"
 
@@ -589,7 +805,7 @@ def scrape_submitted_links():
     if not pending:
         return []
 
-    print(f"\nReading {len(pending)} user-submitted link(s)тАж")
+    print(f"\nReading {len(pending)} user-submitted link(s)…")
     posts = []
     for item in pending:
         url = item["url"].strip()
@@ -605,8 +821,8 @@ def scrape_submitted_links():
                     p = _fb_post(it)
                     if p: posts.append(p)
             else:
-                # Unknown platform тАФ skip but mark done so it doesn't retry forever
-                print(f"  тАУ skipped (unsupported link): {url[:50]}")
+                # Unknown platform — skip but mark done so it doesn't retry forever
+                print(f"  – skipped (unsupported link): {url[:50]}")
             item["status"] = "done"
         except Exception as e:
             print(f"  ! failed to read {url[:50]} ({type(e).__name__})")
@@ -616,7 +832,7 @@ def scrape_submitted_links():
         json.dump(links, open(SUBMITTED_LINKS_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
     except Exception:
         pass
-    print(f"  тЖТ {len(posts)} post(s) from submitted links")
+    print(f"  → {len(posts)} post(s) from submitted links")
     return posts
 
 def extract_event(caption, image_url=None):
@@ -643,7 +859,7 @@ def extract_event(caption, image_url=None):
                                     "and extract the event details. Caption (may be empty): "
                                     + (caption or "")[:1000]})
         else:
-            content = (caption or "")[:4000]   # image fetch failed тЖТ fall back to text
+            content = (caption or "")[:4000]   # image fetch failed → fall back to text
     else:
         content = (caption or "")[:4000]
 
@@ -665,14 +881,14 @@ def extract_event(caption, image_url=None):
             if r.status_code != 200:
                 last_err = f"HTTP {r.status_code}: {r.text[:150]}"
                 if r.status_code in (429, 500, 502, 503, 529) and attempt == 0:
-                    time.sleep(2); continue       # transient тАФ retry once
+                    time.sleep(2); continue       # transient — retry once
                 break
             text = "".join(b.get("text", "") for b in r.json().get("content", []))
             text = text.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
             try:
                 data = json.loads(text)
             except json.JSONDecodeError:
-                # Truncated / malformed JSON тАФ salvage the first complete {...} object
+                # Truncated / malformed JSON — salvage the first complete {...} object
                 m = _re.search(r"\{[^{}]*\}", text)
                 if m:
                     try:
@@ -690,7 +906,7 @@ def extract_event(caption, image_url=None):
         except Exception as e:
             last_err = f"{type(e).__name__}: {e}"
             if attempt == 0:
-                time.sleep(2); continue            # timeout/network тАФ retry once
+                time.sleep(2); continue            # timeout/network — retry once
     _extract_fail_count[0] += 1
     if _extract_fail_count[0] <= 3:
         print(f"  ! extraction failed after retry: {last_err}")
@@ -698,7 +914,7 @@ def extract_event(caption, image_url=None):
 
 
 def extract_event_from_file(path):
-    """Read a local flyer image file with Claude vision тЖТ event dict.
+    """Read a local flyer image file with Claude vision → event dict.
     Handles single-event AND multi-event calendar images (returns first event for
     single-event callers; multi-event path uses extract_events_from_file instead)."""
     import base64, mimetypes
@@ -707,7 +923,7 @@ def extract_event_from_file(path):
             raw = f.read()
         # Guard: skip files Claude vision can't process (too large or wrong format)
         if len(raw) > MAX_IMAGE_BYTES:
-            print(f"  ! {os.path.basename(path)}: image too large ({len(raw)//1024}KB) тАФ skipping")
+            print(f"  ! {os.path.basename(path)}: image too large ({len(raw)//1024}KB) — skipping")
             return {"is_event": False}
         mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
         if mtype not in VALID_IMAGE_TYPES:
@@ -769,7 +985,7 @@ def extract_events_from_file(path):
         with open(path, "rb") as f:
             raw = f.read()
         if len(raw) > MAX_IMAGE_BYTES:
-            print(f"  ! {os.path.basename(path)}: image too large ({len(raw)//1024}KB) тАФ skipping")
+            print(f"  ! {os.path.basename(path)}: image too large ({len(raw)//1024}KB) — skipping")
             return []
         mtype = mimetypes.guess_type(path)[0] or "image/jpeg"
         if mtype not in VALID_IMAGE_TYPES:
@@ -826,7 +1042,7 @@ def extract_events_from_file(path):
                 if data:
                     print(f"  (recovered {len(data)} events from partial JSON)")
             if isinstance(data, dict):
-                data = [data]   # single event returned as object тАФ wrap it
+                data = [data]   # single event returned as object — wrap it
             if not isinstance(data, list):
                 return []
             return [d for d in data if isinstance(d, dict) and d.get("is_event")]
@@ -841,7 +1057,7 @@ def extract_events_from_file(path):
     return (s or "").replace("\\,", ",").replace("\\;", ";").replace("\\n", " ").replace("\\N", " ").strip()
 
 def _ical_date(val):
-    """Parse an iCal DTSTART/DTEND value тЖТ 'YYYY-MM-DD'. Handles 20260620 and 20260620T090000Z."""
+    """Parse an iCal DTSTART/DTEND value → 'YYYY-MM-DD'. Handles 20260620 and 20260620T090000Z."""
     val = (val or "").strip()
     digits = _re.sub(r"[^0-9]", "", val)
     if len(digits) >= 8:
@@ -879,16 +1095,16 @@ def read_html_event_pages():
         if cached and cached.get("date") == today:
             evs = cached.get("events", [])
             out.extend(evs)
-            print(f"  тЖТ {len(evs)} events from {organizer} (cached today, not re-fetched)")
+            print(f"  → {len(evs)} events from {organizer} (cached today, not re-fetched)")
             continue
         page_events = []  # collect this page's events to cache
         try:
             if url in JS_RENDER_URLS:
-                # JavaScript-rendered page тАФ fetch via Apify browser so events actually load
-                print(f"  тЖТ using JS renderer for {organizer}")
+                # JavaScript-rendered page — fetch via Apify browser so events actually load
+                print(f"  → using JS renderer for {organizer}")
                 raw_html = render_with_browser(url)
                 if not raw_html:
-                    print(f"  ! {organizer}: JS render returned empty тАФ skipping")
+                    print(f"  ! {organizer}: JS render returned empty — skipping")
                     continue
             else:
                 # Polite fetch: a referer + small delay + one retry reduces 403 bot-blocking.
@@ -898,13 +1114,19 @@ def read_html_event_pages():
                 if r.status_code == 403:
                     time.sleep(5)                       # brief cool-off, then one retry
                     r = requests.get(url, timeout=45, headers=hdrs)
+                if r.status_code == 403:
+                    # Still blocked: the site is refusing GitHub's datacenter IP, not our headers.
+                    # Retry through Apify's residential proxy — included in the paid plan.
+                    r2 = fetch_via_apify_proxy(url, hdrs)
+                    if r2 is not None:
+                        r = r2
                 if r.status_code != 200:
                     print(f"  ! {organizer}: events page HTTP {r.status_code} "
-                          f"(site is blocking automated requests тАФ try again later)")
+                          f"(site is blocking automated requests — try again later)")
                     continue
                 raw_html = r.text
             # Pull real image URLs in page order (so each camp matches its own picture).
-            # Next.js wraps them as /_next/image?url=<ENCODED>&w=... тАФ decode those too.
+            # Next.js wraps them as /_next/image?url=<ENCODED>&w=... — decode those too.
             import urllib.parse as _up
             imgs = []
             for m in _re.finditer(r'/_next/image\?url=([^&"]+)', raw_html):
@@ -954,8 +1176,8 @@ def read_html_event_pages():
             f"Today is {TODAY}. Below is the text of an Osho centre's events page. "
             "Extract EVERY upcoming meditation camp/retreat/workshop/celebration with a clear date, "
             "IN THE ORDER they appear on the page. The events may run together in dense text "
-            "without line breaks between them тАФ be careful to find every dated entry "
-            "(look for date patterns like '5 - 7 Jun 2026' or '25 Jun тАУ 1 Jul 2026'). "
+            "without line breaks between them — be careful to find every dated entry "
+            "(look for date patterns like '5 - 7 Jun 2026' or '25 Jun – 1 Jul 2026'). "
             "Reply with ONLY a JSON array, each item: "
             "{title, title_original, start_date:'YYYY-MM-DD', end_date:'YYYY-MM-DD', description, full_text}. "
             "If the page is NOT in English, set title to a clear English translation and "
@@ -980,7 +1202,7 @@ def read_html_event_pages():
             try:
                 items = json.loads(rawtext)
             except json.JSONDecodeError:
-                # Response was likely truncated mid-array тАФ salvage each complete {...} object.
+                # Response was likely truncated mid-array — salvage each complete {...} object.
                 items = []
                 for m in _re.finditer(r"\{[^{}]*\}", rawtext):
                     try:
@@ -1017,7 +1239,7 @@ def read_html_event_pages():
             elif "Risk" in organizer:
                 city, state = "Braedstrup", None
             elif "Uta" in organizer:
-                city, state = "K├╢ln", None
+                city, state = "Köln", None
             elif "Humaniversity" in organizer:
                 city, state = "Egmond aan Zee", None
             else:
@@ -1039,7 +1261,7 @@ def read_html_event_pages():
             out.append(ev_obj)
             page_events.append(ev_obj)
             got += 1
-        print(f"  тЖТ {got} events from {organizer} (web page)")
+        print(f"  → {got} events from {organizer} (web page)")
         # Save today's results so later runs today reuse them (once-a-day fetch).
         if got > 0:
             try:
@@ -1050,7 +1272,7 @@ def read_html_event_pages():
     return out
 
 def read_ical_feeds():
-    """Read events from standard iCal (.ics) feeds тАФ works for any centre that publishes one.
+    """Read events from standard iCal (.ics) feeds — works for any centre that publishes one.
     FREE: no Apify, no AI. Returns list of event dicts."""
     out = []
     if not ICAL_FEEDS:
@@ -1065,9 +1287,9 @@ def read_ical_feeds():
             if not is_ical:
                 hint = ""
                 if r.status_code == 403:
-                    hint = " (site is blocking bots тАФ try fetching manually to confirm URL)"
+                    hint = " (site is blocking bots — try fetching manually to confirm URL)"
                 elif r.status_code == 200:
-                    hint = f" (got HTML, not iCal тАФ content-type: {ctype[:60]})"
+                    hint = f" (got HTML, not iCal — content-type: {ctype[:60]})"
                 print(f"  ! {organizer}: no iCal feed (HTTP {r.status_code}){hint}")
                 continue
             text = r.text.replace("\r\n ", "").replace("\r\n\t", "")  # unfold long lines
@@ -1105,12 +1327,12 @@ def read_ical_feeds():
                 "flyer_url": "", "region": REGION_MAP.get(country, "Asia"),
             })
             got += 1
-        print(f"  тЖТ {got} events from {organizer} (iCal)")
+        print(f"  → {got} events from {organizer} (iCal)")
     return out
 
 def read_wp_event_sites():
     """Read events from WordPress 'The Events Calendar' JSON APIs (e.g. Tapoban).
-    These give clean structured data тАФ no Apify, no AI cost. Returns list of event dicts."""
+    These give clean structured data — no Apify, no AI cost. Returns list of event dicts."""
     out = []
     if not WP_EVENT_SITES:
         return out
@@ -1132,7 +1354,7 @@ def read_wp_event_sites():
         for it in items:
             try:
                 title = _html.unescape((it.get("title") or "").strip())
-                start = (it.get("start_date") or "")[:10]      # 'YYYY-MM-DD HH:MM:SS' тЖТ date
+                start = (it.get("start_date") or "")[:10]      # 'YYYY-MM-DD HH:MM:SS' → date
                 end = (it.get("end_date") or it.get("start_date") or "")[:10]
                 if not title or not start:
                     continue
@@ -1164,18 +1386,18 @@ def read_wp_event_sites():
                 out.append(ev); got += 1
             except Exception:
                 continue
-        print(f"  тЖТ {got} events from {site}")
+        print(f"  → {got} events from {site}")
     return out
 
 def read_local_flyers():
     """Read every image in FLYERS_DIR with Claude vision.
     Handles BOTH single-event flyers and multi-event calendar posters.
     CACHED: Claude vision is only called for new or modified files.
-    Cache key = filename|mtime тАФ so editing a flyer triggers re-extraction.
+    Cache key = filename|mtime — so editing a flyer triggers re-extraction.
     Returns list of event dicts."""
     import glob
     if not os.path.isdir(FLYERS_DIR):
-        print(f"  (no '{FLYERS_DIR}/' folder тАФ add flyer images there to include them)")
+        print(f"  (no '{FLYERS_DIR}/' folder — add flyer images there to include them)")
         return []
     files = []
     for ext in ("*.jpg", "*.jpeg", "*.png", "*.webp", "*.JPG", "*.JPEG", "*.PNG"):
@@ -1188,7 +1410,7 @@ def read_local_flyers():
     cached_count = 0
     fresh_count = 0
 
-    print(f"Reading {len(files)} local flyer image(s) with Claude visionтАж")
+    print(f"Reading {len(files)} local flyer image(s) with Claude vision…")
     events = []
     for path in files:
         try:
@@ -1198,31 +1420,31 @@ def read_local_flyers():
 
             # Cache key: filename + MD5 of file contents
             # mtime changes on every fresh git checkout, so we use content hash instead.
-            # If the file is replaced/edited, hash changes тЖТ cache miss тЖТ re-extracted
+            # If the file is replaced/edited, hash changes → cache miss → re-extracted
             import hashlib as _hl
             file_hash = _hl.md5(open(path, "rb").read()).hexdigest()[:16]
             cache_key = os.path.basename(path) + "|" + file_hash
 
             if cache_key in flyer_cache:
-                # Serve from cache тАФ zero Claude cost
+                # Serve from cache — zero Claude cost
                 extracted = flyer_cache[cache_key]
                 cached_count += 1
                 hit_label = "(cached)"
             else:
-                # New or modified file тАФ call Claude vision
+                # New or modified file — call Claude vision
                 extracted = extract_events_from_file(path)
                 flyer_cache[cache_key] = extracted  # persist result
                 fresh_count += 1
                 hit_label = ""
 
             if not extracted:
-                print(f"  тАУ {os.path.basename(path)} тЖТ not a datable event {hit_label}".strip())
+                print(f"  – {os.path.basename(path)} → not a datable event {hit_label}".strip())
                 continue
 
             if len(extracted) > 1:
-                print(f"  тЬУ {os.path.basename(path)} тЖТ {len(extracted)} events (multi-event flyer) {hit_label}".strip())
+                print(f"  ✓ {os.path.basename(path)} → {len(extracted)} events (multi-event flyer) {hit_label}".strip())
             else:
-                print(f"  тЬУ {os.path.basename(path)} тЖТ {extracted[0].get('title','(event)')} {hit_label}".strip())
+                print(f"  ✓ {os.path.basename(path)} → {extracted[0].get('title','(event)')} {hit_label}".strip())
 
             for idx, ev in enumerate(extracted):
                 ev["source_platform"] = "Flyer upload"
@@ -1236,20 +1458,20 @@ def read_local_flyers():
                 ev["_fixed_id"] = "fly" + hashlib.md5(id_key.encode()).hexdigest()[:9]
                 events.append(ev)
         except Exception as e:
-            print(f"  ! {os.path.basename(path)} тЖТ skipped ({type(e).__name__})")
+            print(f"  ! {os.path.basename(path)} → skipped ({type(e).__name__})")
             continue
 
     _save_flyer_cache(flyer_cache)
-    print(f"  ЁЯУБ Flyer cache: {cached_count} served from cache, {fresh_count} newly extracted by Claude")
+    print(f"  📁 Flyer cache: {cached_count} served from cache, {fresh_count} newly extracted by Claude")
     return events
 
 def make_id(ev):
     """Stable dedup id that survives across runs.
     - Flyer uploads & re-hosted images: id from the IMAGE FILENAME (stored in flyer_url),
-      so a carried-forward copy and a freshly-read copy always get the SAME id тЖТ no repeats.
+      so a carried-forward copy and a freshly-read copy always get the SAME id → no repeats.
     - Everything else: exact title + start date + city."""
     fu = ev.get("flyer_url") or ""
-    # Our own repo images (flyers/ or card_images/) have stable filenames тАФ key off them.
+    # Our own repo images (flyers/ or card_images/) have stable filenames — key off them.
     if "/flyers/" in fu or "/card_images/" in fu:
         fname = fu.rstrip("/").split("/")[-1]
         return "img" + hashlib.md5(fname.encode()).hexdigest()[:9]
@@ -1332,9 +1554,9 @@ def smart_crop_hint(img_path_or_bytes):
                     '  "object_fit": "top" or "center" or "bottom",\n'
                     '  "note": "<10 words why>"\n'
                     "}\n"
-                    "Examples: headshot at top тЖТ face_y_pctтЙИ20, focus_y_pctтЙИ25, object_fit=top. "
-                    "Full-body standing тЖТ face_y_pctтЙИ15, focus_y_pctтЙИ20, object_fit=top. "
-                    "Group photo тЖТ focus_y_pctтЙИ40, object_fit=center."
+                    "Examples: headshot at top → face_y_pct≈20, focus_y_pct≈25, object_fit=top. "
+                    "Full-body standing → face_y_pct≈15, focus_y_pct≈20, object_fit=top. "
+                    "Group photo → focus_y_pct≈40, object_fit=center."
                 )}
             ]}]
         }
@@ -1360,10 +1582,10 @@ def smart_crop_hint(img_path_or_bytes):
         return None
 
 
-# Crop-hint cache file тАФ so we don't re-analyse the same image every run.
+# Crop-hint cache file — so we don't re-analyse the same image every run.
 CROP_HINT_CACHE_FILE = os.path.join("feed_cache", "crop_hints.json")
 
-# Flyer vision cache тАФ so Claude is NOT called again for unchanged flyer files.
+# Flyer vision cache — so Claude is NOT called again for unchanged flyer files.
 # Key = "filename|mtime". New/modified flyers are detected automatically.
 FLYER_CACHE_FILE = os.path.join("feed_cache", "flyer_cache.json")
 
@@ -1452,12 +1674,12 @@ def unsplash_image_for(title, cache):
     """Return a themed Unsplash image URL for a camp title, searched ONCE and cached
     forever (keyed by title). Searches api.unsplash.com only for titles never seen
     before, so we stay well under the 50/hour demo limit. Returns '' if no key / no result.
-    Note: displaying images.unsplash.com URLs does NOT count against the rate limit тАФ
+    Note: displaying images.unsplash.com URLs does NOT count against the rate limit —
     only the search call here does, and that's one-per-new-title, cached permanently."""
     if not UNSPLASH_KEY or not title:
         return ""
     key = title.strip().lower()
-    if key in cache:                       # already searched once тЖТ reuse forever
+    if key in cache:                       # already searched once → reuse forever
         return cache[key]
     # Build a focused query from the title (drop generic filler words).
     q = _re.sub(r"\b(osho|meditation|camp|retreat|shivir|the|of|a|an|with|days?|by)\b", " ",
@@ -1493,7 +1715,7 @@ def unsplash_image_for(title, cache):
 
 def build():
     print("="*60)
-    print(f"Token present: {'yes' if APIFY_TOKEN else 'NO тАФ MISSING!'} "
+    print(f"Token present: {'yes' if APIFY_TOKEN else 'NO — MISSING!'} "
           f"(len {len(APIFY_TOKEN)})  |  Anthropic key: {'yes' if ANTHROPIC_KEY else 'NO'}")
     print(f"Window: last {MAX_POST_AGE_DAYS} days  |  posts/query: {POSTS_PER_QUERY}")
     print("="*60)
@@ -1502,18 +1724,18 @@ def build():
     # This lets you test the git commit/push step WITHOUT spending any Apify credit.
     # It just keeps whatever is already in events.json and re-saves it.
     if os.environ.get("TEST_MODE") == "1":
-        print("ЁЯзк TEST_MODE on тАФ skipping Apify entirely (no credit spent).")
+        print("🧪 TEST_MODE on — skipping Apify entirely (no credit spent).")
         try:
             with open(OUTPUT_FILE, encoding="utf-8") as f:
                 existing = json.load(f).get("events", [])
         except Exception:
             existing = []
-        out = {"generated_at": dt.datetime.utcnow().isoformat() + "Z",
-               "test_marker": dt.datetime.utcnow().isoformat() + "Z",  # forces a change so push is tested
+        out = {"generated_at": _utcnow().isoformat() + "Z",
+               "test_marker": _utcnow().isoformat() + "Z",  # forces a change so push is tested
                "events": existing}
         with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, indent=2)
-        print(f"тЬУ TEST_MODE: re-saved {len(existing)} existing events (0 Apify cost).")
+        print(f"✓ TEST_MODE: re-saved {len(existing)} existing events (0 Apify cost).")
         return
 
     # EVERY RUN scrapes fresh from Apify so NEW camps are found each time (manual or
@@ -1521,34 +1743,34 @@ def build():
     # Claude EXTRACTION per-post below: posts already extracted in a previous run are
     # served from cache (no Claude charge); only brand-new posts hit Claude.
     os.makedirs("feed_cache", exist_ok=True)
-    print(f"\nЁЯФД  Scraping fresh тАФ looking for NEW camps (existing ones stay, new ones add on top)тАж")
+    print(f"\n🔄  Scraping fresh — looking for NEW camps (existing ones stay, new ones add on top)…")
     load_external_sources()   # pull in any pages the owner added to sources.json
     posts = scrape_instagram() + scrape_facebook() + scrape_submitted_links()
     print(f"\nTOTAL posts scraped from all platforms: {len(posts)}")
     if not posts:
-        print("тЪая╕П  Zero posts scraped. The problem is APIFY (token, actor, or no posts for these tags),")
+        print("⚠️  Zero posts scraped. The problem is APIFY (token, actor, or no posts for these tags),")
         print("    NOT Claude. Check the HTTP status / error body printed above.")
 
     key_ok = check_anthropic_key()
     if not key_ok:
-        print("тЪая╕П  Anthropic key not working тАФ every post will be marked 'not an event'.")
+        print("⚠️  Anthropic key not working — every post will be marked 'not an event'.")
         print("    THIS is why events.json is empty. Fix the key, then re-run.")
 
-    # Per-post EXTRACTION cache тАФ so re-seen posts don't cost a Claude call again.
+    # Per-post EXTRACTION cache — so re-seen posts don't cost a Claude call again.
     EXTRACT_CACHE_FILE = os.path.join("feed_cache", "extract_cache.json")
     try:
         extract_cache = json.load(open(EXTRACT_CACHE_FILE, encoding="utf-8"))
     except Exception:
         extract_cache = {}
-    n_extract_cached = n_extract_fresh = 0
+    n_extract_cached = n_extract_fresh = n_prefiltered = 0
 
-    print(f"\nExtracting {len(posts)} posts with Claude (cached posts cost nothing)тАж")
+    print(f"\nExtracting {len(posts)} posts with Claude (cached posts cost nothing)…")
     events, seen = [], set()
     n_is_event = n_upcoming = 0
     crop_cache = _load_crop_cache()
     n_crop_analysed = 0
     for i, p in enumerate(posts, 1):
-        # Cache key from caption + image тАФ identical posts reuse the saved result.
+        # Cache key from caption + image — identical posts reuse the saved result.
         # Coerce to str first: some actors return caption/image as a dict or list.
         _cap = p.get("caption") or ""
         _img = p.get("image") or ""
@@ -1558,6 +1780,13 @@ def build():
         if _ek in extract_cache:
             ev = extract_cache[_ek]
             n_extract_cached += 1
+        elif not _worth_extracting(_cap, _img):
+            # Free gate: obvious quote/wallpaper/photo post — never send it to Claude.
+            # Cached as a non-event so we don't even re-test it next run.
+            ev = {"is_event": False, "_prefiltered": True}
+            extract_cache[_ek] = ev
+            n_prefiltered += 1
+            continue
         else:
             ev = extract_event(p["caption"], p.get("image"))
             extract_cache[_ek] = ev
@@ -1569,7 +1798,7 @@ def build():
         ev["source_platform"] = p["platform"]
         # Re-host the post image on our repo so it actually shows on the card (IG/FB block embeds).
         ev["flyer_url"] = rehost_image(p.get("image"), p.get("url") or p.get("image"))
-        # AI crop hint тАФ analyse person photo once, cache forever by image URL
+        # AI crop hint — analyse person photo once, cache forever by image URL
         if ev.get("flyer_url") and p.get("image"):
             cache_key = hashlib.md5((p.get("image") or "").encode()).hexdigest()[:16]
             if cache_key not in crop_cache:
@@ -1594,18 +1823,21 @@ def build():
         events.append(ev)
     if n_crop_analysed:
         _save_crop_cache(crop_cache)
-        print(f"  ЁЯЦ╝  AI crop analysis: {n_crop_analysed} new images analysed ({len(crop_cache)} cached)")
+        print(f"  🖼  AI crop analysis: {n_crop_analysed} new images analysed ({len(crop_cache)} cached)")
 
     # Persist the extraction cache so future runs skip already-seen posts.
     try:
         json.dump(extract_cache, open(EXTRACT_CACHE_FILE, "w", encoding="utf-8"), ensure_ascii=False)
     except Exception:
         pass
-    print(f"  ЁЯза Extraction: {n_extract_fresh} new posts read by Claude, {n_extract_cached} served from cache (free)")
+    print(f"  🧠 Extraction: {n_extract_fresh} new posts read by Claude, {n_extract_cached} served from cache (free)")
+    if n_prefiltered:
+        print(f"  🚦 Prefilter: {n_prefiltered} junk posts dropped before Claude (free — "
+              f"quote/wallpaper posts with no event or date words)")
 
-    # --- WEBSITE EVENT FEEDS (iCal + WordPress) тАФ international centres, free, no AI ---
+    # --- WEBSITE EVENT FEEDS (iCal + WordPress) — international centres, free, no AI ---
     n_wp = 0
-    print("\nReading website event feedsтАж")
+    print("\nReading website event feeds…")
     for ev in (read_ical_feeds() + read_wp_event_sites() + read_html_event_pages()):
         try:
             if not keep_upcoming(ev):
@@ -1622,13 +1854,24 @@ def build():
     # --- LOCAL FLYERS: your uploaded WhatsApp flyer images, read by Claude vision ---
     n_flyer = 0
     flyers_to_delete = []        # files for camps that are confirmed PAST (clean up after)
+    flyers_needing_dates = []    # real camps whose flyer had NO readable date
     for ev in read_local_flyers():
         try:
             if not keep_upcoming(ev):
-                print(f"  тАУ flyer event '{ev.get('title','')}' skipped as past "
-                      f"(start={ev.get('start_date')}, end={ev.get('end_date')})")
                 end = ev.get("end_date") or ev.get("start_date")
-                if end and ev.get("_flyer_path"):
+                if not end:
+                    # NOT past — Claude read this flyer, recognised a real camp, but found
+                    # no date on it. keep_upcoming() returns False for these, which used to
+                    # print "skipped as past" and silently drop a real camp every single run.
+                    print(f"  ⚠ flyer event '{ev.get('title','')}' has NO DATE on the flyer "
+                          f"→ needs a manual date ({os.path.basename(ev.get('_flyer_path') or '?')})")
+                    if ev.get("_flyer_path"):
+                        flyers_needing_dates.append(
+                            f"{os.path.basename(ev['_flyer_path'])}  →  {ev.get('title','')}")
+                    continue
+                print(f"  – flyer event '{ev.get('title','')}' skipped as past "
+                      f"(start={ev.get('start_date')}, end={ev.get('end_date')})")
+                if ev.get("_flyer_path"):
                     try:
                         if dt.date.fromisoformat(end) < dt.date.today():
                             flyers_to_delete.append(ev["_flyer_path"])
@@ -1663,7 +1906,21 @@ def build():
                 os.remove(fp); deleted += 1
             except Exception:
                 pass
-        print(f"  ЁЯЧС  removed {deleted} past flyer image(s) from '{FLYERS_DIR}/'")
+        print(f"  🗑  removed {deleted} past flyer image(s) from '{FLYERS_DIR}/'")
+
+    # Real camps whose flyer carried no date — surface them instead of dropping them silently.
+    if flyers_needing_dates:
+        try:
+            with open("flyers_needing_dates.txt", "w", encoding="utf-8") as f:
+                f.write(f"# Checked {dt.date.today().isoformat()}. Claude read these flyers and\n"
+                        f"# found a real camp, but no date on the image. They are NOT on the site.\n"
+                        f"# Fix: open the flyer, find the date, and add the camp via the\n"
+                        f"# Paste Text route — or delete the flyer if it's an old one.\n\n")
+                f.write("\n".join(sorted(set(flyers_needing_dates))) + "\n")
+        except Exception:
+            pass
+        print(f"  📋 {len(set(flyers_needing_dates))} flyer(s) are real camps with NO date — "
+              f"see flyers_needing_dates.txt")
 
     # Persist crop hint cache so new analyses aren't lost between runs
     if n_crop_analysed:
@@ -1686,7 +1943,7 @@ def build():
     # --- FIRST-SEEN MAP: remember when each event was first discovered ---
     # So the website can badge genuinely NEW finds. Carried-forward events keep
     # their original first_seen; brand-new ones get today's date.
-    _now_iso = dt.datetime.utcnow().isoformat() + "Z"   # full timestamp so the site can measure HOURS
+    _now_iso = _utcnow().isoformat() + "Z"   # full timestamp so the site can measure HOURS
     first_seen_map = {}
     for _ev in existing:
         try:
@@ -1707,7 +1964,7 @@ def build():
         print(f"  ! blocklist load skipped: {ex}")
 
     def _norm(s):
-        """Normalise a string for fuzzy blocklist matching тАФ lowercase, strip punctuation/spaces."""
+        """Normalise a string for fuzzy blocklist matching — lowercase, strip punctuation/spaces."""
         import unicodedata
         s = (s or "").lower().strip()
         s = _re.sub(r"[^\w\s]", "", s)   # strip punctuation
@@ -1750,7 +2007,7 @@ def build():
             seen_ids.add(eid); merged.append(ev); carried += 1
 
     if n_blocked_new or n_blocked_carried:
-        print(f"  ЁЯЪл Blocklist: removed {n_blocked_new} new + {n_blocked_carried} carried-forward event(s)")
+        print(f"  🚫 Blocklist: removed {n_blocked_new} new + {n_blocked_carried} carried-forward event(s)")
 
     merged.sort(key=lambda e: e.get("start_date") or "9999")
 
@@ -1780,14 +2037,14 @@ def build():
             ]
             to_drop = landscape_keys[:ROTATE_PER_RUN]
             for k in to_drop:
-                ucache.pop(k, None)          # deleting тЖТ forces a fresh portrait search
+                ucache.pop(k, None)          # deleting → forces a fresh portrait search
             runs_done += 1
             ucache["__rotation_runs_done__"] = runs_done
-            print(f"  ЁЯФД Portrait auto-rotation: run {runs_done}/{ROTATE_MAX_RUNS} тАФ "
+            print(f"  🔄 Portrait auto-rotation: run {runs_done}/{ROTATE_MAX_RUNS} — "
                   f"dropped {len(to_drop)} old landscape image(s) for re-search "
                   f"({len(landscape_keys) - len(to_drop)} still remaining)")
             if runs_done >= ROTATE_MAX_RUNS:
-                print("  тЬЕ Portrait auto-rotation finished тАФ it will not run again.")
+                print("  ✅ Portrait auto-rotation finished — it will not run again.")
 
         searched = 0
         SEARCH_CAP = 45     # stay safely under Unsplash's 50/hour demo limit
@@ -1797,7 +2054,7 @@ def build():
             title_key = ev.get("title", "").strip().lower()
 
             # FIX: event carries an OLD landscape Unsplash URL but cache already has
-            # the portrait version тАФ just apply it directly, no new API search needed.
+            # the portrait version — just apply it directly, no new API search needed.
             is_landscape_unsplash = (
                 "images.unsplash.com" in fu and "h=1200" not in fu
             )
@@ -1814,7 +2071,7 @@ def build():
             if fu and not stale_unsplash:
                 continue
             if searched >= SEARCH_CAP and title_key not in ucache:
-                # hit the safety cap тАФ leave this one for the next run
+                # hit the safety cap — leave this one for the next run
                 continue
             before = len(ucache)
             url = unsplash_image_for(ev.get("title", ""), ucache)
@@ -1824,20 +2081,20 @@ def build():
                 ev["flyer_url"] = url
                 ev["_img_source"] = "unsplash"
         if portrait_fixed:
-            print(f"  ЁЯЦ╝  Portrait fix: updated {portrait_fixed} event(s) from landscape тЖТ portrait URL")
+            print(f"  🖼  Portrait fix: updated {portrait_fixed} event(s) from landscape → portrait URL")
         _save_unsplash_cache(ucache)
         # don't count the bookkeeping key in the "cached total"
         total_cached = len([k for k in ucache if not k.startswith("__")])
-        print(f"  ЁЯЦ╝  Unsplash themed images: {searched} new searches this run "
+        print(f"  🖼  Unsplash themed images: {searched} new searches this run "
               f"({total_cached} cached total)")
 
-    # SAFETY: warn loudly if this run drastically shrinks the directory тАФ a sign something
+    # SAFETY: warn loudly if this run drastically shrinks the directory — a sign something
     # went wrong (bad scrape, over-merge). The data is still written, but you'll see the alert.
     if len(existing) >= 10 and len(merged) < len(existing) * 0.5:
-        print(f"  тЪая╕П  WARNING: directory dropped from {len(existing)} to {len(merged)} events. "
-              f"If unexpected, check the funnel above тАФ a source may have returned little this run.")
+        print(f"  ⚠️  WARNING: directory dropped from {len(existing)} to {len(merged)} events. "
+              f"If unexpected, check the funnel above — a source may have returned little this run.")
 
-    out = {"generated_at": dt.datetime.utcnow().isoformat() + "Z", "events": merged}
+    out = {"generated_at": _utcnow().isoformat() + "Z", "events": merged}
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(f"  (carried forward {carried} still-upcoming events from previous runs)")
@@ -1845,15 +2102,15 @@ def build():
     print("\n" + "="*60)
     print("FUNNEL (where things drop off):")
     print(f"  posts scraped ........ {len(posts)}")
-    print(f"  extraction failures .. {_extract_fail_count[0]}  (if this тЙИ posts scraped, your ANTHROPIC_API_KEY is the problem)")
+    print(f"  extraction failures .. {_extract_fail_count[0]}  (if this ≈ posts scraped, your ANTHROPIC_API_KEY is the problem)")
     print(f"  judged real events ... {n_is_event}")
     print(f"  still upcoming ....... {n_upcoming}")
-    print(f"  website feeds ........ {n_wp}  (intl centres: Nisarga, Osho World, San DiegoтАж)")
+    print(f"  website feeds ........ {n_wp}  (intl centres: Nisarga, Osho World, San Diego…)")
     print(f"  flyer uploads ........ {n_flyer}  (from your '{FLYERS_DIR}/' folder)")
     print(f"  new this run ......... {len(events)}")
     print(f"  TOTAL in directory ... {len(merged)}  (new + carried forward)")
     print("="*60)
-    print(f"тЬУ events.json now holds {len(merged)} upcoming events")
+    print(f"✓ events.json now holds {len(merged)} upcoming events")
 
 
 if __name__ == "__main__":

@@ -100,12 +100,56 @@ def ddg_search(query):
         items.append({"link": href, "title": htmllib.unescape(title), "snippet": ""})
     return items
 
-def search_district(term):
+# ---------------- Regional-language queries ----------------
+# Websites belong to famous centres. Rural camps announce in the local language or not at
+# all — so an English-only query is structurally blind to most of India's camps.
+#
+# COST NOTE: this adds NO queries. Each district still gets exactly ONE search; we just ask
+# in the right language for that state, and alternate regional/English on each full India
+# pass (discover_state.json "pass"). Tavily budget and pass speed are unchanged.
+
+STATE_LANG = {
+    # Hindi belt — the biggest camp region (Osho's own MP, plus CG/RJ/UP/BR/HR/DL/UK/JH/HP)
+    "Madhya Pradesh": "hi", "Chhattisgarh": "hi", "Rajasthan": "hi", "Uttar Pradesh": "hi",
+    "Bihar": "hi", "Haryana": "hi", "Delhi": "hi", "NCT of Delhi": "hi", "Uttarakhand": "hi",
+    "Jharkhand": "hi", "Himachal Pradesh": "hi",
+    # Gujarati — Osho's oldest base after MP
+    "Gujarat": "gu", "Dadra and Nagar Haveli and Daman and Diu": "gu",
+    # Marathi (Devanagari script, but "शिबिर" not "शिविर")
+    "Maharashtra": "mr", "Goa": "mr",
+    # Punjabi
+    "Punjab": "pa", "Chandigarh": "pa",
+    # Malayalam — Osho Lovers Kerala run camps across Kerala's small towns
+    "Kerala": "ml", "Lakshadweep": "ml",
+}
+
+# One natural phrase per language — what an organiser would actually write.
+LANG_QUERY = {
+    "hi": "ओशो ध्यान शिविर",
+    "mr": "ओशो ध्यान शिबिर",
+    "gu": "ઓશો ધ્યાન શિબિર",
+    "pa": "ਓਸ਼ੋ ਧਿਆਨ ਸ਼ਿਵਿਰ",
+    "ml": "ഓഷോ ധ്യാന ശിബിരം",
+    "en": "osho meditation",
+}
+
+def query_for(district, state, use_regional):
+    """Build this district's single search query. Falls back to English where we have no
+    mapping (Bengal, Tamil Nadu, the North-East…) — Osho presence there is thin enough that
+    a dedicated script isn't worth a query slot yet. Add to STATE_LANG if that changes."""
+    lang = STATE_LANG.get((state or "").strip(), "en")
+    if not use_regional or lang == "en":
+        return f"osho meditation {district}"
+    return f"{LANG_QUERY[lang]} {district}"
+
+
+def search_district(term, query=None):
     """Return list of raw results for a district, via active engine."""
     global ENGINE
+    q = query or f"osho meditation {term}"
     if ENGINE == "tavily":
         try:
-            return tavily_search(f"osho meditation {term}")
+            return tavily_search(q)
         except urllib.error.HTTPError as e:
             body = ""
             try: body = e.read().decode()[:120]
@@ -123,7 +167,7 @@ def search_district(term):
         out = []
         for site in ("facebook.com", "instagram.com"):
             try:
-                out += ddg_search(f"osho meditation {term} site:{site}")
+                out += ddg_search(f"{q} site:{site}")
             except Exception as e:
                 print(f"  ddg {term}/{site}: {e}")
             time.sleep(6)  # slow and steady survives throttling longer
@@ -195,7 +239,19 @@ def main():
     today = time.strftime("%Y-%m-%d")
     fresh, done = [], 0
 
-    print(f"Engine: {ENGINE} | starting at district #{ptr}")
+    # Alternate language on each full India pass: odd pass = English, even pass = regional.
+    # Costs nothing extra and means every district eventually gets asked both ways.
+    # Override any time with:  DISCOVER_LANG=regional  (or =english) in the workflow env.
+    _force = os.environ.get("DISCOVER_LANG", "").strip().lower()
+    if _force in ("regional", "hi", "local"):
+        use_regional = True
+    elif _force in ("english", "en"):
+        use_regional = False
+    else:
+        use_regional = (state.get("pass", 1) % 2 == 0)
+
+    print(f"Engine: {ENGINE} | starting at district #{ptr} | pass {state.get('pass',1)} "
+          f"| asking in: {'REGIONAL language per state' if use_regional else 'English'}")
     tav_used, ddg_used = 0, 0
     for i in range(700):
         if ENGINE == "tavily" and tav_used >= TAVILY_DAILY:
@@ -205,7 +261,7 @@ def main():
             break
         d = districts[(ptr + i) % n]
         eng = ENGINE
-        results = search_district(d["term"])
+        results = search_district(d["term"], query_for(d["term"], d.get("state"), use_regional))
         if eng == "tavily": tav_used += 1
         else: ddg_used += 1
         done += 1
@@ -229,6 +285,7 @@ def main():
     state["pointer"] = (ptr + done) % n
     state["last_run"] = today
     state["engine"] = ENGINE
+    state["lang_mode"] = "regional" if use_regional else "english"
     state["last_batch"] = f'{districts[ptr]["term"]} -> {districts[(ptr+max(done-1,0))%n]["term"]} ({done} districts, {ENGINE})'
 
     fresh = [c for c in claude_filter(fresh) if c.get("score", 5) >= MIN_SCORE]
