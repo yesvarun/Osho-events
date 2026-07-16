@@ -1,4 +1,4 @@
-# Checked 2026-07-15. Claude read these flyers and
+# Checked 2026-07-16. Claude read these flyers and
 # found a real camp, but no date on the image. They are NOT on the site.
 # Fix: open the flyer, find the date, and add the camp via the
 # Paste Text route — or delete the flyer if it's an old one.
